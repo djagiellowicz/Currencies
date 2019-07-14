@@ -1,11 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-<<<<<<< HEAD
 VisualStudioVersion = 16.0.28803.352
-=======
-VisualStudioVersion = 16.0.28922.388
->>>>>>> 703493c446334e5638f9168daabd61f87fec6376
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WalutyBusinessLogic", "WalutyBusinessLogic\WalutyBusinessLogic.csproj", "{2276890E-C6AC-49A1-A593-C252FE28FDCF}"
 EndProject

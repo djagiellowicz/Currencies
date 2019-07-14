@@ -1,33 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
 
 namespace WalutyBusinessLogic.Services
 {
-    public class CurrencyConversionService : ICurrencyConversionServices
+    public class CurrencyConversionService : ICurrencyConversionService
     {
-        private readonly ILoader _loader;
+        private readonly ICurrencyRepository _repository;
 
-        public CurrencyConversionService(ILoader loader)
-        {
-            _loader = loader;
+        public CurrencyConversionService(ICurrencyRepository repository)
+        { 
+            _repository = repository;
         }
 
-        public CurrencyConversionModel CalculateAmountForCurrencyConversion(CurrencyConversionModel currencyConversionModel)
+        public async Task<CurrencyConversionModel> CalculateAmountForCurrencyConversion(CurrencyConversionModel currencyConversionModel)
         {
-            CurrencyRecord firstDesiredCurrency = GetDesiredCurrency(currencyConversionModel.FirstCurrency, currencyConversionModel.Date);
-            CurrencyRecord secondDesiredCurrency = GetDesiredCurrency(currencyConversionModel.SecondCurrency, currencyConversionModel.Date);
+            CurrencyRecord firstDesiredCurrency = await GetDesiredCurrency(currencyConversionModel.FirstCurrency, currencyConversionModel.Date);
+            CurrencyRecord secondDesiredCurrency = await GetDesiredCurrency(currencyConversionModel.SecondCurrency, currencyConversionModel.Date);
             currencyConversionModel.AmountSecondCurrency = currencyConversionModel.AmountFirstCurrency * firstDesiredCurrency.Close / secondDesiredCurrency.Close;
             return currencyConversionModel;
             
         }
 
-        private CurrencyRecord GetDesiredCurrency(string nameCurrency, DateTime date)
+        private async Task<CurrencyRecord> GetDesiredCurrency(string nameCurrency, DateTime date)
         {
-            nameCurrency += ".txt";
-            Currency currency = _loader.LoadCurrencyFromFile(nameCurrency);
+            Currency currency =  await _repository.GetCurrency(nameCurrency);
             List<CurrencyRecord> listOfRecords = currency.ListOfRecords;
             CurrencyRecord desiredRecord = listOfRecords.SingleOrDefault(record => record.Date == date);
             return desiredRecord;

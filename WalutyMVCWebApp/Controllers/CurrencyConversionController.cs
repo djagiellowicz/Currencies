@@ -8,13 +8,13 @@ namespace WalutyMVCWebApp.Controllers
 {
     public class CurrencyConversionController : Controller
     {
-        private readonly CurrencyConversionService _currencyConversionService;
+        private readonly ICurrencyConversionService _currencyConversionService;
         private readonly IDateChecker _dateChecker;
         private readonly IDateRange _dateRange;
         private readonly CurrencyNameChecker _currencyNameChecker;
-        public CurrencyConversionController(ILoader loader, IDateRange dateRange, IDateChecker dateChecker)
+        public CurrencyConversionController(ILoader loader, IDateRange dateRange, IDateChecker dateChecker, ICurrencyConversionService currencyConversionService)
         {
-            _currencyConversionService = new CurrencyConversionService(loader);
+            _currencyConversionService = currencyConversionService;
             _dateChecker = dateChecker;
             _dateRange = dateRange;
             _currencyNameChecker = new CurrencyNameChecker();
@@ -44,7 +44,7 @@ namespace WalutyMVCWebApp.Controllers
 
                 return View("FormOfCurrencyConversion", model);
             }
-            return View(_currencyConversionService.CalculateAmountForCurrencyConversion(model));
+            return View(await _currencyConversionService.CalculateAmountForCurrencyConversion(model));
         }
     }
 }

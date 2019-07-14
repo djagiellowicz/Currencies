@@ -10,12 +10,12 @@ namespace WalutyMVCWebApp.Controllers
     {
         private readonly IExtremesServices _extremeServices;
         private readonly DateChecker _dateChecker;
-        private readonly DateRange _dateRange;
-        public LocalExtremeController(ILoader loader, IExtremesServices extremesServices)
+        private readonly IDateRange _dateRange;
+        public LocalExtremeController(IDateRange dateRange, IExtremesServices extremesServices)
         {
             _extremeServices = extremesServices;
             _dateChecker = new DateChecker();
-            _dateRange = new DateRange(loader);
+            _dateRange = dateRange;
         }
 
         public IActionResult FormOfLocalExtreme()

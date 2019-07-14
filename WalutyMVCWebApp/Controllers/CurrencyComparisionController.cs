@@ -10,14 +10,14 @@ namespace WalutyMVCWebApp.Controllers
     {
         private readonly CurrenciesComparator _currenciesComparator;
         private readonly DateChecker _dateChecker;
-        private readonly DateRange _dateRange;
+        private readonly IDateRange _dateRange;
         private readonly CurrencyNameChecker _currencyNameChecker;
 
-        public CurrencyComparisionController(ILoader loader)
+        public CurrencyComparisionController(ILoader loader, IDateRange dateRange)
         {
             _currenciesComparator = new CurrenciesComparator(loader);
             _dateChecker = new DateChecker();
-            _dateRange = new DateRange(loader);
+            _dateRange = dateRange;
             _currencyNameChecker = new CurrencyNameChecker();
         }
 

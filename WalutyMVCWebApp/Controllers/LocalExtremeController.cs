@@ -9,12 +9,12 @@ namespace WalutyMVCWebApp.Controllers
     public class LocalExtremeController : Controller
     {
         private readonly IExtremesServices _extremeServices;
-        private readonly DateChecker _dateChecker;
+        private readonly IDateChecker _dateChecker;
         private readonly IDateRange _dateRange;
-        public LocalExtremeController(IDateRange dateRange, IExtremesServices extremesServices)
+        public LocalExtremeController(IDateRange dateRange, IExtremesServices extremesServices, IDateChecker dateChecker)
         {
             _extremeServices = extremesServices;
-            _dateChecker = new DateChecker();
+            _dateChecker = dateChecker;
             _dateRange = dateRange;
         }
 
@@ -31,7 +31,7 @@ namespace WalutyMVCWebApp.Controllers
             {
                 return View("FormOfLocalExtreme", model);
             }
-            if (!_dateChecker.CheckingIfDateExistInRange(model.StartDate, model.EndDate, model.NameCurrency))
+            if (! await _dateChecker.CheckingIfDateExistInRange(model.StartDate, model.EndDate, model.NameCurrency))
             {
                 ViewBag.DateRangeForLocalExtreme = _dateRange.GetDateRangeCurrency(model.NameCurrency);
 

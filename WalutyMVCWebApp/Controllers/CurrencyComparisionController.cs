@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.CurrenciesComparision;
 using WalutyBusinessLogic.LoadingFromFile;
@@ -9,14 +10,14 @@ namespace WalutyMVCWebApp.Controllers
     public class CurrencyComparisionController : Controller
     {
         private readonly CurrenciesComparator _currenciesComparator;
-        private readonly DateChecker _dateChecker;
+        private readonly IDateChecker _dateChecker;
         private readonly IDateRange _dateRange;
         private readonly CurrencyNameChecker _currencyNameChecker;
 
-        public CurrencyComparisionController(ILoader loader, IDateRange dateRange)
+        public CurrencyComparisionController(ILoader loader, IDateRange dateRange, IDateChecker dateChecker)
         {
             _currenciesComparator = new CurrenciesComparator(loader);
-            _dateChecker = new DateChecker();
+            _dateChecker = dateChecker;
             _dateRange = dateRange;
             _currencyNameChecker = new CurrencyNameChecker();
         }
@@ -28,7 +29,7 @@ namespace WalutyMVCWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ShowResultCurrencyComparision(CurrenciesComparatorModel model)
+        public async Task<IActionResult> ShowResultCurrencyComparision(CurrenciesComparatorModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -39,7 +40,7 @@ namespace WalutyMVCWebApp.Controllers
                 ViewBag.ResultChekingCurrencyNameInComparision = "Currencies name must different";
                 return View("FormOfCurrencyComparator", model);
             }
-            if (!_dateChecker.CheckingIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrencyCode, model.SecondCurrencyCode))
+            if (! await _dateChecker.CheckingIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrencyCode, model.SecondCurrencyCode))
             {
                 ViewBag.DateRangeForComparison = _dateRange.GetDateRangeTwoCurrencies(model.FirstCurrencyCode, model.SecondCurrencyCode);
                 

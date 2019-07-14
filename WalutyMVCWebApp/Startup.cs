@@ -35,10 +35,10 @@ namespace WalutyMVCWebApp
             services.AddTransient<ICurrencyRepository, CurrencyRepository>();
             services.AddTransient<IExtremesServices, ExtremesServices>();
             services.AddTransient<IDateRange, DateRange>();
+            services.AddTransient<IDateChecker, DateChecker>();
             services.AddDbContext<WalutyDBContext>(opt =>
                 opt.UseInMemoryDatabase("Development"));
             //services.AddDbContext<WalutyDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Connection")));
-            services.AddSingleton<IDateChecker, DateChecker>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

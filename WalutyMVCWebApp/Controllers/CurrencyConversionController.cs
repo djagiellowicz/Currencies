@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Services;
@@ -8,13 +9,13 @@ namespace WalutyMVCWebApp.Controllers
     public class CurrencyConversionController : Controller
     {
         private readonly CurrencyConversionService _currencyConversionService;
-        private readonly DateChecker _dateChecker;
+        private readonly IDateChecker _dateChecker;
         private readonly IDateRange _dateRange;
         private readonly CurrencyNameChecker _currencyNameChecker;
-        public CurrencyConversionController(ILoader loader, IDateRange dateRange)
+        public CurrencyConversionController(ILoader loader, IDateRange dateRange, IDateChecker dateChecker)
         {
             _currencyConversionService = new CurrencyConversionService(loader);
-            _dateChecker = new DateChecker();
+            _dateChecker = dateChecker;
             _dateRange = dateRange;
             _currencyNameChecker = new CurrencyNameChecker();
         }
@@ -26,7 +27,7 @@ namespace WalutyMVCWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ShowResultCurrencyConversion(CurrencyConversionModel model)
+        public async  Task<IActionResult> ShowResultCurrencyConversion(CurrencyConversionModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -37,7 +38,7 @@ namespace WalutyMVCWebApp.Controllers
                 ViewBag.ResultChekingCurrencyNameInConversion = "Currencies name must different";
                 return View("FormOfCurrencyConversion", model);
             }
-            if (!_dateChecker.CheckingIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrency, model.SecondCurrency))
+            if (! await _dateChecker.CheckingIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrency, model.SecondCurrency))
             {
                 ViewBag.DateRangeForConversion = _dateRange.GetDateRangeTwoCurrencies(model.FirstCurrency, model.SecondCurrency);
 

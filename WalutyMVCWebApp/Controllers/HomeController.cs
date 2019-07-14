@@ -13,7 +13,7 @@ namespace WalutyMVCWebApp.Controllers
         private readonly ICurrencyRepository _repository;
         private int _pageSize = 5;
 
-        public HomeController(ILoader loader, ICurrencyRepository repository)
+        public HomeController(ICurrencyRepository repository)
         { 
             _repository = repository;
         }

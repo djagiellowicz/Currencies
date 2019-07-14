@@ -1,43 +1,44 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
 
 namespace WalutyBusinessLogic.Services
 {
-    public class ExtremesServices
+    public class ExtremesServices : IExtremesServices
     {
-        private readonly ILoader _loader;
+        private readonly ICurrencyRepository _repository;
 
-        public ExtremesServices(ILoader loader)
+        public ExtremesServices(ICurrencyRepository repository)
         {
-            _loader = loader;
+            _repository = repository;
         }
 
-        public GlobalExtremeValueModel GetGlobalExtremes(GlobalExtremeValueModel extremeValue)
+        public async Task<GlobalExtremeValueModel> GetGlobalExtremes(GlobalExtremeValueModel extremeValue)
         {
-            List<CurrencyRecord> ListOfRecords = GetCurrencyList(extremeValue.NameCurrency);
-            extremeValue.MaxValue = ListOfRecords.Max(c => c.High);
-            extremeValue.MinValue = ListOfRecords.Min(c => c.Low);
+            List<CurrencyRecord> listOfRecords = await GetCurrencyList(extremeValue.NameCurrency);
+            extremeValue.MaxValue = listOfRecords.Max(c => c.High);
+            extremeValue.MinValue = listOfRecords.Min(c => c.Low);
             return extremeValue;
         }
 
-        public LocalExtremeValueModel GetLocalExtremes(LocalExtremeValueModel extremeValue)
+        public async Task<LocalExtremeValueModel> GetLocalExtremes(LocalExtremeValueModel extremeValue)
         {
-            List<CurrencyRecord> ListOfRecords = GetCurrencyList(extremeValue.NameCurrency);
-            extremeValue.MaxValue = ListOfRecords.Where
+            List<CurrencyRecord> listOfRecords = await GetCurrencyList(extremeValue.NameCurrency);
+            extremeValue.MaxValue = listOfRecords.Where
                 (c => c.Date >= extremeValue.StartDate && c.Date <= extremeValue.EndDate)
                 .Max(c => c.High);
-            extremeValue.MinValue = ListOfRecords.Where
+            extremeValue.MinValue = listOfRecords.Where
                 (c => c.Date >= extremeValue.StartDate && c.Date <= extremeValue.EndDate)
                 .Min(c => c.Low);
             return extremeValue;
         }
 
-        private List<CurrencyRecord> GetCurrencyList(string codeCurrency)
+        private async Task<List<CurrencyRecord>> GetCurrencyList(string codeCurrency)
         {
-            codeCurrency += ".txt";
-            Currency currency = _loader.LoadCurrencyFromFile(codeCurrency);
+            Currency currency = await _repository.GetCurrency(codeCurrency); 
             List<CurrencyRecord> listOfRecords = currency.ListOfRecords;
             return listOfRecords;
         }

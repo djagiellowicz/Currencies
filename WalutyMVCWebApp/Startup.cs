@@ -33,6 +33,7 @@ namespace WalutyMVCWebApp
 
             services.AddSingleton<ILoader, Loader>();
             services.AddTransient<ICurrencyRepository, CurrencyRepository>();
+            services.AddTransient<IExtremesServices, ExtremesServices>();
             services.AddDbContext<WalutyDBContext>(opt =>
                 opt.UseInMemoryDatabase("Development"));
             //services.AddDbContext<WalutyDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Connection")));

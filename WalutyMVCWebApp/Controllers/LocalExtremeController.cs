@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Services;
@@ -7,12 +8,12 @@ namespace WalutyMVCWebApp.Controllers
 {
     public class LocalExtremeController : Controller
     {
-        private readonly ExtremesServices _extremeServices;
+        private readonly IExtremesServices _extremeServices;
         private readonly DateChecker _dateChecker;
         private readonly DateRange _dateRange;
-        public LocalExtremeController(ILoader loader)
+        public LocalExtremeController(ILoader loader, IExtremesServices extremesServices)
         {
-            _extremeServices = new ExtremesServices(loader);
+            _extremeServices = extremesServices;
             _dateChecker = new DateChecker();
             _dateRange = new DateRange(loader);
         }
@@ -24,7 +25,7 @@ namespace WalutyMVCWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ShowLocalExtreme(LocalExtremeValueModel model)
+        public async Task<IActionResult> ShowLocalExtreme(LocalExtremeValueModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -36,7 +37,7 @@ namespace WalutyMVCWebApp.Controllers
 
                 return View("FormOfLocalExtreme", model);
             }
-            return View(_extremeServices.GetLocalExtremes(model));
+            return View(await _extremeServices.GetLocalExtremes(model));
         }
     }
 }

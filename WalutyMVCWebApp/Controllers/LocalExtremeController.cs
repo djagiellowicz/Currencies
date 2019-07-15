@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Services;
 

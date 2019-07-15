@@ -2,24 +2,23 @@
 using Microsoft.AspNetCore.Mvc;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.CurrenciesComparision;
-using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Services;
 
 namespace WalutyMVCWebApp.Controllers
 {
     public class CurrencyComparisionController : Controller
     {
-        private readonly CurrenciesComparator _currenciesComparator;
+        private readonly ICurrenciesComparator _currenciesComparator;
         private readonly IDateChecker _dateChecker;
         private readonly IDateRange _dateRange;
-        private readonly CurrencyNameChecker _currencyNameChecker;
+        private readonly ICurrencyNameChecker _currencyNameChecker;
 
-        public CurrencyComparisionController(ILoader loader, IDateRange dateRange, IDateChecker dateChecker)
+        public CurrencyComparisionController(ICurrenciesComparator currenciesComparator, IDateRange dateRange, IDateChecker dateChecker, ICurrencyNameChecker currencyNameChecker)
         {
-            _currenciesComparator = new CurrenciesComparator(loader);
+            _currenciesComparator = currenciesComparator;
             _dateChecker = dateChecker;
             _dateRange = dateRange;
-            _currencyNameChecker = new CurrencyNameChecker();
+            _currencyNameChecker = currencyNameChecker;
         }
 
         public IActionResult FormOfCurrencyComparator()

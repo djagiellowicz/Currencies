@@ -37,6 +37,7 @@ namespace WalutyMVCWebApp
             services.AddTransient<IDateRange, DateRange>();
             services.AddTransient<IDateChecker, DateChecker>();
             services.AddTransient<ICurrencyConversionService, CurrencyConversionService>();
+            services.AddTransient<ICurrencyNameChecker, CurrencyNameChecker>();
             services.AddDbContext<WalutyDBContext>(opt =>
                 opt.UseInMemoryDatabase("Development"));
             //services.AddDbContext<WalutyDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Connection")));

@@ -11,13 +11,14 @@ namespace WalutyMVCWebApp.Controllers
         private readonly ICurrencyConversionService _currencyConversionService;
         private readonly IDateChecker _dateChecker;
         private readonly IDateRange _dateRange;
-        private readonly CurrencyNameChecker _currencyNameChecker;
-        public CurrencyConversionController(ILoader loader, IDateRange dateRange, IDateChecker dateChecker, ICurrencyConversionService currencyConversionService)
+        private readonly ICurrencyNameChecker _currencyNameChecker;
+        public CurrencyConversionController(ILoader loader, IDateRange dateRange, IDateChecker dateChecker
+                                            ,ICurrencyConversionService currencyConversionService, ICurrencyNameChecker currencyNameChecker)
         {
             _currencyConversionService = currencyConversionService;
             _dateChecker = dateChecker;
             _dateRange = dateRange;
-            _currencyNameChecker = new CurrencyNameChecker();
+            _currencyNameChecker = currencyNameChecker;
         }
 
         public IActionResult FormOfCurrencyConversion()

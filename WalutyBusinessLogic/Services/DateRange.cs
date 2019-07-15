@@ -56,7 +56,6 @@ namespace WalutyBusinessLogic.Services
 
         private async Task<List<CurrencyRecord>> GetCurrencyList(string currencyCode)
         {
-            currencyCode += ".txt";
             Currency currency = await _repository.GetCurrency(currencyCode);
             List<CurrencyRecord> listOfRecords = currency.ListOfRecords;
             return listOfRecords;

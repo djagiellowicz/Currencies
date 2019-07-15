@@ -13,7 +13,8 @@ namespace WalutyMVCWebApp.Controllers
         private readonly IDateRange _dateRange;
         private readonly ICurrencyNameChecker _currencyNameChecker;
 
-        public CurrencyComparisionController(ICurrenciesComparator currenciesComparator, IDateRange dateRange, IDateChecker dateChecker, ICurrencyNameChecker currencyNameChecker)
+        public CurrencyComparisionController(ICurrenciesComparator currenciesComparator, IDateRange dateRange, IDateChecker dateChecker
+                                            ,ICurrencyNameChecker currencyNameChecker)
         {
             _currenciesComparator = currenciesComparator;
             _dateChecker = dateChecker;
@@ -39,13 +40,13 @@ namespace WalutyMVCWebApp.Controllers
                 ViewBag.ResultChekingCurrencyNameInComparision = "Currencies name must different";
                 return View("FormOfCurrencyComparator", model);
             }
-            if (! await _dateChecker.CheckingIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrencyCode, model.SecondCurrencyCode))
+            if (!await _dateChecker.CheckingIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrencyCode, model.SecondCurrencyCode))
             {
-                ViewBag.DateRangeForComparison = _dateRange.GetDateRangeTwoCurrencies(model.FirstCurrencyCode, model.SecondCurrencyCode);
+                ViewBag.DateRangeForComparison = await _dateRange.GetDateRangeTwoCurrencies(model.FirstCurrencyCode, model.SecondCurrencyCode);
                 
                 return View("FormOfCurrencyComparator", model);
             }
-            return View(_currenciesComparator.CompareCurrencies(model));
+            return View(await _currenciesComparator.CompareCurrencies(model));
         }
     }
 }

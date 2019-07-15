@@ -1,6 +1,6 @@
 ﻿namespace WalutyBusinessLogic.Services
 {
-    public class CurrencyNameChecker
+    public class CurrencyNameChecker : ICurrencyNameChecker
     {
         public bool CheckingIfCurrencyNamesAreDifferent(string firstCurrencyName, string secondCurrencyName)
         {

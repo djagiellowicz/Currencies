@@ -39,9 +39,9 @@ namespace WalutyMVCWebApp.Controllers
                 ViewBag.ResultChekingCurrencyNameInConversion = "Currencies name must different";
                 return View("FormOfCurrencyConversion", model);
             }
-            if (! await _dateChecker.CheckingIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrency, model.SecondCurrency))
+            if (!(await _dateChecker.CheckingIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrency, model.SecondCurrency)))
             {
-                ViewBag.DateRangeForConversion = _dateRange.GetDateRangeTwoCurrencies(model.FirstCurrency, model.SecondCurrency);
+                ViewBag.DateRangeForConversion = await _dateRange.GetDateRangeTwoCurrencies(model.FirstCurrency, model.SecondCurrency);
 
                 return View("FormOfCurrencyConversion", model);
             }

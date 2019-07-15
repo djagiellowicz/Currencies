@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WalutyBusinessLogic.CurrenciesComparision;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.LoadingFromFile.DatabaseLoading;
@@ -38,6 +39,7 @@ namespace WalutyMVCWebApp
             services.AddTransient<IDateChecker, DateChecker>();
             services.AddTransient<ICurrencyConversionService, CurrencyConversionService>();
             services.AddTransient<ICurrencyNameChecker, CurrencyNameChecker>();
+            services.AddTransient<ICurrenciesComparator, CurrenciesComparator>();
             services.AddDbContext<WalutyDBContext>(opt =>
                 opt.UseInMemoryDatabase("Development"));
             //services.AddDbContext<WalutyDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Connection")));

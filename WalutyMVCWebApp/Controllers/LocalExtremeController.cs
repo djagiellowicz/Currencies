@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WalutyBusinessLogic.LoadingFromFile;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Services;
 
@@ -7,14 +7,14 @@ namespace WalutyMVCWebApp.Controllers
 {
     public class LocalExtremeController : Controller
     {
-        private readonly ExtremesServices _extremeServices;
-        private readonly DateChecker _dateChecker;
-        private readonly DateRange _dateRange;
-        public LocalExtremeController(ILoader loader)
+        private readonly IExtremesServices _extremeServices;
+        private readonly IDateChecker _dateChecker;
+        private readonly IDateRange _dateRange;
+        public LocalExtremeController(IDateRange dateRange, IExtremesServices extremesServices, IDateChecker dateChecker)
         {
-            _extremeServices = new ExtremesServices(loader);
-            _dateChecker = new DateChecker();
-            _dateRange = new DateRange(loader);
+            _extremeServices = extremesServices;
+            _dateChecker = dateChecker;
+            _dateRange = dateRange;
         }
 
         public IActionResult FormOfLocalExtreme()
@@ -24,19 +24,19 @@ namespace WalutyMVCWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ShowLocalExtreme(LocalExtremeValueModel model)
+        public async Task<IActionResult> ShowLocalExtreme(LocalExtremeValueModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View("FormOfLocalExtreme", model);
             }
-            if (!_dateChecker.CheckingIfDateExistInRange(model.StartDate, model.EndDate, model.NameCurrency))
+            if (! await _dateChecker.CheckingIfDateExistInRange(model.StartDate, model.EndDate, model.NameCurrency))
             {
-                ViewBag.DateRangeForLocalExtreme = _dateRange.GetDateRangeCurrency(model.NameCurrency);
+                ViewBag.DateRangeForLocalExtreme = await _dateRange.GetDateRangeCurrency(model.NameCurrency);
 
                 return View("FormOfLocalExtreme", model);
             }
-            return View(_extremeServices.GetLocalExtremes(model));
+            return View(await _extremeServices.GetLocalExtremes(model));
         }
     }
 }

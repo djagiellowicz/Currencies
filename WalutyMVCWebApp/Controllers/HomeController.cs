@@ -10,13 +10,11 @@ namespace WalutyMVCWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILoader _loader;
         private readonly ICurrencyRepository _repository;
         private int _pageSize = 5;
 
-        public HomeController(ILoader loader, ICurrencyRepository repository)
-        {
-            _loader = loader;
+        public HomeController(ICurrencyRepository repository)
+        { 
             _repository = repository;
         }
         public IActionResult Index(int? page, string searchString)

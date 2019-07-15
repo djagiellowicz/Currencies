@@ -1,9 +1,10 @@
-﻿using WalutyBusinessLogic.Models;
+﻿using System.Threading.Tasks;
+using WalutyBusinessLogic.Models;
 
 namespace WalutyBusinessLogic.Services
 {
-    public interface ICurrencyConversionServices
+    public interface ICurrencyConversionService
     {
-        CurrencyConversionModel CalculateAmountForCurrencyConversion(CurrencyConversionModel currencyConversionModel);
+        Task<CurrencyConversionModel> CalculateAmountForCurrencyConversion(CurrencyConversionModel currencyConversionModel);
     }
 }

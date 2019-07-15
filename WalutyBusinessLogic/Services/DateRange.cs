@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
 
 namespace WalutyBusinessLogic.Services
 {
-    public class DateRange
+    public class DateRange : IDateRange
     {
-        private readonly ILoader _loader;
-        public DateRange(ILoader loader)
+        private readonly ICurrencyRepository _repository;
+
+        public DateRange(ICurrencyRepository repository)
         {
-            _loader = loader;
+            _repository = repository;
         }
-        public string GetDateRangeCurrency(string currencyCode)
+        public async Task<string> GetDateRangeCurrency(string currencyCode)
         {
-            List<CurrencyRecord> listOfRecords = GetCurrencyList(currencyCode);
+            List<CurrencyRecord> listOfRecords = await GetCurrencyList(currencyCode);
             DateTime FirstDateCurrency = listOfRecords.FirstOrDefault().Date;
             DateTime LastDateCurrency= listOfRecords.LastOrDefault().Date;
             string dateRangeResult = $"{currencyCode} exist in this app from {FirstDateCurrency.ToShortDateString()} " +
@@ -23,12 +26,12 @@ namespace WalutyBusinessLogic.Services
             return dateRangeResult;
         }
 
-        public string GetDateRangeTwoCurrencies(string firstCurrencyCode, string secondCurrencyCode)
+        public async Task<string> GetDateRangeTwoCurrencies(string firstCurrencyCode, string secondCurrencyCode)
         {
-            List<CurrencyRecord> FirstListOfRecords = GetCurrencyList(firstCurrencyCode);
+            List<CurrencyRecord> FirstListOfRecords = await GetCurrencyList(firstCurrencyCode);
             DateTime FirstDateOfFirstCurrency = FirstListOfRecords.FirstOrDefault().Date;
             DateTime LastDateOfFirstCurrency = FirstListOfRecords.LastOrDefault().Date;
-            List<CurrencyRecord> SecondListOfRecords = GetCurrencyList(secondCurrencyCode);
+            List<CurrencyRecord> SecondListOfRecords = await GetCurrencyList(secondCurrencyCode);
             DateTime FirstDateOfSecondCurrency = SecondListOfRecords.FirstOrDefault().Date;
             DateTime LastDateOfSecondCurrency = SecondListOfRecords.LastOrDefault().Date;
             DateTime FirstCommonDate = GetBiggerDate(FirstDateOfSecondCurrency, FirstDateOfFirstCurrency);
@@ -51,10 +54,9 @@ namespace WalutyBusinessLogic.Services
             else return secondDate;
         }
 
-        private List<CurrencyRecord> GetCurrencyList(string currencyCode)
+        private async Task<List<CurrencyRecord>> GetCurrencyList(string currencyCode)
         {
-            currencyCode += ".txt";
-            Currency currency = _loader.LoadCurrencyFromFile(currencyCode);
+            Currency currency = await _repository.GetCurrency(currencyCode);
             List<CurrencyRecord> listOfRecords = currency.ListOfRecords;
             return listOfRecords;
         }

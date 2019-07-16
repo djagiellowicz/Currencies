@@ -41,7 +41,7 @@ namespace WalutyMVCWebApp.Controllers
             }
             if (!(await _dateChecker.CheckingIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrency, model.SecondCurrency)))
             {
-                ViewBag.DateRangeForConversion = await _dateRange.GetDateRangeTwoCurrencies(model.FirstCurrency, model.SecondCurrency);
+                ViewBag.DateRangeForConversion = await _dateRange.GetCommonDateRangeForTwoCurrencies(model.FirstCurrency, model.SecondCurrency);
 
                 return View("FormOfCurrencyConversion", model);
             }

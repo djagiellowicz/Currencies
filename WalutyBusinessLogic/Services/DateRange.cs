@@ -17,7 +17,7 @@ namespace WalutyBusinessLogic.Services
         }
         public async Task<string> GetDateRangeCurrency(string currencyCode)
         {
-            List<CurrencyRecord> listOfRecords = await GetCurrencyList(currencyCode);
+            List<CurrencyRecord> listOfRecords = await GetCurrencysRecordsList(currencyCode);
 
             DateTime FirstDateCurrency = listOfRecords.FirstOrDefault().Date;
             DateTime LastDateCurrency= listOfRecords.LastOrDefault().Date;
@@ -30,8 +30,8 @@ namespace WalutyBusinessLogic.Services
 
         public async Task<string> GetDateRangeTwoCurrencies(string firstCurrencyCode, string secondCurrencyCode)
         {
-            List<CurrencyRecord> FirstListOfRecords = await GetCurrencyList(firstCurrencyCode);
-            List<CurrencyRecord> SecondListOfRecords = await GetCurrencyList(secondCurrencyCode);
+            List<CurrencyRecord> FirstListOfRecords = await GetCurrencysRecordsList(firstCurrencyCode);
+            List<CurrencyRecord> SecondListOfRecords = await GetCurrencysRecordsList(secondCurrencyCode);
 
             DateTime FirstDateOfFirstCurrency = FirstListOfRecords.FirstOrDefault().Date;
             DateTime LastDateOfFirstCurrency = FirstListOfRecords.LastOrDefault().Date;
@@ -60,7 +60,7 @@ namespace WalutyBusinessLogic.Services
             else return secondDate;
         }
 
-        private async Task<List<CurrencyRecord>> GetCurrencyList(string currencyCode)
+        private async Task<List<CurrencyRecord>> GetCurrencysRecordsList(string currencyCode)
         {
             Currency currency = await _repository.GetCurrency(currencyCode);
             List<CurrencyRecord> listOfRecords = currency.ListOfRecords;

@@ -4,7 +4,7 @@ using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
 
-namespace WalutyBusinessLogic.CurrenciesComparision
+namespace WalutyBusinessLogic.Services
 {
     public class CurrenciesComparator : ICurrenciesComparator
     {

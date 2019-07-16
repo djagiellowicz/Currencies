@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WalutyBusinessLogic.Models;
-using WalutyBusinessLogic.CurrenciesComparision;
 using WalutyBusinessLogic.Services;
 
 namespace WalutyMVCWebApp.Controllers
@@ -42,7 +41,7 @@ namespace WalutyMVCWebApp.Controllers
             }
             if (!await _dateChecker.CheckingIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrencyCode, model.SecondCurrencyCode))
             {
-                ViewBag.DateRangeForComparison = await _dateRange.GetDateRangeTwoCurrencies(model.FirstCurrencyCode, model.SecondCurrencyCode);
+                ViewBag.DateRangeForComparison = await _dateRange.GetCommonDateRangeForTwoCurrencies(model.FirstCurrencyCode, model.SecondCurrencyCode);
                 
                 return View("FormOfCurrencyComparator", model);
             }

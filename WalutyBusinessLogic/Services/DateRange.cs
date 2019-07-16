@@ -18,8 +18,10 @@ namespace WalutyBusinessLogic.Services
         public async Task<string> GetDateRangeCurrency(string currencyCode)
         {
             List<CurrencyRecord> listOfRecords = await GetCurrencyList(currencyCode);
+
             DateTime FirstDateCurrency = listOfRecords.FirstOrDefault().Date;
             DateTime LastDateCurrency= listOfRecords.LastOrDefault().Date;
+
             string dateRangeResult = $"{currencyCode} exist in this app from {FirstDateCurrency.ToShortDateString()} " +
                 $"to {LastDateCurrency.ToShortDateString()}. Without weekends and holidays";
 
@@ -29,26 +31,30 @@ namespace WalutyBusinessLogic.Services
         public async Task<string> GetDateRangeTwoCurrencies(string firstCurrencyCode, string secondCurrencyCode)
         {
             List<CurrencyRecord> FirstListOfRecords = await GetCurrencyList(firstCurrencyCode);
+            List<CurrencyRecord> SecondListOfRecords = await GetCurrencyList(secondCurrencyCode);
+
             DateTime FirstDateOfFirstCurrency = FirstListOfRecords.FirstOrDefault().Date;
             DateTime LastDateOfFirstCurrency = FirstListOfRecords.LastOrDefault().Date;
-            List<CurrencyRecord> SecondListOfRecords = await GetCurrencyList(secondCurrencyCode);
+            
             DateTime FirstDateOfSecondCurrency = SecondListOfRecords.FirstOrDefault().Date;
             DateTime LastDateOfSecondCurrency = SecondListOfRecords.LastOrDefault().Date;
-            DateTime FirstCommonDate = GetBiggerDate(FirstDateOfSecondCurrency, FirstDateOfFirstCurrency);
-            DateTime LastCommonDate = GetLowerDate(LastDateOfFirstCurrency, LastDateOfSecondCurrency);
+
+            DateTime FirstCommonDate = GetLaterDate(FirstDateOfSecondCurrency, FirstDateOfFirstCurrency);
+            DateTime LastCommonDate = GetEarlierDate(LastDateOfFirstCurrency, LastDateOfSecondCurrency);
+
             string dateRangeResult = $"Date common for {firstCurrencyCode} and {secondCurrencyCode} " +
-                $"exist in this app is from {FirstCommonDate.ToShortDateString()} to {LastCommonDate.ToShortDateString()}"
-                + ". Without weekends and holidays";
+                                     $"exist in this app is from {FirstCommonDate.ToShortDateString()} to {LastCommonDate.ToShortDateString()}"
+                                     + ". Without weekends and holidays";
             return dateRangeResult;
         }
 
-        private DateTime GetBiggerDate(DateTime firstDate, DateTime secondDate)
+        private DateTime GetLaterDate(DateTime firstDate, DateTime secondDate)
         {
             if (firstDate > secondDate) return firstDate;
             else return secondDate;
         }
 
-        private DateTime GetLowerDate(DateTime firstDate, DateTime secondDate)
+        private DateTime GetEarlierDate(DateTime firstDate, DateTime secondDate)
         {
             if (firstDate > secondDate) return firstDate;
             else return secondDate;

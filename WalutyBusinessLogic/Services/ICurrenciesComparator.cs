@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using WalutyBusinessLogic.Models;
 
-namespace WalutyBusinessLogic.CurrenciesComparision
+namespace WalutyBusinessLogic.Services
 {
     public interface ICurrenciesComparator
     {

@@ -16,7 +16,7 @@ namespace WalutyBusinessLogic.Services
             _repository = repository;
         }
 
-        public async Task<GlobalExtremeValueModel> GetGlobalExtremes(GlobalExtremeValueModel extremeValue)
+        public async Task<GlobalExtremeValueModel> GetGlobalExtreme(GlobalExtremeValueModel extremeValue)
         {
             List<CurrencyRecord> listOfRecords = await GetCurrencyList(extremeValue.NameCurrency);
             extremeValue.MaxValue = listOfRecords.Max(c => c.High);

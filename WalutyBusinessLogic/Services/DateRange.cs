@@ -15,46 +15,52 @@ namespace WalutyBusinessLogic.Services
         {
             _repository = repository;
         }
-        public async Task<string> GetDateRangeCurrency(string currencyCode)
+        public async Task<string> GetCurrencyDateRange(string currencyCode)
         {
-            List<CurrencyRecord> listOfRecords = await GetCurrencyList(currencyCode);
+            List<CurrencyRecord> listOfRecords = await GetCurrencyRecordsList(currencyCode);
+
             DateTime FirstDateCurrency = listOfRecords.FirstOrDefault().Date;
             DateTime LastDateCurrency= listOfRecords.LastOrDefault().Date;
+
             string dateRangeResult = $"{currencyCode} exist in this app from {FirstDateCurrency.ToShortDateString()} " +
                 $"to {LastDateCurrency.ToShortDateString()}. Without weekends and holidays";
 
             return dateRangeResult;
         }
 
-        public async Task<string> GetDateRangeTwoCurrencies(string firstCurrencyCode, string secondCurrencyCode)
+        public async Task<string> GetCommonDateRangeForTwoCurrencies(string firstCurrencyCode, string secondCurrencyCode)
         {
-            List<CurrencyRecord> FirstListOfRecords = await GetCurrencyList(firstCurrencyCode);
+            List<CurrencyRecord> FirstListOfRecords = await GetCurrencyRecordsList(firstCurrencyCode);
+            List<CurrencyRecord> SecondListOfRecords = await GetCurrencyRecordsList(secondCurrencyCode);
+
             DateTime FirstDateOfFirstCurrency = FirstListOfRecords.FirstOrDefault().Date;
             DateTime LastDateOfFirstCurrency = FirstListOfRecords.LastOrDefault().Date;
-            List<CurrencyRecord> SecondListOfRecords = await GetCurrencyList(secondCurrencyCode);
+            
             DateTime FirstDateOfSecondCurrency = SecondListOfRecords.FirstOrDefault().Date;
             DateTime LastDateOfSecondCurrency = SecondListOfRecords.LastOrDefault().Date;
-            DateTime FirstCommonDate = GetBiggerDate(FirstDateOfSecondCurrency, FirstDateOfFirstCurrency);
-            DateTime LastCommonDate = GetLowerDate(LastDateOfFirstCurrency, LastDateOfSecondCurrency);
+
+            DateTime FirstCommonDate = GetLaterDate(FirstDateOfSecondCurrency, FirstDateOfFirstCurrency);
+            DateTime LastCommonDate = GetEarlierDate(LastDateOfFirstCurrency, LastDateOfSecondCurrency);
+
             string dateRangeResult = $"Date common for {firstCurrencyCode} and {secondCurrencyCode} " +
-                $"exist in this app is from {FirstCommonDate.ToShortDateString()} to {LastCommonDate.ToShortDateString()}"
-                + ". Without weekends and holidays";
+                                     $"exist in this app is from {FirstCommonDate.ToShortDateString()} to {LastCommonDate.ToShortDateString()}"
+                                     + ". Without weekends and holidays";
             return dateRangeResult;
         }
 
-        private DateTime GetBiggerDate(DateTime firstDate, DateTime secondDate)
+        private DateTime GetLaterDate(DateTime firstDate, DateTime secondDate)
         {
             if (firstDate > secondDate) return firstDate;
             else return secondDate;
         }
 
-        private DateTime GetLowerDate(DateTime firstDate, DateTime secondDate)
+        private DateTime GetEarlierDate(DateTime firstDate, DateTime secondDate)
         {
             if (firstDate > secondDate) return firstDate;
             else return secondDate;
         }
 
-        private async Task<List<CurrencyRecord>> GetCurrencyList(string currencyCode)
+        private async Task<List<CurrencyRecord>> GetCurrencyRecordsList(string currencyCode)
         {
             Currency currency = await _repository.GetCurrency(currencyCode);
             List<CurrencyRecord> listOfRecords = currency.ListOfRecords;

@@ -20,13 +20,13 @@ namespace WalutyMVCWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ShowGlobaExtreme(GlobalExtremeValueModel model)
+        public async Task<IActionResult> ShowGlobalExtreme(GlobalExtremeValueModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View("FormOfGlobalExtreme", model);
             }
-            return View(await _extremeServices.GetGlobalExtremes(model));
+            return View(await _extremeServices.GetGlobalExtreme(model));
         }
     }
 }

@@ -12,18 +12,18 @@
                 <label>Date          </label>
                 <input type="date" asp-for="Date" name="Date" />
                 <span asp-validation-for="Date" class="text-danger"></span>
-                @if (ViewBag.DateRangeForComparison != null)
+                @if (ViewBag.CommonDateRangeInfo != null)
                 {
-                <span class="text-danger">@ViewBag.DateRangeForComparison</span>
+                <span class="text-danger">@ViewBag.CommonDateRangeInfo</span>
                 }
             </div>
             <div class="form-control">
                 <label>First currency</label>
                 <input type="text" asp-for="FirstCurrencyCode" name="FirstCurrencyCode" />
                 <span asp-validation-for="FirstCurrencyCode" class="text-danger"></span>
-                @if (ViewBag.ResultChekingCurrencyNameInComparision != null)
+                @if (ViewBag.NameErrorInfo != null)
                 {
-                <span class="text-danger">@ViewBag.ResultChekingCurrencyNameInComparision</span>
+                <span class="text-danger">@ViewBag.NameErrorInfo</span>
                 }
             </div>
             <div class="form-control">

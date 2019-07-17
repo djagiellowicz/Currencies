@@ -4,7 +4,7 @@ namespace WalutyBusinessLogic.Services
 {
     public interface IDateRange
     {
-        Task<string> GetDateRangeCurrency(string currencyCode);
-        Task<string> GetDateRangeTwoCurrencies(string firstCurrencyCode, string secondCurrencyCode);
+        Task<string> GetCurrencyDateRange(string currencyCode);
+        Task<string> GetCommonDateRangeForTwoCurrencies(string firstCurrencyCode, string secondCurrencyCode);
     }
 }

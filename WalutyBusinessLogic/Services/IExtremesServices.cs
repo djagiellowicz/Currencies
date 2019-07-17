@@ -5,7 +5,7 @@ namespace WalutyBusinessLogic.Services
 {
     public interface IExtremesServices
     {
-        Task<GlobalExtremeValueModel> GetGlobalExtremes(GlobalExtremeValueModel extremeValue);
+        Task<GlobalExtremeValueModel> GetGlobalExtreme(GlobalExtremeValueModel extremeValue);
         Task<LocalExtremeValueModel> GetLocalExtremes(LocalExtremeValueModel extremeValue);
     }
 }

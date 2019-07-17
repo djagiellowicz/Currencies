@@ -30,9 +30,9 @@ namespace WalutyMVCWebApp.Controllers
             {
                 return View("FormOfLocalExtreme", model);
             }
-            if (! await _dateChecker.CheckingIfDateExistInRange(model.StartDate, model.EndDate, model.NameCurrency))
+            if (! await _dateChecker.CheckIfDateExistInRange(model.StartDate, model.EndDate, model.NameCurrency))
             {
-                ViewBag.DateRangeForLocalExtreme = await _dateRange.GetDateRangeCurrency(model.NameCurrency);
+                ViewBag.DateRangeForLocalExtreme = await _dateRange.GetCurrencyDateRange(model.NameCurrency);
 
                 return View("FormOfLocalExtreme", model);
             }

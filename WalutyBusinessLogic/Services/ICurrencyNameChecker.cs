@@ -2,6 +2,6 @@
 {
     public interface ICurrencyNameChecker
     {
-        bool CheckingIfCurrencyNamesAreDifferent(string firstCurrencyName, string secondCurrencyName);
+        bool AreDifferent(string firstCurrencyName, string secondCurrencyName);
     }
 }

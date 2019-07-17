@@ -34,12 +34,12 @@ namespace WalutyMVCWebApp.Controllers
             {
                 return View("FormOfCurrencyConversion", model);
             }
-            if (!_currencyNameChecker.CheckingIfCurrencyNamesAreDifferent(model.FirstCurrency, model.SecondCurrency))
+            if (!_currencyNameChecker.AreDifferent(model.FirstCurrency, model.SecondCurrency))
             {
                 ViewBag.ResultChekingCurrencyNameInConversion = "Currencies name must different";
                 return View("FormOfCurrencyConversion", model);
             }
-            if (!(await _dateChecker.CheckingIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrency, model.SecondCurrency)))
+            if (!(await _dateChecker.CheckIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrency, model.SecondCurrency)))
             {
                 ViewBag.DateRangeForConversion = await _dateRange.GetCommonDateRangeForTwoCurrencies(model.FirstCurrency, model.SecondCurrency);
 

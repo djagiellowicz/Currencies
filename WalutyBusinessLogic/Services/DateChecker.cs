@@ -15,7 +15,7 @@ namespace WalutyBusinessLogic.Services
         {
             _repository = repository;
         }
-        public async Task<bool> CheckingIfDateExistsForTwoCurrencies(DateTime dateCurrency, string firstNameCurrency,
+        public async Task<bool> CheckIfDateExistsForTwoCurrencies(DateTime dateCurrency, string firstNameCurrency,
             string secondNameCurrency)
         {
             List<CurrencyRecord> FirstCurrencyRecordList = await GetRecordDateList(firstNameCurrency);
@@ -28,7 +28,7 @@ namespace WalutyBusinessLogic.Services
             else return false;
         }
 
-        public async Task<bool> CheckingIfDateExistInRange(DateTime firstDate, DateTime secondDate, string currencyName)
+        public async Task<bool> CheckIfDateExistInRange(DateTime firstDate, DateTime secondDate, string currencyName)
         {
             List<CurrencyRecord> CurrencyRecordList = await GetRecordDateList(currencyName);
             if (CurrencyRecordList.Exists(c => c.Date >= firstDate) &&

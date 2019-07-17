@@ -15,9 +15,9 @@ namespace WalutyBusinessLogic.Services
         {
             _repository = repository;
         }
-        public async Task<string> GetDateRangeCurrency(string currencyCode)
+        public async Task<string> GetCurrencyDateRange(string currencyCode)
         {
-            List<CurrencyRecord> listOfRecords = await GetCurrencysRecordsList(currencyCode);
+            List<CurrencyRecord> listOfRecords = await GetCurrencyRecordsList(currencyCode);
 
             DateTime FirstDateCurrency = listOfRecords.FirstOrDefault().Date;
             DateTime LastDateCurrency= listOfRecords.LastOrDefault().Date;
@@ -28,10 +28,10 @@ namespace WalutyBusinessLogic.Services
             return dateRangeResult;
         }
 
-        public async Task<string> GetDateRangeTwoCurrencies(string firstCurrencyCode, string secondCurrencyCode)
+        public async Task<string> GetCommonDateRangeForTwoCurrencies(string firstCurrencyCode, string secondCurrencyCode)
         {
-            List<CurrencyRecord> FirstListOfRecords = await GetCurrencysRecordsList(firstCurrencyCode);
-            List<CurrencyRecord> SecondListOfRecords = await GetCurrencysRecordsList(secondCurrencyCode);
+            List<CurrencyRecord> FirstListOfRecords = await GetCurrencyRecordsList(firstCurrencyCode);
+            List<CurrencyRecord> SecondListOfRecords = await GetCurrencyRecordsList(secondCurrencyCode);
 
             DateTime FirstDateOfFirstCurrency = FirstListOfRecords.FirstOrDefault().Date;
             DateTime LastDateOfFirstCurrency = FirstListOfRecords.LastOrDefault().Date;
@@ -60,7 +60,7 @@ namespace WalutyBusinessLogic.Services
             else return secondDate;
         }
 
-        private async Task<List<CurrencyRecord>> GetCurrencysRecordsList(string currencyCode)
+        private async Task<List<CurrencyRecord>> GetCurrencyRecordsList(string currencyCode)
         {
             Currency currency = await _repository.GetCurrency(currencyCode);
             List<CurrencyRecord> listOfRecords = currency.ListOfRecords;

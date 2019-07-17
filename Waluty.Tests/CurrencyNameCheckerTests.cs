@@ -15,7 +15,7 @@ namespace Waluty.Tests
             bool result;
 
             //Act
-            result = nameChecker.CheckingIfCurrencyNamesAreDifferent(firstCurrencyName, secondCurrencyName);
+            result = nameChecker.CheckIfNamesAreDifferent(firstCurrencyName, secondCurrencyName);
 
             //Asert
             Assert.True(result);
@@ -31,7 +31,7 @@ namespace Waluty.Tests
             bool result;
 
             //Act
-            result = nameChecker.CheckingIfCurrencyNamesAreDifferent(firstCurrencyName, secondCurrencyName);
+            result = nameChecker.CheckIfNamesAreDifferent(firstCurrencyName, secondCurrencyName);
 
             //Asert
             Assert.False(result);

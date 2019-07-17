@@ -34,7 +34,7 @@ namespace Waluty.Tests.Services
             string secondNameCurrency = "AUD";
 
             // Act
-            var result = unitUnderTest.CheckingIfDateExistsForTwoCurrencies(
+            var result = unitUnderTest.CheckIfDateExistsForTwoCurrencies(
                 dateCurrency,
                 firstNameCurrency,
                 secondNameCurrency);
@@ -53,7 +53,7 @@ namespace Waluty.Tests.Services
             string secondNameCurrency = "AUD";
 
             // Act
-            var result = unitUnderTest.CheckingIfDateExistsForTwoCurrencies(
+            var result = unitUnderTest.CheckIfDateExistsForTwoCurrencies(
                 dateCurrency,
                 firstNameCurrency,
                 secondNameCurrency);

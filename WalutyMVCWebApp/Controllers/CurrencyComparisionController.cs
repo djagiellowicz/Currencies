@@ -36,12 +36,12 @@ namespace WalutyMVCWebApp.Controllers
             }
             if (!_currencyNameChecker.AreDifferent(model.FirstCurrencyCode, model.SecondCurrencyCode))
             {
-                ViewBag.ResultChekingCurrencyNameInComparision = "Currencies name must different";
+                ViewBag.NameErrorInfo = "Currencies name must different";
                 return View("FormOfCurrencyComparator", model);
             }
             if (!await _dateChecker.CheckIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrencyCode, model.SecondCurrencyCode))
             {
-                ViewBag.DateRangeForComparison = await _dateRange.GetCommonDateRangeForTwoCurrencies(model.FirstCurrencyCode, model.SecondCurrencyCode);
+                ViewBag.CommonDateRangeInfo = await _dateRange.GetCommonDateRangeForTwoCurrencies(model.FirstCurrencyCode, model.SecondCurrencyCode);
                 
                 return View("FormOfCurrencyComparator", model);
             }

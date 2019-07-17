@@ -17,13 +17,13 @@ namespace WalutyBusinessLogic.Services
             _repository = repository;
         }
 
-        public async Task<CurrencyConversionModel> CalculateAmountForCurrencyConversion(CurrencyConversionModel currencyConversionModel)
+        public async Task<CurrencyConversionModel> CalculateCurrencyConversionAmount(CurrencyConversionModel currencyConversionModel)
         {
             CurrencyRecord firstDesiredCurrency = await GetDesiredCurrency(currencyConversionModel.FirstCurrency, currencyConversionModel.Date);
             CurrencyRecord secondDesiredCurrency = await GetDesiredCurrency(currencyConversionModel.SecondCurrency, currencyConversionModel.Date);
             currencyConversionModel.AmountSecondCurrency = currencyConversionModel.AmountFirstCurrency * firstDesiredCurrency.Close / secondDesiredCurrency.Close;
+
             return currencyConversionModel;
-            
         }
 
         private async Task<CurrencyRecord> GetDesiredCurrency(string nameCurrency, DateTime date)
@@ -31,7 +31,9 @@ namespace WalutyBusinessLogic.Services
             Currency currency =  await _repository.GetCurrency(nameCurrency);
             List<CurrencyRecord> listOfRecords = currency.ListOfRecords;
             CurrencyRecord desiredRecord = listOfRecords.SingleOrDefault(record => record.Date == date);
+
             return desiredRecord;
         }
+
     }
 }

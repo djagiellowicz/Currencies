@@ -5,6 +5,6 @@ namespace WalutyBusinessLogic.Services
 {
     public interface ICurrencyConversionService
     {
-        Task<CurrencyConversionModel> CalculateAmountForCurrencyConversion(CurrencyConversionModel currencyConversionModel);
+        Task<CurrencyConversionModel> CalculateCurrencyConversionAmount(CurrencyConversionModel currencyConversionModel);
     }
 }

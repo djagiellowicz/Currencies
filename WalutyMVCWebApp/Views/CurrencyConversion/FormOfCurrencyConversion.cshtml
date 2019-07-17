@@ -13,9 +13,9 @@
                     <label>Date           </label>
                     <input type="date" asp-for="Date" name="Date" />
                     <span asp-validation-for="Date" class="text-danger"></span>
-                    @if (ViewBag.DateRangeForConversion != null)
+                    @if (ViewBag.CommonDateRangeInfo != null)
                     {
-                        <span class="text-danger">@ViewBag.DateRangeForConversion</span>
+                        <span class="text-danger">@ViewBag.CommonDateRangeInfo</span>
                     }
                 </div>
                 <div class="form-control">
@@ -23,9 +23,9 @@
                     <input type="text" asp-for="FirstCurrency" name="FirstCurrency" />
 
                     <span asp-validation-for="FirstCurrency" class="text-danger"></span>
-                    @if (ViewBag.ResultChekingCurrencyNameInConversion != null)
+                    @if (ViewBag.NameErrorInfo != null)
                     { 
-                        <span class="text-danger">@ViewBag.ResultChekingCurrencyNameInConversion</span>
+                        <span class="text-danger">@ViewBag.NameErrorInfo</span>
                     }
                 </div>
                 <div class="form-control">

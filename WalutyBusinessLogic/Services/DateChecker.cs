@@ -25,7 +25,7 @@ namespace WalutyBusinessLogic.Services
             {
                 return true;
             }
-            else return false;
+            return false;
         }
 
         public async Task<bool> CheckIfDateExistInRange(DateTime firstDate, DateTime secondDate, string currencyName)
@@ -36,7 +36,7 @@ namespace WalutyBusinessLogic.Services
             {
                 return true;
             }
-            else return false;
+            return false;
         }
 
         private async Task<List<CurrencyRecord>> GetRecordDateList(string nameCurrency)

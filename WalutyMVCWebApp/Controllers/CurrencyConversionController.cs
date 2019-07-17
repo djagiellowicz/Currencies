@@ -36,16 +36,16 @@ namespace WalutyMVCWebApp.Controllers
             }
             if (!_currencyNameChecker.AreDifferent(model.FirstCurrency, model.SecondCurrency))
             {
-                ViewBag.ResultChekingCurrencyNameInConversion = "Currencies name must different";
+                ViewBag.NameErrorInfo = "Currencies name must different";
                 return View("FormOfCurrencyConversion", model);
             }
             if (!(await _dateChecker.CheckIfDateExistsForTwoCurrencies(model.Date, model.FirstCurrency, model.SecondCurrency)))
             {
-                ViewBag.DateRangeForConversion = await _dateRange.GetCommonDateRangeForTwoCurrencies(model.FirstCurrency, model.SecondCurrency);
+                ViewBag.CommonDateRangeInfo = await _dateRange.GetCommonDateRangeForTwoCurrencies(model.FirstCurrency, model.SecondCurrency);
 
                 return View("FormOfCurrencyConversion", model);
             }
-            return View(await _currencyConversionService.CalculateAmountForCurrencyConversion(model));
+            return View(await _currencyConversionService.CalculateCurrencyConversionAmount(model));
         }
     }
 }

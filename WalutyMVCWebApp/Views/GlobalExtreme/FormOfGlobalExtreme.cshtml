@@ -1,18 +1,14 @@
 ﻿@model WalutyBusinessLogic.Models.GlobalExtremeValueModel
 
-<h3>Globa extreme</h3>
-<br/>
+<h1>Global extreme</h1>
+
 <div class="container">
     <form asp-controller="GlobalExtreme" asp-action="ShowGlobalExtreme" method="post">
-        <div class="form-group">
-            <div class="form-control">
-                <label>Currency</label>
-                <input type="text" asp-for="NameCurrency" name="NameCurrency">
+    <div class="form-group">
+                <label asp-for="NameCurrency">Currency</label>
+                <input type="text" asp-for="NameCurrency" name="NameCurrency" class="form-control">
                 <span asp-validation-for="NameCurrency" class="text-danger"></span>
             </div>
-        </div>
         <button type="submit" class="btn btn-success">Show</button>
     </form>
 </div>
-
-

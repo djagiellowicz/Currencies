@@ -8,29 +8,23 @@
 <div class="container">
     <form asp-controller="LocalExtreme" asp-action="ShowLocalExtreme" method="post">
         <div class="form-group">
-            <div class="form-control">
-                <label>Currency </label>
-                <input type="text" asp-for="NameCurrency" name="NameCurrency" />
+                <label asp-for="NameCurrency">Currency </label>
+                <input type="text" asp-for="NameCurrency" name="NameCurrency" class="form-control" />
                 <span asp-validation-for="NameCurrency" class="text-danger"></span>
                 @if (ViewBag.DateRangeForLocalExtreme != null)
                 {
                     <span class="text-danger">@ViewBag.DateRangeForLocalExtreme</span>
                 }
-            </div>
         </div>
         <div class="form-group">
-            <div class="form-control">
-                <label>Start date</label>
-                <input type="date" asp-for="StartDate" name="startDate" />
+                <label asp-for="StartDate">Start date</label>
+                <input type="date" asp-for="StartDate" name="startDate" class="form-control" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
         </div>
         <div class="form-group">
-            <div class="form-control">
-                <label>End date</label>
-                <input type="date" asp-for="EndDate" name="endDate" />
+                <label asp-for="EndDate">End date</label>
+                <input type="date" asp-for="EndDate" name="endDate" class="form-control" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
         </div>
         <button type="submit" class="btn btn-success">Show</button>
     </form>

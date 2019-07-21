@@ -1,40 +1,38 @@
 ﻿@model WalutyBusinessLogic.Models.CurrencyConversionModel
 
 <h1>Currency conversion</h1>
-<br/>
-<div class="container">
-        <form asp-controller="CurrencyConversion" asp-action="ShowResultCurrencyConversion" method="post">
-            <div class="form-group">
-                <div class="form-control">
-                    <label>Date           </label>
-                    <input type="date" asp-for="Date" name="Date" />
-                    <span asp-validation-for="Date" class="text-danger"></span>
-                    @if (ViewBag.CommonDateRangeInfo != null)
-                    {
-                        <span class="text-danger">@ViewBag.CommonDateRangeInfo</span>
-                    }
-                </div>
-                <div class="form-control">
-                    <label>First currency </label>
-                    <input type="text" asp-for="FirstCurrency" name="FirstCurrency" />
 
-                    <span asp-validation-for="FirstCurrency" class="text-danger"></span>
-                    @if (ViewBag.NameErrorInfo != null)
-                    { 
-                        <span class="text-danger">@ViewBag.NameErrorInfo</span>
-                    }
-                </div>
-                <div class="form-control">
-                    <label>Second currency</label>
-                    <input type="text" asp-for="SecondCurrency" name="SecondCurrency"/>
-                    <span asp-validation-for="SecondCurrency" class="text-danger"></span>
-                </div>
-                <div class="form-control">
-                    <label>Amount currency</label>
-                    <input type="number" asp-for="AmountFirstCurrency" name="AmountFirstCurrency"/>
-                    <span asp-validation-for="AmountFirstCurrency" class="text-danger"></span>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-success">Show</button>
-        </form>
+<div class="container">
+    <form asp-controller="CurrencyConversion" asp-action="ShowResultCurrencyConversion" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Date"></label>
+            <input type="date" asp-for="Date" class="form-control" />
+            <span asp-validation-for="Date" class="text-danger"></span>
+            @if (ViewBag.CommonDateRangeInfo != null)
+            {
+                <span class="text-danger">@ViewBag.CommonDateRangeInfo</span>
+            }
+        </div>
+        <div class="form-group">
+            <label asp-for="FirstCurrency">First currency</label>
+            <input type="text" asp-for="FirstCurrency" name="FirstCurrencyCode" class="form-control" />
+            <span asp-validation-for="FirstCurrency" class="text-danger"></span>
+            @if (ViewBag.NameErrorInfo != null)
+            {
+                <span class="text-danger">@ViewBag.NameErrorInfo</span>
+            }
+        </div>
+        <div class="form-group">
+            <label asp-for="SecondCurrency">Second currency</label>
+            <input type="text" asp-for="SecondCurrency" name="SecondCurrencyCode" class="form-control" />
+            <span asp-validation-for="SecondCurrency" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="AmountFirstCurrency">Amount currency</label>
+            <input type="number" asp-for="AmountFirstCurrency" name="AmountFirstCurrency" class="form-control">
+            <span asp-validation-for="AmountFirstCurrency" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-success">Show</button>
+    </form>
 </div>

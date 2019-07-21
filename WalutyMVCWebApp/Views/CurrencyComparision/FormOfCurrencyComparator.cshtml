@@ -4,33 +4,31 @@
 }
 
 <h1>Currencies Comparator</h1>
-<br />
 <div class="container">
     <form asp-controller="CurrencyComparision" asp-action="ShowResultCurrencyComparision" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="form-group">
-            <div class="form-control">
-                <label>Date          </label>
-                <input type="date" asp-for="Date" name="Date" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-                @if (ViewBag.CommonDateRangeInfo != null)
-                {
+            <label asp-for="Date"></label>
+            <input type="date" asp-for="Date" class="form-control" />
+            <span asp-validation-for="Date" class="text-danger"></span>
+            @if (ViewBag.CommonDateRangeInfo != null)
+            {
                 <span class="text-danger">@ViewBag.CommonDateRangeInfo</span>
-                }
-            </div>
-            <div class="form-control">
-                <label>First currency</label>
-                <input type="text" asp-for="FirstCurrencyCode" name="FirstCurrencyCode" />
-                <span asp-validation-for="FirstCurrencyCode" class="text-danger"></span>
-                @if (ViewBag.NameErrorInfo != null)
-                {
+            }
+        </div>
+        <div class="form-group">
+            <label asp-for="FirstCurrencyCode">First currency</label>
+            <input type="text" asp-for="FirstCurrencyCode" name="FirstCurrencyCode" class="form-control" />
+            <span asp-validation-for="FirstCurrencyCode" class="text-danger"></span>
+            @if (ViewBag.NameErrorInfo != null)
+            {
                 <span class="text-danger">@ViewBag.NameErrorInfo</span>
-                }
-            </div>
-            <div class="form-control">
-                <label>Second currency</label>
-                <input type="text" asp-for="SecondCurrencyCode" name="SecondCurrencyCode" />
-                <span asp-validation-for="SecondCurrencyCode" class="text-danger"></span>
-            </div>
+            }
+        </div>
+        <div class="form-group">
+            <label asp-for="SecondCurrencyCode">Second currency</label>
+            <input type="text" asp-for="SecondCurrencyCode" name="SecondCurrencyCode" class="form-control" />
+            <span asp-validation-for="SecondCurrencyCode" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-success">Show</button>
     </form>

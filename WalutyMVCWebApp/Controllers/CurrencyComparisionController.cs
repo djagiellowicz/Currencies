@@ -11,18 +11,21 @@ namespace WalutyMVCWebApp.Controllers
         private readonly IDateChecker _dateChecker;
         private readonly IDateRange _dateRange;
         private readonly ICurrencyNameChecker _currencyNameChecker;
+        private readonly ICurrenciesSelectList _currenciesSelectList;
 
         public CurrencyComparisionController(ICurrenciesComparator currenciesComparator, IDateRange dateRange, IDateChecker dateChecker
-                                            ,ICurrencyNameChecker currencyNameChecker)
+                                            ,ICurrencyNameChecker currencyNameChecker, ICurrenciesSelectList currenciesSelectList)
         {
             _currenciesComparator = currenciesComparator;
             _dateChecker = dateChecker;
             _dateRange = dateRange;
             _currencyNameChecker = currencyNameChecker;
+            _currenciesSelectList = currenciesSelectList;
         }
 
-        public IActionResult FormOfCurrencyComparator()
+        public async Task<IActionResult> FormOfCurrencyComparator()
         {
+            ViewData["currencyCodes"] = await _currenciesSelectList.GetCurrencyCodes(User.Identity.Name);
             return View();
         }
 
@@ -30,6 +33,8 @@ namespace WalutyMVCWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ShowResultCurrencyComparision(CurrenciesComparatorModel model)
         {
+            ViewData["currencyCodes"] = await _currenciesSelectList.GetCurrencyCodes(User.Identity.Name);
+
             if (!ModelState.IsValid)
             {
                 return View("FormOfCurrencyComparator", model);
@@ -45,6 +50,7 @@ namespace WalutyMVCWebApp.Controllers
                 
                 return View("FormOfCurrencyComparator", model);
             }
+
             return View(await _currenciesComparator.CompareCurrencies(model));
         }
     }

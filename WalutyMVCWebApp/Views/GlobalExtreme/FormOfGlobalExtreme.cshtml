@@ -1,14 +1,19 @@
 ﻿@model WalutyBusinessLogic.Models.GlobalExtremeValueModel
+@{
+    var items = ViewData["currencyCodes"];
+}
 
 <h1>Global extreme</h1>
 
 <div class="container">
     <form asp-controller="GlobalExtreme" asp-action="ShowGlobalExtreme" method="post">
-    <div class="form-group">
-                <label asp-for="NameCurrency">Currency</label>
-                <input type="text" asp-for="NameCurrency" name="NameCurrency" class="form-control">
-                <span asp-validation-for="NameCurrency" class="text-danger"></span>
-            </div>
+        <div class="form-group">
+            <label asp-for="NameCurrency">Currency</label>
+            <select asp-for="NameCurrency" asp-items="(IEnumerable<SelectListItem>)@items" class="form-control">
+                <option disabled="true" selected="true">Select Currency</option>
+            </select>
+            <span asp-validation-for="NameCurrency" class="text-danger"></span>
+        </div>
         <button type="submit" class="btn btn-success">Show</button>
     </form>
 </div>

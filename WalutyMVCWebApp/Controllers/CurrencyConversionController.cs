@@ -28,7 +28,7 @@ namespace WalutyMVCWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async  Task<IActionResult> ShowResultCurrencyConversion(CurrencyConversionModel model)
+        public async Task<IActionResult> ShowResultCurrencyConversion(CurrencyConversionModel model)
         {
             if (!ModelState.IsValid)
             {

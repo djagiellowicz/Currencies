@@ -1,6 +1,7 @@
 ﻿@model WalutyBusinessLogic.Models.CurrenciesComparatorModel;
 @{
     ViewData["Title"] = "CurrenciesComparator";
+    var items = ViewData["currencyCodes"];
 }
 
 <h1>Currencies Comparator</h1>
@@ -18,7 +19,9 @@
         </div>
         <div class="form-group">
             <label asp-for="FirstCurrencyCode">First currency</label>
-            <input type="text" asp-for="FirstCurrencyCode" name="FirstCurrencyCode" class="form-control" />
+            <select asp-for="FirstCurrencyCode" asp-items="(IEnumerable<SelectListItem>)@items" class="form-control">
+                <option disabled="true" selected="true">Select Currency</option>
+            </select>
             <span asp-validation-for="FirstCurrencyCode" class="text-danger"></span>
             @if (ViewBag.NameErrorInfo != null)
             {
@@ -27,7 +30,9 @@
         </div>
         <div class="form-group">
             <label asp-for="SecondCurrencyCode">Second currency</label>
-            <input type="text" asp-for="SecondCurrencyCode" name="SecondCurrencyCode" class="form-control" />
+            <select asp-for="SecondCurrencyCode" asp-items="(IEnumerable<SelectListItem>)@items" class="form-control">
+                <option disabled="true" selected="true">Select Currency</option>
+            </select>
             <span asp-validation-for="SecondCurrencyCode" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-success">Show</button>

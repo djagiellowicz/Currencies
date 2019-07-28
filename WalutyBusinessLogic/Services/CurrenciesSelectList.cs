@@ -2,37 +2,34 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.Models;
 
 namespace WalutyBusinessLogic.Services
 {
-    public interface ICurrenciesListService
-    {
-        Task<List<string>> GetCurrencyCodes();
-    }
 
-    public class CurrenciesListService : ICurrenciesListService
+    public class CurrenciesSelectList : ICurrenciesSelectList
     {
         private readonly UserManager<User> _userManager;
         private readonly ICurrencyRepository _repository;
         private readonly SignInManager<User> _signInManager;
 
-        public CurrenciesListService(UserManager<User> userManager, ICurrencyRepository repository, SignInManager<User> signInManager)
+        public CurrenciesSelectList(UserManager<User> userManager, ICurrencyRepository repository, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _repository = repository;
             _signInManager = signInManager;
         }
 
-        public async Task<List<string>> GetCurrencyCodes()
+        public async Task<IEnumerable<SelectListItem>> GetCurrencyCodes()
         {
-            List<string> CodesToReturn = (await _repository.GetAllCurrencyInfo())
-                .Select(x => x.Code)
-                .OrderBy(x => x)
+            var listItems = (await _repository.GetAllCurrencyInfo())
+                .OrderBy(x => x.Code)
+                .Select(x => new SelectListItem(x.Code, x.Code))
                 .ToList();
 
-            return CodesToReturn;
+            return listItems;
         }
     }
 }

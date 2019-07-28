@@ -25,7 +25,7 @@ namespace WalutyMVCWebApp.Controllers
 
         public async Task<IActionResult> FormOfCurrencyComparator()
         {
-            ViewData["currencyCodes"] = await _currenciesSelectList.GetCurrencyCodes();
+            ViewData["currencyCodes"] = await _currenciesSelectList.GetCurrencyCodes(User.Identity.Name);
             return View();
         }
 
@@ -33,7 +33,7 @@ namespace WalutyMVCWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ShowResultCurrencyComparision(CurrenciesComparatorModel model)
         {
-            ViewData["currencyCodes"] = await _currenciesSelectList.GetCurrencyCodes();
+            ViewData["currencyCodes"] = await _currenciesSelectList.GetCurrencyCodes(User.Identity.Name);
 
             if (!ModelState.IsValid)
             {

@@ -6,6 +6,6 @@ namespace WalutyBusinessLogic.Services
 {
     public interface ICurrenciesSelectList
     {
-        Task<IEnumerable<SelectListItem>> GetCurrencyCodes();
+        Task<IEnumerable<SelectListItem>> GetCurrencyCodes(string identityName);
     }
 }

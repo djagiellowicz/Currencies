@@ -12,17 +12,21 @@ namespace WalutyMVCWebApp.Controllers
         private readonly IDateChecker _dateChecker;
         private readonly IDateRange _dateRange;
         private readonly ICurrencyNameChecker _currencyNameChecker;
+        private readonly ICurrenciesSelectList _currenciesSelectList;
+
         public CurrencyConversionController(ILoader loader, IDateRange dateRange, IDateChecker dateChecker
-                                            ,ICurrencyConversionService currencyConversionService, ICurrencyNameChecker currencyNameChecker)
+                                            ,ICurrencyConversionService currencyConversionService, ICurrencyNameChecker currencyNameChecker, ICurrenciesSelectList currenciesSelectList)
         {
             _currencyConversionService = currencyConversionService;
             _dateChecker = dateChecker;
             _dateRange = dateRange;
             _currencyNameChecker = currencyNameChecker;
+            _currenciesSelectList = currenciesSelectList;
         }
 
-        public IActionResult FormOfCurrencyConversion()
+        public async Task<IActionResult> FormOfCurrencyConversion()
         {
+            ViewData["currencyCodes"] = await _currenciesSelectList.GetCurrencyCodes(User.Identity.Name);
             return View();
         }
 
@@ -30,6 +34,8 @@ namespace WalutyMVCWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ShowResultCurrencyConversion(CurrencyConversionModel model)
         {
+            ViewData["currencyCodes"] = await _currenciesSelectList.GetCurrencyCodes(User.Identity.Name);
+
             if (!ModelState.IsValid)
             {
                 return View("FormOfCurrencyConversion", model);

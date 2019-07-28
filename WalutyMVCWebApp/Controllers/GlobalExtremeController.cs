@@ -8,13 +8,17 @@ namespace WalutyMVCWebApp.Controllers
     public class GlobalExtremeController : Controller
     {
         private readonly IExtremesServices _extremeServices;
-        public GlobalExtremeController(IExtremesServices extremesServices)
+        private readonly ICurrenciesSelectList _currenciesSelectList;
+
+        public GlobalExtremeController(IExtremesServices extremesServices, ICurrenciesSelectList currenciesSelectList)
         {
             _extremeServices = extremesServices;
+            _currenciesSelectList = currenciesSelectList;
         }
 
-        public IActionResult FormOfGlobalExtreme()
+        public async Task<IActionResult> FormOfGlobalExtreme()
         {
+            ViewData["currencyCodes"] = await _currenciesSelectList.GetCurrencyCodes(User.Identity.Name);
             return View();
         }
 
@@ -22,6 +26,8 @@ namespace WalutyMVCWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ShowGlobalExtreme(GlobalExtremeValueModel model)
         {
+            ViewData["currencyCodes"] = await _currenciesSelectList.GetCurrencyCodes(User.Identity.Name);
+
             if (!ModelState.IsValid)
             {
                 return View("FormOfGlobalExtreme", model);

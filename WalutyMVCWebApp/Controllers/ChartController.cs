@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.Services;
 
 namespace WalutyMVCWebApp.Controllers
@@ -7,10 +9,12 @@ namespace WalutyMVCWebApp.Controllers
     public class ChartController : Controller
     {
         private readonly ICurrenciesSelectList _currenciesSelectList;
+        private readonly ICurrencyRepository _currencyRepository;
 
-        public ChartController(ICurrenciesSelectList currenciesSelectList)
+        public ChartController(ICurrenciesSelectList currenciesSelectList, ICurrencyRepository currencyRepository)
         {
             _currenciesSelectList = currenciesSelectList;
+            _currencyRepository = currencyRepository;
         }
         // GET: Chart
         public async Task<ActionResult> Index()
@@ -20,9 +24,12 @@ namespace WalutyMVCWebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(string currencyCode)
         {
-            return View();
+            var currency = await _currencyRepository.GetCurrency(currencyCode);
+            var currencyRecords = currency.ListOfRecords;
+
+            return View("Details", currencyRecords);
         }
 
     }

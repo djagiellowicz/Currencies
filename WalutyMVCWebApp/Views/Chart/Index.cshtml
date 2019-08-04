@@ -7,8 +7,8 @@
 <div class="container">
     <form asp-controller="Chart" asp-action="Details" method="post">
         <div class="form-group">
-            <label for="NameCurrency">Currency</label>
-            <select for="NameCurrency" asp-items="(IEnumerable<SelectListItem>)@items" class="form-control">
+            <label for="currencyCode">Currency</label>
+            <select  name="currencyCode" for="currencyCode" type="text" asp-items="(IEnumerable<SelectListItem>)@items" class="form-control">
                 <option disabled="true" selected="true">Select Currency</option>
             </select>
         </div>

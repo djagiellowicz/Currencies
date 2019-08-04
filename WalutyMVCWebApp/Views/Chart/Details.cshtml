@@ -1,6 +1,9 @@
-﻿
+﻿@model List<WalutyBusinessLogic.LoadingFromFile.CurrencyRecord>
 @{
     ViewData["Title"] = "Details";
 }
 
-
+@foreach (var variable in Model)
+{
+    <div>@variable.High</div>
+}

@@ -4,7 +4,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
 }
 
-<canvas id="myChart" width="400" height="400"></canvas>
+<div class="w-75 p-3 h-25 d-inline-block">
+    <canvas id="myChart" width="400" height="400"></canvas>
+</div>
+
+
 <script>
     var label = @Json.Serialize(Model.Select(x => x.Date));
     var data = @Json.Serialize(Model.Select(x => x.Close));
@@ -12,9 +16,9 @@
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: label
+            labels: label,
             datasets: [{
-                label: '# of Votes',
+                label: 'Close value',
                 data: data,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',

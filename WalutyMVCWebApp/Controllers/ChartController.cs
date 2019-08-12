@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WalutyBusinessLogic.DatabaseLoading;
+using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Services;
 
 namespace WalutyMVCWebApp.Controllers
@@ -28,8 +28,9 @@ namespace WalutyMVCWebApp.Controllers
         {
             var currency = await _currencyRepository.GetCurrency(currencyCode);
             var currencyRecords = currency.ListOfRecords;
+            var model = new ChartModel(currencyCode, currencyRecords);
 
-            return View("Details", currencyRecords);
+            return View("Details", model);
         }
 
     }

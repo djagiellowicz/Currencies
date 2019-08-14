@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    var items = ViewData["currencyCodes"];
+}
+
+<div class="container">
+    <form asp-controller="Chart" asp-action="Details" method="post">
+        <div class="form-group">
+            <label for="currencyCode">Currency</label>
+            <select  name="currencyCode" for="currencyCode" type="text" asp-items="(IEnumerable<SelectListItem>)@items" class="form-control">
+                <option disabled="true" selected="true">Select Currency</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Show</button>
+    </form>
+</div>
+

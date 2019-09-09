@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using System;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
-
+using WalutyBusinessLogic.Models;
 
 namespace WalutyMVCWebApp
 {
@@ -32,8 +33,12 @@ namespace WalutyMVCWebApp
 
                     var context = services.GetRequiredService<WalutyDBContext>();
                     var loader = services.GetRequiredService<ILoader>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
                     DBInitialization.InitialiseDB(context, loader);
+                    DefaultRolesInitializator.Init(roleManager);
+                    
+
                 }
                 catch (Exception)
                 {

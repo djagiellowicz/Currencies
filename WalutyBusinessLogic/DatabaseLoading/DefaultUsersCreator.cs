@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WalutyBusinessLogic.DatabaseLoading
 {
-    class DefaultUsersCreator
+    class DefaultUserCreator
     {
 
     }

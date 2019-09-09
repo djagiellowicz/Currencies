@@ -1,6 +1,6 @@
 ﻿namespace WalutyBusinessLogic.Models.Enums
 {
-    public enum Roles
+    public enum RolesEnum
     {
         Administrator,
         User

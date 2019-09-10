@@ -34,9 +34,11 @@ namespace WalutyMVCWebApp
                     var context = services.GetRequiredService<WalutyDBContext>();
                     var loader = services.GetRequiredService<ILoader>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    var userManager = services.GetRequiredService<UserManager<User>>();
 
-                    DBInitialization.InitialiseDB(context, loader);
-                    DefaultRolesInitializator.Init(roleManager);
+                    DBInitialisation.InitialiseDB(context, loader);
+                    DefaultRolesInitialisation.Init(roleManager);
+                    DefaultUserCreator.CreateUsers(userManager);
                     
 
                 }

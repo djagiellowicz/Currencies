@@ -4,7 +4,7 @@ using WalutyBusinessLogic.Models.Enums;
 
 namespace WalutyBusinessLogic.DatabaseLoading
 {
-    public static class DefaultRolesInitializator
+    public static class DefaultRolesInitialisation
     {
         public static async void Init(RoleManager<IdentityRole> roleManager)
         {

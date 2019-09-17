@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using WalutyBusinessLogic.Models;
+using WalutyBusinessLogic.Models.Enums;
 
 namespace WalutyMVCWebApp.Areas.Identity.Pages.Account
 {
@@ -68,9 +69,11 @@ namespace WalutyMVCWebApp.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.Email, Email = Input.Email, UserFavoriteCurrencies = new List<UserCurrency>()};
+                var user = new User { UserName = Input.Email, Email = Input.Email, SecurityStamp = Guid.NewGuid().ToString(), UserFavoriteCurrencies = new List<UserCurrency>()};
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
+                await _userManager.AddToRoleAsync(user, RolesEnum.User.ToString());
 
                 if (result.Succeeded)
                 {

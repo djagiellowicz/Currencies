@@ -3,7 +3,7 @@ using WalutyBusinessLogic.LoadingFromFile;
 
 namespace WalutyBusinessLogic.DatabaseLoading
 {
-    public static class DBInitialization
+    public static class DBInitialisation
     {
         public static void InitialiseDB(WalutyDBContext context, ILoader loader)
         {

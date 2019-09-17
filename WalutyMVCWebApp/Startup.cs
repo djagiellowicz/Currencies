@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.LoadingFromFile.DatabaseLoading;
+using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Services;
 
 namespace WalutyMVCWebApp
@@ -41,9 +42,12 @@ namespace WalutyMVCWebApp
             services.AddTransient<ICurrenciesComparator, CurrenciesComparator>();
             services.AddTransient<ICurrenciesSelectList, CurrenciesSelectList>();
             services.AddTransient<IChartService, ChartService>();
-            services.AddDbContext<WalutyDBContext>(opt =>
+
+            services.AddDbContextPool<WalutyDBContext>(opt =>
                 opt.UseInMemoryDatabase("Development"));
+
             //services.AddDbContext<WalutyDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Connection")));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -64,6 +68,8 @@ namespace WalutyMVCWebApp
             app.UseCookiePolicy();
             app.ApplicationServices.GetService<ILoader>().Init();
             app.UseAuthentication();
+            
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

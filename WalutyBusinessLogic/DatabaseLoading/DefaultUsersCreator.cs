@@ -7,12 +7,12 @@ using WalutyBusinessLogic.Models.Enums;
 
 namespace WalutyBusinessLogic.DatabaseLoading
 {
-    public static class DefaultUserCreator
+    public static class DefaultAdminCreator
     {
         private static readonly string defaultAdminName = "administrator@adm.com";
         private static readonly string defaultAdminPassword = "!1234Qwertyuiop";
 
-        public async static void CreateUsers(UserManager<User> userManager)
+        public async static void CreateAdmin(UserManager<User> userManager)
         {
             if (await userManager.FindByNameAsync(defaultAdminName) == null)
             {

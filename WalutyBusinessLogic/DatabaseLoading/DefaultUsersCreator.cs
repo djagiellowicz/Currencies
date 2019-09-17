@@ -18,12 +18,13 @@ namespace WalutyBusinessLogic.DatabaseLoading
             {
                 var user = new User { UserName = defaultAdminName, Email = defaultAdminName, SecurityStamp = Guid.NewGuid().ToString(), UserFavoriteCurrencies = new List<UserCurrency>() };
 
-                var result = await userManager.CreateAsync(user, defaultAdminPassword);
-
-                await userManager.AddToRoleAsync(user, RolesEnum.Administrator.ToString());
+                var result = await userManager.CreateAsync(user, defaultAdminPassword);           
 
                 if (result.Succeeded)
                 {
+                    await userManager.AddToRoleAsync(user, RolesEnum.Administrator.ToString());
+                    await userManager.AddToRoleAsync(user, RolesEnum.User.ToString());
+
                     Log.Logger.Information($"User {defaultAdminName} has been created.");
                 }
             }

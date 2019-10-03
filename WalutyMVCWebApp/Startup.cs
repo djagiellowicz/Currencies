@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.LoadingFromFile.DatabaseLoading;
-using WalutyBusinessLogic.Models;
+using WalutyBusinessLogic.AutoMapper.Profiles;
 using WalutyBusinessLogic.Services;
 
 namespace WalutyMVCWebApp
@@ -31,6 +32,8 @@ namespace WalutyMVCWebApp
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            services.AddAutoMapper(typeof(UserProfileMap));
 
             services.AddSingleton<ILoader, Loader>();
             services.AddTransient<ICurrencyRepository, CurrencyRepository>();

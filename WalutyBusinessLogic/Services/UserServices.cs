@@ -12,7 +12,7 @@ using X.PagedList;
 
 namespace WalutyBusinessLogic.Services
 {
-    class UserServices
+    public class UserServices : IUserServices
     {
         private readonly UserManager<User> _userManager;
         private readonly WalutyDBContext _dbContext;
@@ -30,7 +30,7 @@ namespace WalutyBusinessLogic.Services
             var listOfUsers = await _dbContext.Users
                 .Select(x => _mapper.Map<User, UserDTO>(x))
                 .ToPagedListAsync(pageNumber, pageSize);
-            
+
             return listOfUsers;
         }
 

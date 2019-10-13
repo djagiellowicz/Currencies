@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using WalutyBusinessLogic.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using WalutyBusinessLogic.Models.Enums;
 using WalutyBusinessLogic.Services;
 using WalutyMVCWebApp.AuthorizeAttributes;
@@ -17,9 +16,9 @@ namespace WalutyMVCWebApp.Controllers
             _userServices = userServices;
         }
 
-        public IActionResult Index()
-        {
-            return View();
+        public async Task<IActionResult> Index()
+        {    
+            return View(await _userServices.GetUsersPage(1, 3));
         }
     }
 }

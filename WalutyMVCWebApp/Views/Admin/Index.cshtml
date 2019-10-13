@@ -1,7 +1,15 @@
-﻿
+﻿@using WalutyBusinessLogic.Models.DTO
+@using X.PagedList
+@model IPagedList<UserDTO>
+
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
 
+@foreach (var user in Model)
+{
+    <br /> @user.Email @user.Roles 
+    <br />
+}

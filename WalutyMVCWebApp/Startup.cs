@@ -44,6 +44,7 @@ namespace WalutyMVCWebApp
             services.AddTransient<ICurrencyNameChecker, CurrencyNameChecker>();
             services.AddTransient<ICurrenciesComparator, CurrenciesComparator>();
             services.AddTransient<ICurrenciesSelectList, CurrenciesSelectList>();
+            services.AddTransient<IUserServices, UserServices>();
             services.AddTransient<IChartService, ChartService>();
 
             services.AddDbContextPool<WalutyDBContext>(opt =>

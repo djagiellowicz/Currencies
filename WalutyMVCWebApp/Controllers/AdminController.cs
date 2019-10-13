@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Models.Enums;
+using WalutyBusinessLogic.Services;
 using WalutyMVCWebApp.AuthorizeAttributes;
 
 namespace WalutyMVCWebApp.Controllers
@@ -9,13 +10,11 @@ namespace WalutyMVCWebApp.Controllers
     [AuthorizeEnumRoles(RolesEnum.Administrator)]
     public class AdminController : Controller
     {
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserServices _userServices;
 
-        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
+        public AdminController(IUserServices userServices)
         {
-            _roleManager = roleManager;
-            _userManager = userManager;
+            _userServices = userServices;
         }
 
         public IActionResult Index()

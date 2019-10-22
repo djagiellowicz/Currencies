@@ -6,10 +6,21 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-@foreach (var user in Model)
-{
-    <br /> @user.Email @user.Roles 
-    <br />
-}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Roles</th>
+        </tr>
+        <tr></tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@user.Roles</td>
+            </tr>
+        }
+    </tbody>
+</table>

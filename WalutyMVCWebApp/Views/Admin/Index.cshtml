@@ -19,7 +19,10 @@
         {
             <tr>
                 <td>@user.Email</td>
-                <td>@user.Roles</td>
+                @foreach (var role in user.Roles)
+                {
+                    <td>@role</td>
+                }
             </tr>
         }
     </tbody>

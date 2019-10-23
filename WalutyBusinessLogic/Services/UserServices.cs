@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WalutyBusinessLogic.DatabaseLoading;
@@ -24,11 +25,19 @@ namespace WalutyBusinessLogic.Services
 
         public async Task<IPagedList<UserDTO>> GetUsersPage(int pageNumber, int pageSize)
         {
-            var listOfUsers = await _dbContext.Users
-                .Select(x => _mapper.Map<User, UserDTO>(x))
-                .ToPagedListAsync(pageNumber, pageSize);
+            // Not the best / optimal solution, better look for different way, but for now it's sufficient
 
-            return listOfUsers;
+            var users =  _userManager.Users;
+            IList<UserDTO> listOfUsers = new List<UserDTO>();
+
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+
+                listOfUsers.Add(new UserDTO { Email = user.Email, Roles = roles });
+            }
+
+            return await listOfUsers.ToPagedListAsync(pageNumber, pageSize);
         }
 
     }

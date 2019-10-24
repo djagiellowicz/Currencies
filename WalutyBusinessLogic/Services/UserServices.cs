@@ -25,19 +25,19 @@ namespace WalutyBusinessLogic.Services
 
         public async Task<IPagedList<UserDTO>> GetUsersPage(int pageNumber, int pageSize)
         {
-            // Not the best / optimal solution, better look for different way, but for now it's sufficient
+            IPagedList<User> usersPage =  _userManager.Users.ToPagedList(pageNumber, pageSize);
+            IList<UserDTO> userDTOs = new List<UserDTO>();
 
-            var users =  _userManager.Users;
-            IList<UserDTO> listOfUsers = new List<UserDTO>();
-
-            foreach (var user in users)
+            foreach (var user in usersPage)
             {
                 var roles = await _userManager.GetRolesAsync(user);
 
-                listOfUsers.Add(new UserDTO { Email = user.Email, Roles = roles });
+                userDTOs.Add(new UserDTO { Email = user.Email, Roles = roles });
             }
 
-            return await listOfUsers.ToPagedListAsync(pageNumber, pageSize);
+            IPagedList<UserDTO> pageToReturn = new PagedList<UserDTO>(userDTOs, pageNumber, pageSize);
+
+            return pageToReturn;
         }
 
     }

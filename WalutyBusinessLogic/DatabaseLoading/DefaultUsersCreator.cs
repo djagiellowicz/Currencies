@@ -9,7 +9,11 @@ namespace WalutyBusinessLogic.DatabaseLoading
 {
     public class DefaultUsersCreator
     {
-        private static readonly string[] defaultUserNames = new string[] { "kamr@example.com", "zers@example.com", "kali@example.com", "dromero@example.com", "karo@example.com", "zajnb@example.com" };
+        private static readonly string[] defaultUserNames = new string[] { "kamr@example.com"
+            , "zers@example.com", "kali@example.com"
+            , "dromero@example.com", "karo@example.com"
+            , "zajnb@example.com", "frank@example.com"
+            , "stephen@example.com", "harry@example.com"};
         private static readonly string defaultUserPassword = "!1234Qwertyuiop";
 
         public async static void CreateUsers(UserManager<User> userManager)

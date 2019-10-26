@@ -1,5 +1,7 @@
 ﻿@using WalutyBusinessLogic.Models.DTO
-@using X.PagedList
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Mvc.Common
 @model IPagedList<UserDTO>
 
 @{
@@ -27,3 +29,13 @@
         }
     </tbody>
 </table>
+
+@Html.PagedListPager((IPagedList) Model,
+    page => Url.Action("Index", new { pageNumber = page, pageSize = 5 }),
+    new PagedListRenderOptions
+    {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" },
+        MaximumPageNumbersToDisplay = 5,
+        EllipsesFormat = ""
+    })

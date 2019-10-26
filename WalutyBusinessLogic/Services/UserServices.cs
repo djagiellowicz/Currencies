@@ -26,6 +26,7 @@ namespace WalutyBusinessLogic.Services
         public async Task<IPagedList<UserDTO>> GetUsersPage(int pageNumber, int pageSize)
         {
             IPagedList<User> usersPage =  _userManager.Users.ToPagedList(pageNumber, pageSize);
+            int totalNumberOfUsers = _userManager.Users.Count();
             IList<UserDTO> userDTOs = new List<UserDTO>();
 
             foreach (var user in usersPage)
@@ -35,10 +36,9 @@ namespace WalutyBusinessLogic.Services
                 userDTOs.Add(new UserDTO { Email = user.Email, Roles = roles });
             }
 
-            IPagedList<UserDTO> pageToReturn = new PagedList<UserDTO>(userDTOs, pageNumber, pageSize);
+            var usersDTOPagedList = new StaticPagedList<UserDTO>(userDTOs, pageNumber, pageSize, totalNumberOfUsers);
 
-            return pageToReturn;
+            return usersDTOPagedList;
         }
-
     }
 }

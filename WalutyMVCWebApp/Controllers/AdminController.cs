@@ -16,9 +16,12 @@ namespace WalutyMVCWebApp.Controllers
             _userServices = userServices;
         }
 
-        public async Task<IActionResult> Index()
-        {    
-            return View(await _userServices.GetUsersPage(1, 3));
+        public async Task<IActionResult> Index(int? pageNumber, int? pageSize)
+        {
+            pageNumber = pageNumber ?? 1;
+            pageSize = pageSize ?? 5;
+
+            return View(await _userServices.GetUsersPage((int) pageNumber, (int) pageSize));
         }
     }
 }

@@ -33,7 +33,7 @@ namespace WalutyBusinessLogic.Services
             {
                 var roles = await _userManager.GetRolesAsync(user);
 
-                userDTOs.Add(new UserDTO { Email = user.Email, Roles = roles });
+                userDTOs.Add(new UserDTO { Email = user.Email, Roles = roles, Id = user.Id });
             }
 
             var usersDTOPagedList = new StaticPagedList<UserDTO>(userDTOs, pageNumber, pageSize, totalNumberOfUsers);

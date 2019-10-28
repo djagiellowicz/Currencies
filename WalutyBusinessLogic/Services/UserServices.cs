@@ -57,5 +57,12 @@ namespace WalutyBusinessLogic.Services
             }
             return false;
         }
+
+        public async Task<User> GetUser(string id)
+        {
+            User user = await _userManager.FindByIdAsync(id);
+
+            return user;
+        }
     }
 }

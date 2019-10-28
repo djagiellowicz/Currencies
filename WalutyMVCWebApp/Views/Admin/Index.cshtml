@@ -8,6 +8,20 @@
     ViewData["Title"] = "Index";
 }
 
+<!-- Maybe partial view? -->
+
+@if (ViewData["IsRemoved"] != null)
+{
+    if((bool) ViewData["IsRemoved"] == true)
+    {
+    <h2>Succesfully deleted</h2>
+    }
+    else
+    {
+    <h2>Failed to delete</h2>
+    }
+}
+
 <table class="table">
     <thead>
         <tr>

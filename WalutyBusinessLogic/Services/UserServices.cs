@@ -41,7 +41,7 @@ namespace WalutyBusinessLogic.Services
             return usersDTOPagedList;
         }
 
-        public async Task<bool> RemoveUser(string id)
+        public async Task<bool> Delete(string id)
         {
             User user = await _userManager.FindByIdAsync(id);
 

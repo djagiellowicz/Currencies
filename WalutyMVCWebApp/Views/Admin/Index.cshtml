@@ -36,11 +36,20 @@
         <tr>
             <td>@user.Id</td>
             <td>@user.Email</td>
-            @foreach (var role in user.Roles)
-            {
-                <td>@role</td>
-            }
-        </tr>
+            <td>
+                @foreach (var role in user.Roles)
+                {
+                    @role
+                    @:&nbsp;
+                }
+
+            </td>
+            <td> 
+                 <form method="post" asp-controller="Admin" asp-action="Delete" asp-route-Id="@user.Id">
+                    <input class="btn btn-danger" type="submit" value="Delete user" />
+                 </form>
+            </td>
+</tr>
         }
     </tbody>
 </table>

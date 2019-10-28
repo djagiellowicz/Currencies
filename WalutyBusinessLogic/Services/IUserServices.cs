@@ -7,6 +7,6 @@ namespace WalutyBusinessLogic.Services
     public interface IUserServices
     {
         Task<IPagedList<UserDTO>> GetUsersPage(int pageNumber, int pageSize);
-        Task<bool> RemoveUser(string id);
+        Task<bool> Delete(string id);
     }
 }

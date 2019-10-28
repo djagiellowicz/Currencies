@@ -24,11 +24,11 @@ namespace WalutyMVCWebApp.Controllers
             return View(await _userServices.GetUsersPage((int) pageNumber, (int) pageSize));
         }
 
-        public async Task<IActionResult> RemoveUser(string id)
+        public async Task<IActionResult> Delete(string id)
         {
             // Add sending pageNumber and pageSize to RemoveUser when rediricting to Index.
 
-            bool result = await _userServices.RemoveUser(id);
+            bool result = await _userServices.Delete(id);
             ViewData["IsRemoved"] = result;
 
             return View("Index", await _userServices.GetUsersPage(1,5));

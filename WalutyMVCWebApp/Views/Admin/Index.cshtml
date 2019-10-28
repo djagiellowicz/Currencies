@@ -19,13 +19,14 @@
     <tbody>
         @foreach (var user in Model)
         {
-            <tr>
-                <td>@user.Email</td>
-                @foreach (var role in user.Roles)
-                {
-                    <td>@role</td>
-                }
-            </tr>
+        <tr>
+            <td>@user.Id</td>
+            <td>@user.Email</td>
+            @foreach (var role in user.Roles)
+            {
+                <td>@role</td>
+            }
+        </tr>
         }
     </tbody>
 </table>

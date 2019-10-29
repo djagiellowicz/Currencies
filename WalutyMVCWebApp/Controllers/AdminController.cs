@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Models.Enums;
 using WalutyBusinessLogic.Services;
 using WalutyMVCWebApp.AuthorizeAttributes;
@@ -32,6 +33,14 @@ namespace WalutyMVCWebApp.Controllers
             ViewData["IsRemoved"] = result;
 
             return View("Index", await _userServices.GetUsersPage(1,5));
+        }
+
+        public async Task<IActionResult> Update(UserPasswordModel userPasswordModel)
+        {
+            var result = await _userServices.Update(userPasswordModel);
+            ViewData["IsUpdated"] = result;
+
+            return View("Index");
         }
     }
 }

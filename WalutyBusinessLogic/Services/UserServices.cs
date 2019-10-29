@@ -58,13 +58,28 @@ namespace WalutyBusinessLogic.Services
             return false;
         }
 
-        public async Task<DetailedUserDTO> GetUser(string id)
+        public async Task<bool> Update(UserPasswordModel userPasswordModel)
         {
-            // Has to be completed
+            User user;
+            IdentityResult result = new IdentityResult();
 
-            User user = await _userManager.FindByIdAsync(id);
+            if (userPasswordModel.Password == userPasswordModel.ConfirmPassword)
+            {
+               user = await _userManager.FindByIdAsync(userPasswordModel.UserId);
 
-            return new DetailedUserDTO();
+                if (user != null)
+                {
+                    user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userPasswordModel.Password);
+                    result = await _userManager.UpdateAsync(user);
+                }
+
+                if (result.Succeeded)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
     }
 }

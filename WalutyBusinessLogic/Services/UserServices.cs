@@ -81,5 +81,13 @@ namespace WalutyBusinessLogic.Services
             }
             return false;
         }
+
+        public async Task<UserDTO> GetUser(string id)
+        {
+           User user = await _userManager.FindByIdAsync(id);
+           UserDTO UserDTO = _mapper.Map<User, UserDTO>(user);
+
+           return UserDTO;
+        }
     }
 }

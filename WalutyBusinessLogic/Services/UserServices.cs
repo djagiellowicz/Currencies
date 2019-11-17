@@ -65,7 +65,7 @@ namespace WalutyBusinessLogic.Services
 
             if (userPasswordModel.Password == userPasswordModel.ConfirmPassword)
             {
-               user = await _userManager.FindByIdAsync(userPasswordModel.UserId);
+               user = await _userManager.FindByIdAsync(userPasswordModel.Id);
 
                 if (user != null)
                 {

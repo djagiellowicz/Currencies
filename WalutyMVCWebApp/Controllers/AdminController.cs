@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Models.DTO;
@@ -12,10 +13,12 @@ namespace WalutyMVCWebApp.Controllers
     public class AdminController : Controller
     {
         private readonly IUserServices _userServices;
+        private readonly IMapper _mapper;
 
-        public AdminController(IUserServices userServices)
+        public AdminController(IUserServices userServices, IMapper mapper)
         {
             _userServices = userServices;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index(int? pageNumber, int? pageSize)
@@ -41,8 +44,9 @@ namespace WalutyMVCWebApp.Controllers
         public async Task<IActionResult> Update(string id)
         {
             UserDTO userDTO = await _userServices.GetUser(id);
+            UserPasswordModel userPasswordModel = _mapper.Map<UserDTO, UserPasswordModel>(userDTO);
             
-            return View(userDTO);
+            return View(userPasswordModel);
         }
 
         [HttpPost]

@@ -58,7 +58,9 @@ namespace WalutyMVCWebApp.Controllers
             var result = await _userServices.Update(userPasswordModel);
             ViewData["IsUpdated"] = result;
 
-            return View("Index");
+            // Should redirect to list of users.
+
+            return RedirectToAction("Index");
         }
     }
 }

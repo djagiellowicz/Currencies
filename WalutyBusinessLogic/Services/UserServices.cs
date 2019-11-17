@@ -69,6 +69,8 @@ namespace WalutyBusinessLogic.Services
 
                 if (user != null)
                 {
+                    // IPasswordValidator should be added here - otherwise when admin is changing password it skips policy
+
                     user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userPasswordModel.Password);
                     result = await _userManager.UpdateAsync(user);
                 }

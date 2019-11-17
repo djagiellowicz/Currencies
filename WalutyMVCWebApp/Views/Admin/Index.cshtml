@@ -44,12 +44,17 @@
                 }
 
             </td>
-            <td> 
-                 <form method="post" asp-controller="Admin" asp-action="Delete" asp-route-Id="@user.Id">
-                    <input class="btn btn-danger" type="submit" value="Delete user" />
-                 </form>
+            <td>
+                <form method="get" asp-controller="Admin" asp-action="Update" asp-route-Id="@user.Id">
+                    <input class="btn btn-danger" type="submit" value="Change Password" />
+                </form>
             </td>
-</tr>
+            <td>
+                <form method="post" asp-controller="Admin" asp-action="Delete" asp-route-Id="@user.Id">
+                    <input class="btn btn-danger" type="submit" value="Delete user" />
+                </form>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

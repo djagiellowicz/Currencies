@@ -71,7 +71,6 @@ namespace WalutyBusinessLogic.Services
 
                 if (user != null)
                 {
-                    // IPasswordValidator should be added here - otherwise when admin is changing password it skips policy
                     result = await _passwordValidator.ValidateAsync(_userManager, user, userPasswordModel.Password);
 
                     if (result.Succeeded)

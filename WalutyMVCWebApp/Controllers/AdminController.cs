@@ -55,12 +55,11 @@ namespace WalutyMVCWebApp.Controllers
             // Can be changed from bool to IdentityResult
             // Add sending pageNumber and pageSize to RemoveUser when rediricting to Index.
 
-            var result = await _userServices.Update(userPasswordModel);
-            ViewData["IsUpdated"] = result;
+            var isUpdated = await _userServices.Update(userPasswordModel);
 
-            // Should redirect to list of users.
+            ViewData["IsUpdated"] = isUpdated;
 
-            return RedirectToAction("Index");
+            return View("Index", await _userServices.GetUsersPage(1, 5));
         }
     }
 }

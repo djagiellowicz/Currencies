@@ -12,13 +12,27 @@
 
 @if (ViewData["IsRemoved"] != null)
 {
-    if((bool) ViewData["IsRemoved"] == true)
+    if ((bool)ViewData["IsRemoved"] == true)
     {
-    <h2>Succesfully deleted</h2>
+        <h2>Succesfully deleted</h2>
     }
     else
     {
-    <h2>Failed to delete</h2>
+        <h2>Failed to delete</h2>
+    }
+}
+
+<!-- Partial view or make another returnable class with message and Models.DTO (generic?)-->
+
+@if (ViewData["IsUpdated"] != null)
+{
+    if ((bool)ViewData["IsUpdated"] == true)
+    {
+        <h2>Succesfully changed password</h2>
+    }
+    else
+    {
+        <h2>Failed to change password</h2>
     }
 }
 
@@ -33,33 +47,33 @@
     <tbody>
         @foreach (var user in Model)
         {
-        <tr>
-            <td>@user.Id</td>
-            <td>@user.Email</td>
-            <td>
-                @foreach (var role in user.Roles)
-                {
-                    @role
-                    @:&nbsp;
-                }
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Email</td>
+                <td>
+                    @foreach (var role in user.Roles)
+                    {
+                        @role
+                        @:&nbsp;
+                    }
 
-            </td>
-            <td>
-                <form method="get" asp-controller="Admin" asp-action="Update" asp-route-Id="@user.Id">
-                    <input class="btn btn-danger" type="submit" value="Change Password" />
-                </form>
-            </td>
-            <td>
-                <form method="post" asp-controller="Admin" asp-action="Delete" asp-route-Id="@user.Id">
-                    <input class="btn btn-danger" type="submit" value="Delete user" />
-                </form>
-            </td>
-        </tr>
+                </td>
+                <td>
+                    <form method="get" asp-controller="Admin" asp-action="Update" asp-route-Id="@user.Id">
+                        <input class="btn btn-danger" type="submit" value="Change Password" />
+                    </form>
+                </td>
+                <td>
+                    <form method="post" asp-controller="Admin" asp-action="Delete" asp-route-Id="@user.Id">
+                        <input class="btn btn-danger" type="submit" value="Delete user" />
+                    </form>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
 
-@Html.PagedListPager((IPagedList) Model,
+@Html.PagedListPager((IPagedList)Model,
     page => Url.Action("Index", new { pageNumber = page, pageSize = 5 }),
     new PagedListRenderOptions
     {

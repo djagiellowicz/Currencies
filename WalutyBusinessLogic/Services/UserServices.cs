@@ -76,9 +76,12 @@ namespace WalutyBusinessLogic.Services
                     if (result.Succeeded)
                     {
                         user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userPasswordModel.Password);
-                        await _userManager.UpdateAsync(user);
+                        result = await _userManager.UpdateAsync(user);
 
-                        return true;
+                        if (result.Succeeded)
+                        {
+                            return true;
+                        }       
                     }
                 }
             }

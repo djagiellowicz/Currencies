@@ -15,12 +15,14 @@ namespace WalutyBusinessLogic.Services
         private readonly UserManager<User> _userManager;
         private readonly WalutyDBContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IPasswordValidator<User> _passwordValidator;
 
-        public UserServices(UserManager<User> userManager, WalutyDBContext walutyDBContext, IMapper mapper)
+        public UserServices(UserManager<User> userManager, WalutyDBContext walutyDBContext, IMapper mapper, IPasswordValidator<User> passwordValidator)
         {
             _userManager = userManager;
             _dbContext = walutyDBContext;
             _mapper = mapper;
+            _passwordValidator = passwordValidator;
         }
 
         public async Task<IPagedList<UserDTO>> GetUsersPage(int pageNumber, int pageSize)
@@ -61,7 +63,7 @@ namespace WalutyBusinessLogic.Services
         public async Task<bool> Update(UserPasswordModel userPasswordModel)
         {
             User user;
-            IdentityResult result = new IdentityResult();
+            IdentityResult result;
 
             if (userPasswordModel.Password == userPasswordModel.ConfirmPassword)
             {
@@ -70,16 +72,16 @@ namespace WalutyBusinessLogic.Services
                 if (user != null)
                 {
                     // IPasswordValidator should be added here - otherwise when admin is changing password it skips policy
+                    result = await _passwordValidator.ValidateAsync(_userManager, user, userPasswordModel.Password);
 
-                    user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userPasswordModel.Password);
-                    result = await _userManager.UpdateAsync(user);
-                }
+                    if (result.Succeeded)
+                    {
+                        user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userPasswordModel.Password);
+                        await _userManager.UpdateAsync(user);
 
-                if (result.Succeeded)
-                {
-                    return true;
+                        return true;
+                    }
                 }
-                return false;
             }
             return false;
         }

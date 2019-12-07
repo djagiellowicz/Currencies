@@ -1,4 +1,5 @@
 ﻿@using WalutyBusinessLogic.Models.DTO
+@using Microsoft.AspNetCore.Identity;
 @model UserModel
 
 @{
@@ -24,5 +25,19 @@
         <input type="password" asp-for="ConfirmPassword" class="form-control" />
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        <label asp-for="ConfirmPassword"></label>
+        <input type="password" asp-for="ConfirmPassword" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Roles"></label>
+        @foreach (var availableRole in (IList<IdentityRole>)ViewData["AllRoles"])
+        {
+            @availableRole <input type="checkbox" name="NewRoles" value="@availableRole.Name"
+                                  checked="@Model.Roles.Contains(availableRole.Name))">
+        }
+    </div>
+    
     <button type="submit" class="btn btn-success">Change</button>
 </form>

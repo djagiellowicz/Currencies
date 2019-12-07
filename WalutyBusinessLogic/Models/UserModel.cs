@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace WalutyBusinessLogic.Models
@@ -18,6 +19,9 @@ namespace WalutyBusinessLogic.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public IList<string> Roles { get; set; }
+        public IList<string> NewRoles { get; set; }
 
     }
 }

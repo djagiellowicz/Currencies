@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Models.DTO;
@@ -14,11 +16,13 @@ namespace WalutyMVCWebApp.Controllers
     {
         private readonly IUserServices _userServices;
         private readonly IMapper _mapper;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AdminController(IUserServices userServices, IMapper mapper)
+        public AdminController(IUserServices userServices, IMapper mapper, RoleManager<IdentityRole> roleManager)
         {
             _userServices = userServices;
             _mapper = mapper;
+            _roleManager = roleManager;
         }
 
         public async Task<IActionResult> Index(int? pageNumber, int? pageSize)
@@ -44,18 +48,20 @@ namespace WalutyMVCWebApp.Controllers
         public async Task<IActionResult> Update(string id)
         {
             UserDTO userDTO = await _userServices.GetUser(id);
-            UserModel userPasswordModel = _mapper.Map<UserDTO, UserModel>(userDTO);
-            
-            return View(userPasswordModel);
+            UserModel userModel = _mapper.Map<UserDTO, UserModel>(userDTO);
+
+            ViewData["AllRoles"] = _roleManager.Roles.Select(x => x).ToList();
+
+            return View(userModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(UserModel userPasswordModel)
+        public async Task<IActionResult> Update(UserModel userModel)
         {
             // Can be changed from bool to IdentityResult
             // Add sending pageNumber and pageSize to RemoveUser when rediricting to Index.
 
-            var isUpdated = await _userServices.Update(userPasswordModel);
+            var isUpdated = await _userServices.Update(userModel);
 
             ViewData["IsUpdated"] = isUpdated;
 

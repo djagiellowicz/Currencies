@@ -24,6 +24,15 @@ namespace WalutyBusinessLogic.Services
             _mapper = mapper;
             _passwordValidator = passwordValidator;
         }
+        public async Task<UserDTO> GetUser(string id)
+        {
+            User user = await _userManager.FindByIdAsync(id);
+            UserDTO userDTO = _mapper.Map<User, UserDTO>(user);
+
+            userDTO.Roles = await _userManager.GetRolesAsync(user);
+
+            return userDTO;
+        }
 
         public async Task<IPagedList<UserDTO>> GetUsersPage(int pageNumber, int pageSize)
         {
@@ -86,14 +95,6 @@ namespace WalutyBusinessLogic.Services
                 }
             }
             return false;
-        }
-
-        public async Task<UserDTO> GetUser(string id)
-        {
-           User user = await _userManager.FindByIdAsync(id);
-           UserDTO UserDTO = _mapper.Map<User, UserDTO>(user);
-
-           return UserDTO;
         }
     }
 }

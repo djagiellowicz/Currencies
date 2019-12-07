@@ -35,7 +35,7 @@
         @foreach (var availableRole in (IList<IdentityRole>)ViewData["AllRoles"])
         {
             @availableRole <input type="checkbox" name="NewRoles" value="@availableRole.Name"
-                                  checked="@Model.Roles.Contains(availableRole.Name))">
+                                  checked="@Model.Roles.Contains(availableRole.Name)">
         }
     </div>
 

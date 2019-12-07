@@ -16,14 +16,17 @@ namespace WalutyBusinessLogic.Services
         private readonly WalutyDBContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IPasswordValidator<User> _passwordValidator;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserServices(UserManager<User> userManager, WalutyDBContext walutyDBContext, IMapper mapper, IPasswordValidator<User> passwordValidator)
+
+        public UserServices(UserManager<User> userManager, WalutyDBContext walutyDBContext, IMapper mapper, IPasswordValidator<User> passwordValidator, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _dbContext = walutyDBContext;
             _mapper = mapper;
             _passwordValidator = passwordValidator;
-        }
+            _roleManager = roleManager;
+    }
         public async Task<UserDTO> GetUser(string id)
         {
             User user = await _userManager.FindByIdAsync(id);
@@ -69,30 +72,52 @@ namespace WalutyBusinessLogic.Services
             return false;
         }
 
-        public async Task<bool> Update(UserModel userPasswordModel)
+        public async Task<bool> Update(UserModel model)
         {
             User user;
             IdentityResult result;
+            List<IdentityRole> allRoles = _roleManager.Roles.Select(x => x).ToList();
 
-            if (userPasswordModel.Password == userPasswordModel.ConfirmPassword)
+            user = await _userManager.FindByIdAsync(model.Id);
+
+            if (user != null)
             {
-               user = await _userManager.FindByIdAsync(userPasswordModel.Id);
-
-                if (user != null)
+                if (model.Password == model.ConfirmPassword && model.Password != null && model.ConfirmPassword != null)
                 {
-                    result = await _passwordValidator.ValidateAsync(_userManager, user, userPasswordModel.Password);
+                    result = await _passwordValidator.ValidateAsync(_userManager, user, model.Password);
 
                     if (result.Succeeded)
                     {
-                        user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userPasswordModel.Password);
+                        user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, model.Password);
                         result = await _userManager.UpdateAsync(user);
 
                         if (result.Succeeded)
                         {
-                            return true;
-                        }       
+                            //return true;
+                        }
+                    }
+
+                }
+
+                foreach (var role in allRoles)
+                {
+                    if (model.NewRoles.Contains(role.Name))
+                    {
+                        if (model.Roles.Contains(role.Name))
+                        {
+                            
+                        }
+                        else
+                        {
+                            await _userManager.AddToRoleAsync(user, role.Name);
+                        }
+                    }
+                    else
+                    {
+                        await _userManager.RemoveFromRoleAsync(user, role.Name);
                     }
                 }
+                
             }
             return false;
         }

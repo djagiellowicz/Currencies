@@ -44,13 +44,13 @@ namespace WalutyMVCWebApp.Controllers
         public async Task<IActionResult> Update(string id)
         {
             UserDTO userDTO = await _userServices.GetUser(id);
-            UserPasswordModel userPasswordModel = _mapper.Map<UserDTO, UserPasswordModel>(userDTO);
+            UserModel userPasswordModel = _mapper.Map<UserDTO, UserModel>(userDTO);
             
             return View(userPasswordModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(UserPasswordModel userPasswordModel)
+        public async Task<IActionResult> Update(UserModel userPasswordModel)
         {
             // Can be changed from bool to IdentityResult
             // Add sending pageNumber and pageSize to RemoveUser when rediricting to Index.

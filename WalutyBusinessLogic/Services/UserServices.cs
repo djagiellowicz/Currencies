@@ -60,7 +60,7 @@ namespace WalutyBusinessLogic.Services
             return false;
         }
 
-        public async Task<bool> Update(UserPasswordModel userPasswordModel)
+        public async Task<bool> Update(UserModel userPasswordModel)
         {
             User user;
             IdentityResult result;

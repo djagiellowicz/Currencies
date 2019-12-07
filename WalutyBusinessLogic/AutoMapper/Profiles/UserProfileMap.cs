@@ -9,7 +9,7 @@ namespace WalutyBusinessLogic.AutoMapper.Profiles
         public UserProfileMap()
         {
             CreateMap<User, UserDTO>();
-            CreateMap<UserDTO, UserPasswordModel>();
+            CreateMap<UserDTO, UserModel>();
         }
     }
 }

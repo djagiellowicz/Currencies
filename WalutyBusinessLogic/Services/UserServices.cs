@@ -99,22 +99,25 @@ namespace WalutyBusinessLogic.Services
 
                 }
 
-                foreach (var role in allRoles)
+                if (model.NewRoles != null)
                 {
-                    if (model.NewRoles.Contains(role.Name))
+                    foreach (var role in allRoles)
                     {
-                        if (model.Roles.Contains(role.Name))
+                        if (model.NewRoles.Contains(role.Name))
                         {
-                            
+                            if (model.Roles.Contains(role.Name))
+                            {
+
+                            }
+                            else
+                            {
+                                await _userManager.AddToRoleAsync(user, role.Name);
+                            }
                         }
                         else
                         {
-                            await _userManager.AddToRoleAsync(user, role.Name);
+                            await _userManager.RemoveFromRoleAsync(user, role.Name);
                         }
-                    }
-                    else
-                    {
-                        await _userManager.RemoveFromRoleAsync(user, role.Name);
                     }
                 }
                 

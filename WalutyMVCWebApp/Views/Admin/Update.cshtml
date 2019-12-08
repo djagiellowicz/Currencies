@@ -27,17 +27,17 @@
     </div>
     <div class="form-group">
         <label asp-for="Roles"></label>
-        <input type="text" asp-for="Roles" class="form-control" hidden="hidden"/>
+        <input type="text" asp-for="Roles" class="form-control" hidden="hidden" />
         <span asp-validation-for="Roles" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Roles"></label>
-        @foreach (var availableRole in (IList<IdentityRole>)ViewData["AllRoles"])
-        {
-            @availableRole <input type="checkbox" name="NewRoles" value="@availableRole.Name"
-                                  checked="@Model.Roles.Contains(availableRole.Name)">
-        }
-    </div>
 
+    @foreach (var availableRole in (IList<IdentityRole>)ViewData["AllRoles"])
+    {
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="newRoles" value="@availableRole.Name"
+                   checked="@Model.Roles.Contains(availableRole.Name)">
+            <label class="form-check-label">@availableRole</label>
+        </div>
+    }
     <button type="submit" class="btn btn-success">Change</button>
 </form>

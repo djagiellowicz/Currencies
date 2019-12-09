@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WalutyBusinessLogic.Models.GenericModel
+namespace WalutyBusinessLogic.Models.Generic
 {
     public class GenericModel<T>
     {

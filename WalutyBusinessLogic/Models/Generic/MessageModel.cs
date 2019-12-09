@@ -2,7 +2,7 @@
 
 namespace WalutyBusinessLogic.Models.Generic
 {
-    class MessageModel<T> : GenericModel<T>
+    public class MessageModel<T> : GenericModel<T>
     {
         public IList<string> Messages { get; set; }
 

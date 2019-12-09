@@ -7,5 +7,10 @@ namespace WalutyBusinessLogic.Models.Generic
     public class GenericModel<T>
     {
         public T Model { get; set; }
+
+        public GenericModel(T model)
+        {
+            Model = model;
+        }
     }
 }

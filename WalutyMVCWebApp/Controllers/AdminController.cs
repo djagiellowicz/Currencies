@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Models.DTO;
 using WalutyBusinessLogic.Models.Enums;
+using WalutyBusinessLogic.Models.Generic;
 using WalutyBusinessLogic.Services;
 using WalutyMVCWebApp.AuthorizeAttributes;
 
@@ -33,7 +34,7 @@ namespace WalutyMVCWebApp.Controllers
             return View(await _userServices.GetUsersPage((int) pageNumber, (int) pageSize));
         }
         [HttpPost]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(string id, Page page)
         {
             // Can be changed from bool to IdentityResult
             // Add sending pageNumber and pageSize to RemoveUser when rediricting to Index.
@@ -41,7 +42,7 @@ namespace WalutyMVCWebApp.Controllers
             bool result = await _userServices.Delete(id);
             ViewData["IsRemoved"] = result;
 
-            return View("Index", await _userServices.GetUsersPage(1,5));
+            return View("Index", await _userServices.GetUsersPage(page.PageNumber, page.PageSize));
         }
 
         [HttpGet]

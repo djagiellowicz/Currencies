@@ -6,9 +6,13 @@ namespace WalutyBusinessLogic.Models.Generic
     {
         public IList<string> Messages { get; set; }
 
-        public MessageModel(T model, IList<string> messages):base(model) 
+        public MessageModel(T viewModel, IList<string> messages):base(viewModel) 
         {
             Messages = messages;
+        }
+        public MessageModel() : base()
+        {
+
         }
     }
 }

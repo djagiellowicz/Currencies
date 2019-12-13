@@ -37,7 +37,6 @@ namespace WalutyMVCWebApp.Controllers
         public async Task<IActionResult> Delete(string id, Page page)
         {
             // Can be changed from bool to IdentityResult
-            // Add sending pageNumber and pageSize to RemoveUser when rediricting to Index.
 
             bool result = await _userServices.Delete(id);
             ViewData["IsRemoved"] = result;
@@ -46,27 +45,24 @@ namespace WalutyMVCWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Update(string id)
+        public async Task<IActionResult> Update(string id, Page page)
         {
             UserDTO userDTO = await _userServices.GetUser(id);
             UserModel userModel = _mapper.Map<UserDTO, UserModel>(userDTO);
 
             ViewData["AllRoles"] = _roleManager.Roles.Select(x => x).ToList();
 
-            return View(userModel);
+            return View(new PageModel<UserModel>(userModel, page));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(UserModel userModel)
+        public async Task<IActionResult> Update(PageModel<UserModel> model)
         {
-            // Can be changed from bool to IdentityResult
-            // Add sending pageNumber and pageSize to RemoveUser when rediricting to Index.
-
-            var isUpdated = await _userServices.Update(userModel);
+            var isUpdated = await _userServices.Update(model.ViewModel);
 
             ViewData["IsUpdated"] = isUpdated;
 
-            return View("Index", await _userServices.GetUsersPage(1, 5));
+            return View("Index", await _userServices.GetUsersPage(model.Page.PageNumber, model.Page.PageSize));
         }
     }
 }

@@ -4,13 +4,18 @@ using System.Text;
 
 namespace WalutyBusinessLogic.Models.Generic
 {
-    class PageModel<T> : GenericModel<T>
+    public class PageModel<T> : GenericModel<T>
     {
         public Page Page { get; set; }
 
-        public PageModel(T model, Page page) : base(model)
+        public PageModel(T viewModel, Page page) : base(viewModel)
         {
             Page = page;
+        }
+
+        public PageModel() : base()
+        {
+           
         }
     }
 }

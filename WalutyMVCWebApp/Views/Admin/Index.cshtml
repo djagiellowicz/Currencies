@@ -61,6 +61,8 @@
                 <td>
                     <form method="get" asp-controller="Admin" asp-action="Update" asp-route-Id="@user.Id">
                         <input class="btn btn-danger" type="submit" value="Change" />
+                        <input name="pageSize" typeof="text" value="@Model.PageSize" hidden />
+                        <input name="pageNumber" typeof="text" value="@Model.PageNumber" hidden />
                     </form>
                     <form method="post" asp-controller="Admin" asp-action="Delete" asp-route-Id="@user.Id">
                         <input name="pageSize" typeof="text" value="@Model.PageSize" hidden />

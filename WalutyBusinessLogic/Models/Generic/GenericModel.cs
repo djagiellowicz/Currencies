@@ -2,11 +2,16 @@
 {
     public class GenericModel<T>
     {
-        public T Model { get; set; }
+        public T ViewModel { get; set; }
 
-        public GenericModel(T model)
+        public GenericModel(T viewModel)
         {
-            Model = model;
+            ViewModel = viewModel;
+        }
+
+        public GenericModel()
+        {
+
         }
     }
 }

@@ -26,12 +26,14 @@ namespace WalutyMVCWebApp.Controllers
             _roleManager = roleManager;
         }
 
-        public async Task<IActionResult> Index(int? pageNumber, int? pageSize)
+        public async Task<IActionResult> Index(Page page)
         {
-            pageNumber = pageNumber ?? 1;
-            pageSize = pageSize ?? 5;
-
-            return View(await _userServices.GetUsersPage((int) pageNumber, (int) pageSize));
+            int pageNumber = 1;
+            int pageSize = 5;
+            if (page.PageNumber != 0) { pageNumber = page.PageNumber; }
+            if (page.PageSize != 0) { pageSize = page.PageSize; }
+            
+            return View(await _userServices.GetUsersPage(pageNumber, pageSize));
         }
         [HttpPost]
         public async Task<IActionResult> Delete(string id, Page page)

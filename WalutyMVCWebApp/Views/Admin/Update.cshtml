@@ -25,7 +25,8 @@
         <input type="password" asp-for="ViewModel.ConfirmPassword" class="form-control" />
         <span asp-validation-for="ViewModel.ConfirmPassword" class="text-danger"></span>
     </div>
-    @for(int i = 0; i < Model.ViewModel.Roles.Count(); i++) { 
+    @for(int i = 0; i < Model.ViewModel.Roles.Count(); i++)
+        {
     <div class="form-group">
         <label asp-for="ViewModel.Roles[i]"></label>
         <input type="text" asp-for="ViewModel.Roles[i]" class="form-control" hidden="hidden" />

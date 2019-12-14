@@ -1,7 +1,66 @@
-﻿
+﻿@using WalutyBusinessLogic.Models.DTO
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Mvc.Common
+@model IPagedList<UserDTO>
+
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+@if (ViewData["Comments"] != null)
+{
+    foreach (var comment in (IList<string>)ViewData["Comments"])
+    {
+        <h2>@comment</h2>
+    }
+}
 
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Roles</th>
+            <th scope="col">Actions</th>
+        </tr>
+        <tr></tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>
+                    @foreach (var role in user.Roles)
+                    {
+                        @role
+                        @:&nbsp;
+                    }
+
+                </td>
+                <td>
+                    <form method="get" asp-controller="Admin" asp-action="Update" asp-route-Id="@user.Id">
+                        <input class="btn btn-danger" type="submit" value="Change" />
+                        <input name="pageSize" typeof="text" value="@Model.PageSize" hidden />
+                        <input name="pageNumber" typeof="text" value="@Model.PageNumber" hidden />
+                    </form>
+                    <form method="post" asp-controller="Admin" asp-action="Delete" asp-route-Id="@user.Id">
+                        <input name="pageSize" typeof="text" value="@Model.PageSize" hidden />
+                        <input name="pageNumber" typeof="text" value="@Model.PageNumber" hidden />
+                        <input class="btn btn-danger" type="submit" value="Delete" />
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@Html.PagedListPager((IPagedList)Model,
+    page => Url.Action("Index", new { pageNumber = page, pageSize = 5 }),
+    new PagedListRenderOptions
+    {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" },
+        MaximumPageNumbersToDisplay = 5,
+        EllipsesFormat = ""
+    })

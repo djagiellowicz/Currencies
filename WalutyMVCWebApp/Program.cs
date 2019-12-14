@@ -39,7 +39,7 @@ namespace WalutyMVCWebApp
                     DBInitialisation.InitialiseDB(context, loader);
                     DefaultRolesInitialisation.Init(roleManager);
                     DefaultAdminCreator.CreateAdmin(userManager);
-                    
+                    DefaultUsersCreator.CreateUsers(userManager);
 
                 }
                 catch (Exception)

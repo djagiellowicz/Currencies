@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
+using WalutyBusinessLogic.Models.Enums;
+using WalutyMVCWebApp.AuthorizeAttributes;
 
 namespace WalutyMVCWebApp.Controllers
 {
-    [Authorize]
+    [AuthorizeEnumRoles(RolesEnum.Administrator,RolesEnum.User)]
     public class FavoritesController : Controller
     {
         // Remember to create separate controller for these methods, pushed due to deadline

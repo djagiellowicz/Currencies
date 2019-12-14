@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.LoadingFromFile.DatabaseLoading;
-using WalutyBusinessLogic.Models;
+using WalutyBusinessLogic.AutoMapper.Profiles;
 using WalutyBusinessLogic.Services;
 
 namespace WalutyMVCWebApp
@@ -32,6 +33,8 @@ namespace WalutyMVCWebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddAutoMapper(typeof(UserProfileMap));
+
             services.AddSingleton<ILoader, Loader>();
             services.AddTransient<ICurrencyRepository, CurrencyRepository>();
             services.AddTransient<IExtremesServices, ExtremesServices>();
@@ -41,6 +44,7 @@ namespace WalutyMVCWebApp
             services.AddTransient<ICurrencyNameChecker, CurrencyNameChecker>();
             services.AddTransient<ICurrenciesComparator, CurrenciesComparator>();
             services.AddTransient<ICurrenciesSelectList, CurrenciesSelectList>();
+            services.AddTransient<IUserServices, UserServices>();
             services.AddTransient<IChartService, ChartService>();
 
             services.AddDbContextPool<WalutyDBContext>(opt =>

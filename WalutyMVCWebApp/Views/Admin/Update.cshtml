@@ -1,0 +1,54 @@
+﻿@using WalutyBusinessLogic.Models.Generic
+@using Microsoft.AspNetCore.Identity;
+@model PageModel<UserModel>
+
+@{
+    ViewData["Title"] = "Update";
+}
+
+<h1>Update</h1>
+
+<form asp-controller="Admin" asp-action="Update" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="ViewModel.Id"></label>
+        <input type="text" asp-for="ViewModel.Id" readonly class="form-control" />
+        <span asp-validation-for="ViewModel.Id" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ViewModel.Password"></label>
+        <input type="password" asp-for="ViewModel.Password" class="form-control" />
+        <span asp-validation-for="ViewModel.Password" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ViewModel.ConfirmPassword"></label>
+        <input type="password" asp-for="ViewModel.ConfirmPassword" class="form-control" />
+        <span asp-validation-for="ViewModel.ConfirmPassword" class="text-danger"></span>
+    </div>
+    <label asp-for="ViewModel.Roles"></label>
+    @for (int i = 0; i < Model.ViewModel.Roles.Count(); i++)
+    {
+        <div class="form-group">
+            <input type="text" asp-for="ViewModel.Roles[i]" class="form-control" hidden="hidden" />
+            <span asp-validation-for="ViewModel.Roles[i]" class="text-danger"></span>
+        </div>
+    }
+    <div class="form-group">
+        <input type="number" asp-for="Page.PageNumber" class="form-control" hidden="hidden" />
+        <span asp-validation-for="Page.PageNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="number" asp-for="Page.PageSize" class="form-control" hidden="hidden" />
+        <span asp-validation-for="Page.PageSize" class="text-danger"></span>
+    </div>
+    @foreach (var availableRole in (IList<IdentityRole>)ViewData["AllRoles"])
+    {
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="ViewModel.NewRoles[]" value="@availableRole.Name"
+                   checked="@Model.ViewModel.Roles.Contains(availableRole.Name)">
+            <label class="form-check-label">@availableRole</label>
+        </div>
+    }
+    <br>
+    <button type="submit" class="btn btn-success">Change</button>
+</form>

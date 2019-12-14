@@ -1,8 +1,13 @@
-Group project that started in the middle of January - team work ended in the end of June. After that period I try to develop it further. It needs a lot of tweaks and reworks.
+Group project that started in the middle of January - team work ended in the end of June. After that period I try to develop it further. 
 
 How to run this application?
 
 Application is configured to work with MSSQL database, but by default it works with in memory DBContext (In memory context is initialized every time application starts), so no configuring should be needed.
+
+There is one default administrator account that has access to admin panel:
+
+Username: administrator@adm.com
+Password: !1234Qwertyuiop
 
 Software is written in c# using many technologies including:
 

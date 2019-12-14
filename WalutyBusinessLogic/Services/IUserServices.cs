@@ -9,7 +9,7 @@ namespace WalutyBusinessLogic.Services
     {
         Task<IPagedList<UserDTO>> GetUsersPage(int pageNumber, int pageSize);
         Task<bool> Delete(string id);
-        Task<bool> Update(UserModel userPasswordModel);
+        Task<UpdateUserResult> Update(UserModel model);
         Task<UserDTO> GetUser(string id);
     }
 }

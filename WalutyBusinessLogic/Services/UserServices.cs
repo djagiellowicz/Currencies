@@ -72,16 +72,20 @@ namespace WalutyBusinessLogic.Services
             return false;
         }
 
-        public async Task<bool> Update(UserModel model)
+        public async Task<UpdateUserResult> Update(UserModel model)
         {
             User user;
+            IList<IdentityRole> results = new List<IdentityRole>(); 
             IdentityResult result;
+            bool areRolesUpdated = true;
+            bool isPasswordUpdated = false;
             List<IdentityRole> allRoles = _roleManager.Roles.Select(x => x).ToList();
 
             user = await _userManager.FindByIdAsync(model.Id);
 
             if (user != null)
             {
+
                 if (model.Password == model.ConfirmPassword && model.Password != null && model.ConfirmPassword != null)
                 {
                     result = await _passwordValidator.ValidateAsync(_userManager, user, model.Password);
@@ -93,10 +97,9 @@ namespace WalutyBusinessLogic.Services
 
                         if (result.Succeeded)
                         {
-                            //return true;
+                            isPasswordUpdated = true;
                         }
                     }
-
                 }
 
                 if (model.NewRoles != null)
@@ -111,18 +114,28 @@ namespace WalutyBusinessLogic.Services
                             }
                             else
                             {
-                                await _userManager.AddToRoleAsync(user, role.Name);
+                                result = await _userManager.AddToRoleAsync(user, role.Name);
+
+                                if (!result.Succeeded && areRolesUpdated != false)
+                                {
+                                    areRolesUpdated = false; 
+                                }
                             }
                         }
                         else
                         {
-                            await _userManager.RemoveFromRoleAsync(user, role.Name);
+                            result = await _userManager.RemoveFromRoleAsync(user, role.Name);
+
+                            if (!result.Succeeded && areRolesUpdated != false)
+                            {
+                                areRolesUpdated = false;
+                            }
                         }
                     }
                 }
                 
             }
-            return false;
+            return new UpdateUserResult(isPasswordUpdated, areRolesUpdated);
         }
     }
 }

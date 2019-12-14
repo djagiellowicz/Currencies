@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WalutyBusinessLogic.Models;
@@ -61,11 +62,30 @@ namespace WalutyMVCWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(PageModel<UserModel> model)
         {
-            var isUpdated = await _userServices.Update(model.ViewModel);
+            UpdateUserResult updateResult = await _userServices.Update(model.ViewModel);
+            IList<string> comments = new List<string>();
 
             model.Page = GetPageOrDefaultValues(model.Page);
 
-            ViewData["IsUpdated"] = isUpdated;
+            if (updateResult.IsPasswordUpdated)
+            {
+                comments.Add("Succeeded to update password");
+            }
+            else
+            {
+                comments.Add("Password was not updated");
+            }
+
+            if (updateResult.AreRolesUpdated)
+            {
+                comments.Add("Succeeded to update roles");
+            }
+            else
+            {
+                comments.Add("Roles were not updated");
+            }
+
+            ViewData["Comments"] = comments;
 
             return View("Index", await _userServices.GetUsersPage(model.Page.PageNumber, model.Page.PageSize));
         }

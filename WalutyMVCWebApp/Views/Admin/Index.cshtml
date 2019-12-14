@@ -8,31 +8,11 @@
     ViewData["Title"] = "Index";
 }
 
-<!-- Maybe partial view? -->
-
-@if (ViewData["IsRemoved"] != null)
+@if (ViewData["Comments"] != null)
 {
-    if ((bool)ViewData["IsRemoved"] == true)
+    foreach (var comment in (IList<string>)ViewData["Comments"])
     {
-        <h2>Succesfully deleted</h2>
-    }
-    else
-    {
-        <h2>Failed to delete</h2>
-    }
-}
-
-<!-- Partial view or make another returnable class with message and Models.DTO (generic?)-->
-
-@if (ViewData["IsUpdated"] != null)
-{
-    if ((bool)ViewData["IsUpdated"] == true)
-    {
-        <h2>Succesfully changed password</h2>
-    }
-    else
-    {
-        <h2>Failed to change password</h2>
+        <h2>@comment</h2>
     }
 }
 

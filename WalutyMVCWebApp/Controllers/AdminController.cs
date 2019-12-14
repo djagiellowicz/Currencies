@@ -18,6 +18,8 @@ namespace WalutyMVCWebApp.Controllers
         private readonly IUserServices _userServices;
         private readonly IMapper _mapper;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly int _defaultPageSize = 5;
+        private readonly int _defaultPageNumber = 1;
 
         public AdminController(IUserServices userServices, IMapper mapper, RoleManager<IdentityRole> roleManager)
         {
@@ -28,17 +30,14 @@ namespace WalutyMVCWebApp.Controllers
 
         public async Task<IActionResult> Index(Page page)
         {
-            int pageNumber = 1;
-            int pageSize = 5;
-            if (page.PageNumber != 0) { pageNumber = page.PageNumber; }
-            if (page.PageSize != 0) { pageSize = page.PageSize; }
-            
-            return View(await _userServices.GetUsersPage(pageNumber, pageSize));
+            page = GetPageOrDefaultValues(page);
+
+            return View(await _userServices.GetUsersPage(page.PageNumber, page.PageSize));
         }
         [HttpPost]
         public async Task<IActionResult> Delete(string id, Page page)
         {
-            // Can be changed from bool to IdentityResult
+            page = GetPageOrDefaultValues(page);
 
             bool result = await _userServices.Delete(id);
             ViewData["IsRemoved"] = result;
@@ -52,6 +51,8 @@ namespace WalutyMVCWebApp.Controllers
             UserDTO userDTO = await _userServices.GetUser(id);
             UserModel userModel = _mapper.Map<UserDTO, UserModel>(userDTO);
 
+            page = GetPageOrDefaultValues(page);
+
             ViewData["AllRoles"] = _roleManager.Roles.Select(x => x).ToList();
 
             return View(new PageModel<UserModel>(userModel, page));
@@ -62,9 +63,24 @@ namespace WalutyMVCWebApp.Controllers
         {
             var isUpdated = await _userServices.Update(model.ViewModel);
 
+            model.Page = GetPageOrDefaultValues(model.Page);
+
             ViewData["IsUpdated"] = isUpdated;
 
             return View("Index", await _userServices.GetUsersPage(model.Page.PageNumber, model.Page.PageSize));
+        }
+
+        private Page GetPageOrDefaultValues(Page page)
+        {
+            if (page.PageNumber <= 0)
+            {
+                page.PageNumber = _defaultPageNumber;
+            }
+            if (page.PageSize <= 0)
+            {
+                page.PageSize = _defaultPageSize;
+            }
+            return page;
         }
     }
 }

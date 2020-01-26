@@ -7,7 +7,6 @@ namespace WalutyBusinessLogic.LoadingFromFile
         /// <summary>
         /// This method should not be called manually.
         /// </summary>
-        //TODO: Maybe find a way to generate a warning when user tries to use this method somewhere? 
         void Init();
         List<Currency> AllCurrencies { get; set; }
         Currency LoadCurrencyFromFile(string fileName);

@@ -75,7 +75,7 @@ namespace WalutyBusinessLogic.LoadingFromFile
                 throw new FileLoadException();
             }
 
-            //Ignore first line from currenty data
+            //Ignore first line from current data
             if (!streamReader.EndOfStream)
             {
                 streamReader.ReadLine();

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Threading.Tasks;
 
 namespace WalutyBusinessLogic.DatabaseLoading.Updater
 {
-    interface ICurrencyFilesDownloader
+    public interface ICurrencyFilesDownloader
     {
+        Task<bool> DownloadFilesAsync();
     }
 }

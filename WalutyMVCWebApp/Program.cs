@@ -5,7 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using System;
+using System.Threading.Tasks;
 using WalutyBusinessLogic.DatabaseLoading;
+using WalutyBusinessLogic.DatabaseLoading.Updater;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
 
@@ -14,7 +16,7 @@ namespace WalutyMVCWebApp
     public class Program
     {
 
-        public static int Main(string[] args)
+        public  static int Main(string[] args)
         {
            var hostBuilder = CreateWebHostBuilder(args).Build();          
 

@@ -11,6 +11,7 @@ using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.LoadingFromFile.DatabaseLoading;
 using WalutyBusinessLogic.AutoMapper.Profiles;
 using WalutyBusinessLogic.Services;
+using WalutyBusinessLogic.DatabaseLoading.Updater;
 
 namespace WalutyMVCWebApp
 { 
@@ -36,6 +37,7 @@ namespace WalutyMVCWebApp
             services.AddAutoMapper(typeof(UserProfileMap));
 
             services.AddSingleton<ILoader, Loader>();
+            services.AddSingleton<ICurrencyFilesDownloader, CurrencyFilesDownloader>();
             services.AddTransient<ICurrencyRepository, CurrencyRepository>();
             services.AddTransient<IExtremesServices, ExtremesServices>();
             services.AddTransient<IDateRange, DateRange>();
@@ -46,6 +48,7 @@ namespace WalutyMVCWebApp
             services.AddTransient<ICurrenciesSelectList, CurrenciesSelectList>();
             services.AddTransient<IUserServices, UserServices>();
             services.AddTransient<IChartService, ChartService>();
+            
 
             services.AddDbContextPool<WalutyDBContext>(opt =>
                 opt.UseInMemoryDatabase("Development"));

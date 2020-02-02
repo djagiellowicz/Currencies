@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace WalutyBusinessLogic.DatabaseLoading.Updater
@@ -13,7 +12,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
         private readonly string _databaseZipFileLink = @"https://info.bossa.pl/pub/waluty/omega/omeganbp.zip";
         private readonly string _databaseContentFileLink = @"https://info.bossa.pl/pub/fundinwest/omega/omegafun.lst";
         // Change Path
-        private readonly string _pathToDirectory = @"\Currencies\WalutyBusinessLogic\DatabaseLoading\Updater\";
+        private readonly string _pathToInternalDirectory = @"\Currencies\WalutyBusinessLogic\DatabaseLoading\Updater\";
 
         public CurrencyFilesDownloader()
         {
@@ -24,9 +23,14 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
         {
             bool result = true;
             WebClient webClient = new WebClient();
-            string workingDirectory = Environment.CurrentDirectory;
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
-            string fullPathToDirectory = projectDirectory + _pathToDirectory;
+            string projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+            string fullPathToDirectory = projectDirectory + _pathToInternalDirectory + DateTime.Now.ToString("ddMMyyyy") + @"\";
+;
+
+            if (!Directory.Exists(fullPathToDirectory))
+            {
+                Directory.CreateDirectory(fullPathToDirectory);
+            }
 
             try
             {
@@ -56,6 +60,8 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
 
             return result;
         }
+
+
 
 
     }

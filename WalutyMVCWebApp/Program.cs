@@ -38,10 +38,13 @@ namespace WalutyMVCWebApp
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
 
+                    var currencyFileSDownloader = services.GetRequiredService<ICurrencyFilesDownloader>();
+
                     DBInitialisation.InitialiseDB(context, loader);
                     DefaultRolesInitialisation.Init(roleManager);
                     DefaultAdminCreator.CreateAdmin(userManager);
                     DefaultUsersCreator.CreateUsers(userManager);
+                    currencyFileSDownloader.DownloadFilesAsync();
 
                 }
                 catch (Exception)

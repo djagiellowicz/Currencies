@@ -11,7 +11,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
         private readonly string _databaseZipFileLink = @"https://info.bossa.pl/pub/waluty/omega/omeganbp.zip";
         private readonly string _databaseContentFileLink = @"https://info.bossa.pl/pub/fundinwest/omega/omegafun.lst";
         // Change Path
-        private readonly string _pathToDirectory = @"e:\test\";
+        private readonly string _pathToDirectory = @"c:\test\";
 
         public CurrencyFilesDownloader()
         {

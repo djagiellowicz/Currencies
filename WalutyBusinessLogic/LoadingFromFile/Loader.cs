@@ -8,9 +8,9 @@ namespace WalutyBusinessLogic.LoadingFromFile
     public class Loader : ILoader
     {
         public List<Currency> AllCurrencies { get; set; }
-        private string PathToDirectory = @"LoadingFromFile\FilesToLoad\omeganbp";
-        string AssemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        private string Separator = ",";
+        private readonly string _pathToDirectory = @"LoadingFromFile\FilesToLoad\omeganbp";
+        private readonly string _assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private readonly string _separator = ",";
 
         public void Init()
         {
@@ -56,7 +56,7 @@ namespace WalutyBusinessLogic.LoadingFromFile
 
         private string GetCurrenciesFolderPath()
         {
-            return Path.Combine(AssemblyPath, $"{PathToDirectory}");
+            return Path.Combine(_assemblyPath, $"{_pathToDirectory}");
         }
 
         private List<string> LoadLinesFromFile(string fileName)
@@ -97,7 +97,7 @@ namespace WalutyBusinessLogic.LoadingFromFile
             for (int i = 0; i < listOfLines.Count; i++)
             {
                 CurrencyRecord currencyRecord = new CurrencyRecord();
-                var splittedLine = listOfLines[i].Split(Separator);
+                var splittedLine = listOfLines[i].Split(_separator);
 
                 if (i == 0)
                 {

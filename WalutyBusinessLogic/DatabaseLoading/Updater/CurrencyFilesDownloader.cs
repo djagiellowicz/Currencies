@@ -11,7 +11,6 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
         // Could be put inside file, not hardcoded
         private readonly string _databaseZipFileLink = @"https://info.bossa.pl/pub/waluty/omega/omeganbp.zip";
         private readonly string _databaseContentFileLink = @"https://info.bossa.pl/pub/fundinwest/omega/omegafun.lst";
-        // Change Path
         private readonly string _pathToInternalDirectory = @"\Currencies\WalutyBusinessLogic\DatabaseLoading\Updater\";
 
         public CurrencyFilesDownloader()
@@ -35,7 +34,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
             try
             {
                await webClient.DownloadFileTaskAsync(new Uri(_databaseContentFileLink), fullPathToDirectory + "content.lst");
-               Log.Logger.Information($"Downloaded files to: {projectDirectory}");
+               Log.Logger.Information($"Downloaded files to: {fullPathToDirectory}");
             }
             catch (WebException e)
             {
@@ -48,7 +47,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
             try
             {
                 await webClient.DownloadFileTaskAsync(new Uri(_databaseZipFileLink), fullPathToDirectory + "database.zip");
-                Log.Logger.Information($"Downloaded files to: {projectDirectory}");
+                Log.Logger.Information($"Downloaded files to: {fullPathToDirectory}");
             }
             catch (WebException e)
             {

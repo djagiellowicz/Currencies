@@ -4,7 +4,7 @@ using ICSharpCode.SharpZipLib.Zip;
 
 namespace WalutyBusinessLogic.DatabaseLoading.Updater
 {
-    public class CurrencyFilesUnzipper
+    public class CurrencyFilesUnzipper : ICurrencyFilesUnzipper
     {
 
         public bool UnzipFile(string fileName, string filePath)

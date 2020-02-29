@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using System;
-using System.Threading.Tasks;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.DatabaseLoading.Updater;
 using WalutyBusinessLogic.LoadingFromFile;

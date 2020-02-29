@@ -7,7 +7,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
 {
     public class CurrencyFilesUpdater : ICurrencyFilesUpdater
     {
-        // Could be put inside file, not hardcoded
+        // Can be put inside file, not hardcoded
         private readonly string _databaseZipFileLink = @"https://info.bossa.pl/pub/waluty/omega/omeganbp.zip";
         private readonly string _databaseContentFileLink = @"https://info.bossa.pl/pub/waluty/omega/omeganbp.lst";
         private readonly string _pathToInternalDirectory = @"\Currencies\WalutyBusinessLogic\DatabaseLoading\Updater\Files\";
@@ -30,6 +30,8 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
 
             downloaderResult = downloader.DownloadFilesAsync(_databaseZipFileLink, _databaseContentFileLink, fullPathToDirectory, currentDate, _contentFileName, _databaseFileName).Result;
             unzipperResult = unzipper.UnzipFile(_databaseFileName, fullPathToDirectory);
+
+            //Lacks method that will read/upload new data to database
 
             if(downloaderResult && unzipperResult)
             {

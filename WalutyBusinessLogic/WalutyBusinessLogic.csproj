@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="DatabaseLoading\Updater\Files\" />
     <Folder Include="LoadingFromFile\FilesToLoad\" />
   </ItemGroup>
 

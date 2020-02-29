@@ -37,7 +37,9 @@ namespace WalutyMVCWebApp
             services.AddAutoMapper(typeof(UserProfileMap));
 
             services.AddSingleton<ILoader, Loader>();
-            services.AddSingleton<ICurrencyFilesDownloader, CurrencyFilesDownloader>();
+            services.AddSingleton<ICurrencyFilesUpdater, CurrencyFilesUpdater>();
+            services.AddTransient<ICurrencyFilesDownloader, CurrencyFilesDownloader>();
+            services.AddTransient<ICurrencyFilesUnzipper, CurrencyFilesUnzipper>();
             services.AddTransient<ICurrencyRepository, CurrencyRepository>();
             services.AddTransient<IExtremesServices, ExtremesServices>();
             services.AddTransient<IDateRange, DateRange>();

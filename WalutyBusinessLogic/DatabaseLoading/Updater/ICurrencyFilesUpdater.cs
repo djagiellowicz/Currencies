@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WalutyBusinessLogic.DatabaseLoading.Updater
+﻿namespace WalutyBusinessLogic.DatabaseLoading.Updater
 {
     public interface ICurrencyFilesUpdater
     {
+        bool Process(ICurrencyFilesDownloader downloader, ICurrencyFilesUnzipper unzipper);
     }
 }

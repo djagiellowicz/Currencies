@@ -8,23 +8,17 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
 {
     public class CurrencyFilesDownloader : ICurrencyFilesDownloader
     {
-        // Could be put inside file, not hardcoded
-        private readonly string _databaseZipFileLink = @"https://info.bossa.pl/pub/waluty/omega/omeganbp.zip";
-        private readonly string _databaseContentFileLink = @"https://info.bossa.pl/pub/waluty/omega/omeganbp.lst";
-        private readonly string _pathToInternalDirectory = @"\Currencies\WalutyBusinessLogic\DatabaseLoading\Updater\Files\";
 
         public CurrencyFilesDownloader()
         {
           
         }
 
-        public async Task<bool> DownloadFilesAsync()
+        public async Task<bool> DownloadFilesAsync(string databaseZipFileLink, string databaseContentFileLink, string fullPathToDirectory,
+                                                   DateTime date, string contentFileName, string databaseFileName)
         {
             bool result = true;
             WebClient webClient = new WebClient();
-            string projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
-            string fullPathToDirectory = projectDirectory + _pathToInternalDirectory + DateTime.Now.ToString("ddMMyyyy") + @"\";
-;
 
             if (!Directory.Exists(fullPathToDirectory))
             {
@@ -33,7 +27,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
 
             try
             {
-               await webClient.DownloadFileTaskAsync(new Uri(_databaseContentFileLink), fullPathToDirectory + "content.lst");
+               await webClient.DownloadFileTaskAsync(new Uri(databaseContentFileLink), fullPathToDirectory + contentFileName);
                Log.Logger.Information($"Downloaded files to: {fullPathToDirectory}");
             }
             catch (WebException e)
@@ -46,7 +40,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
 
             try
             {
-                await webClient.DownloadFileTaskAsync(new Uri(_databaseZipFileLink), fullPathToDirectory + "database.zip");
+                await webClient.DownloadFileTaskAsync(new Uri(databaseZipFileLink), fullPathToDirectory + databaseFileName);
                 Log.Logger.Information($"Downloaded files to: {fullPathToDirectory}");
             }
             catch (WebException e)

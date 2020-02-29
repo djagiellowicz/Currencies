@@ -31,6 +31,11 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
             downloaderResult = downloader.DownloadFilesAsync(_databaseZipFileLink, _databaseContentFileLink, fullPathToDirectory, currentDate, _contentFileName, _databaseFileName).Result;
             unzipperResult = unzipper.UnzipFile(_databaseFileName, fullPathToDirectory);
 
+            if(downloaderResult && unzipperResult)
+            {
+                return true;
+            }
+
             return false;
         }
     }

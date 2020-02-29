@@ -29,8 +29,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
             bool unzipperResult = false;
 
             downloaderResult = downloader.DownloadFilesAsync(_databaseZipFileLink, _databaseContentFileLink, fullPathToDirectory, currentDate, _contentFileName, _databaseFileName).Result;
-          
-
+            unzipperResult = unzipper.UnzipFile(_databaseFileName, fullPathToDirectory);
 
             return false;
         }

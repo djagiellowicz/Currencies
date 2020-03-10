@@ -36,23 +36,23 @@ namespace WalutyMVCWebApp
                     var loader = services.GetRequiredService<ILoader>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
-                    var currencyFilesUpdater = services.GetRequiredService<ICurrencyFilesUpdater>();
+                    
                     var currencyFilesDownloader = services.GetRequiredService<ICurrencyFilesDownloader>();
                     var currencyFilesUnzipper = services.GetRequiredService<ICurrencyFilesUnzipper>();
-                    
+                    var currencyFilesUpdater = services.GetRequiredService<ICurrencyFilesUpdater>();
+
 
                     DBInitialisation.InitialiseDB(context, loader);
                     DefaultRolesInitialisation.Init(roleManager);
                     DefaultAdminCreator.CreateAdmin(userManager);
                     DefaultUsersCreator.CreateUsers(userManager);
-                    currencyFilesUpdater.Process(currencyFilesDownloader, currencyFilesUnzipper, loader, context);
-
-
+                    currencyFilesUpdater.Process(context);
 
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     Log.Fatal("Failed to initalise DB");
+                    Log.Fatal(e.Message);
                 }
             }
 

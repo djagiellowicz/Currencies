@@ -17,14 +17,20 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
         private readonly string _pathToInternalDirectory = @"\Currencies\WalutyBusinessLogic\DatabaseLoading\Updater\Files\";
         private readonly string _contentFileName = "content.lst";
         private readonly string _databaseFileName = "database.zip";
+        private readonly ICurrencyFilesDownloader _downloader;
+        private readonly ICurrencyFilesUnzipper _unzipper;
+        private readonly ILoader _loader;
 
-        public CurrencyFilesUpdater()
+        public CurrencyFilesUpdater(ICurrencyFilesDownloader downloader, ICurrencyFilesUnzipper unzipper, ILoader loader)
         {
+            _downloader = downloader;
+            _unzipper = unzipper;
+            _loader = loader;
 
         }
         // Prevents method from running multiple times at once
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public bool Process(ICurrencyFilesDownloader downloader, ICurrencyFilesUnzipper unzipper, ILoader loader, WalutyDBContext context)
+        public bool Process(WalutyDBContext context)
         {
             DateTime currentDate = DateTime.Now;
             string fullPathToDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + _pathToInternalDirectory + currentDate.ToString("ddMMyyyy") + @"\";
@@ -33,16 +39,16 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
             bool updateResult = false;
             IList<Currency> loadedCurrencies = new List<Currency>();
 
-            downloaderResult = downloader.DownloadFilesAsync(_databaseZipFileLink, _databaseContentFileLink, fullPathToDirectory, currentDate, _contentFileName, _databaseFileName).Result;
-            unzipperResult = unzipper.UnzipFile(_databaseFileName, fullPathToDirectory);
+            downloaderResult = _downloader.DownloadFilesAsync(_databaseZipFileLink, _databaseContentFileLink, fullPathToDirectory, currentDate, _contentFileName, _databaseFileName).Result;
+            unzipperResult = _unzipper.UnzipFile(_databaseFileName, fullPathToDirectory);
              
             if(downloaderResult && unzipperResult)
             {
-                loadedCurrencies = loader.GetListOfAllCurrencies(fullPathToDirectory);
+                loadedCurrencies = _loader.GetListOfAllCurrencies(fullPathToDirectory);
 
                 updateResult = UpdateCurrencies(loadedCurrencies, context);
 
-                return updateResult;
+                return true;
             }
 
             return false;

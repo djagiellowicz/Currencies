@@ -36,8 +36,7 @@ namespace WalutyMVCWebApp
 
             services.AddAutoMapper(typeof(UserProfileMap));
 
-            services.AddSingleton<ILoader, Loader>();
-            services.AddSingleton<ICurrencyFilesUpdater, CurrencyFilesUpdater>();
+            services.AddSingleton<ILoader, Loader>();  
             services.AddTransient<ICurrencyFilesDownloader, CurrencyFilesDownloader>();
             services.AddTransient<ICurrencyFilesUnzipper, CurrencyFilesUnzipper>();
             services.AddTransient<ICurrencyRepository, CurrencyRepository>();
@@ -50,7 +49,8 @@ namespace WalutyMVCWebApp
             services.AddTransient<ICurrenciesSelectList, CurrenciesSelectList>();
             services.AddTransient<IUserServices, UserServices>();
             services.AddTransient<IChartService, ChartService>();
-            
+            services.AddSingleton<ICurrencyFilesUpdater, CurrencyFilesUpdater>();
+
 
             services.AddDbContextPool<WalutyDBContext>(opt =>
                 opt.UseInMemoryDatabase("Development"));

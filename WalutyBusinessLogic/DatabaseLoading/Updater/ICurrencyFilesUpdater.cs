@@ -4,6 +4,6 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
 {
     public interface ICurrencyFilesUpdater
     {
-        bool Process(ICurrencyFilesDownloader downloader, ICurrencyFilesUnzipper unzipper, ILoader loader, WalutyDBContext context);
+        bool Process(WalutyDBContext context);
     }
 }

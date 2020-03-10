@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,19 +51,26 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
         {
             DbSet<Currency> currenciesDbSet = context.Currencies;
 
-            foreach(Currency currency in loadedCurrencies)
+            try
             {
-                var currentCurrency = currenciesDbSet.SingleOrDefault(x => x.Name.ToLower() == currency.Name.ToLower());
-                var latestCurrencyDate = currentCurrency.ListOfRecords.Max(x => x.Date);
+                foreach (Currency currency in loadedCurrencies)
+                {
+                    var currentCurrency = currenciesDbSet.SingleOrDefault(x => x.Name.ToLower() == currency.Name.ToLower());
+                    var latestCurrencyDate = currentCurrency.ListOfRecords.Max(x => x.Date);
 
-                var currencyRecordsToUpdate = currency.ListOfRecords.Where(x => x.Date > latestCurrencyDate).ToList();
+                    var currencyRecordsToUpdate = currency.ListOfRecords.Where(x => x.Date > latestCurrencyDate).ToList();
 
-                currentCurrency.ListOfRecords.AddRange(currencyRecordsToUpdate);
-   
+                    currentCurrency.ListOfRecords.AddRange(currencyRecordsToUpdate);
+
+                }
+                context.SaveChanges();
+                return true;
             }
-            context.SaveChanges();
-
-            // LOGS have to be added
+            catch (DbUpdateException e)
+            {
+                Log.Logger.Error("Couldn't update the database");
+                Log.Logger.Error(e.Message);
+            }
 
             return false;
         }

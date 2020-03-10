@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
-
+using WalutyBusinessLogic.LoadingFromFile;
 
 namespace WalutyBusinessLogic.DatabaseLoading.Updater
 {
@@ -20,22 +21,32 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
         }
         // Prevents method from running multiple times at once
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public bool Process(ICurrencyFilesDownloader downloader, ICurrencyFilesUnzipper unzipper)
+        public bool Process(ICurrencyFilesDownloader downloader, ICurrencyFilesUnzipper unzipper, ILoader loader, ICurrencyRepository repository)
         {
             DateTime currentDate = DateTime.Now;
-            string projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
-            string fullPathToDirectory = projectDirectory + _pathToInternalDirectory + currentDate.ToString("ddMMyyyy") + @"\";
+            string fullPathToDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + _pathToInternalDirectory + currentDate.ToString("ddMMyyyy") + @"\";
             bool downloaderResult = false;
             bool unzipperResult = false;
+            IList<Currency> loadedCurrencies = new List<Currency>();
 
             downloaderResult = downloader.DownloadFilesAsync(_databaseZipFileLink, _databaseContentFileLink, fullPathToDirectory, currentDate, _contentFileName, _databaseFileName).Result;
             unzipperResult = unzipper.UnzipFile(_databaseFileName, fullPathToDirectory);
-
-            //Lacks method that will read/upload new data to database
-
+             
             if(downloaderResult && unzipperResult)
             {
+                loadedCurrencies = loader.GetListOfAllCurrencies(fullPathToDirectory);
+                UpdateCurrencies(loadedCurrencies, repository);
                 return true;
+            }
+
+            return false;
+        }
+
+        private bool UpdateCurrencies(IList<Currency> loadedCurrencies, ICurrencyRepository repository)
+        {
+            foreach(Currency currency in loadedCurrencies)
+            {
+                
             }
 
             return false;

@@ -18,8 +18,9 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
             // Will always overwrite if target filenames already exist
             try
             {
-            fastZip.ExtractZip(zipFileName, filePath, fileFilter);
+                fastZip.ExtractZip(zipFileName, filePath, fileFilter);
                 Log.Logger.Information($"Extracted database content file to {filePath}");
+                return true;
   
             }
             catch (IOException e)

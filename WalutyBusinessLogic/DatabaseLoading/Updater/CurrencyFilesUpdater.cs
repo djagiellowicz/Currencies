@@ -30,6 +30,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
             string fullPathToDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + _pathToInternalDirectory + currentDate.ToString("ddMMyyyy") + @"\";
             bool downloaderResult = false;
             bool unzipperResult = false;
+            bool updateResult = false;
             IList<Currency> loadedCurrencies = new List<Currency>();
 
             downloaderResult = downloader.DownloadFilesAsync(_databaseZipFileLink, _databaseContentFileLink, fullPathToDirectory, currentDate, _contentFileName, _databaseFileName).Result;
@@ -39,9 +40,9 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
             {
                 loadedCurrencies = loader.GetListOfAllCurrencies(fullPathToDirectory);
 
-                UpdateCurrencies(loadedCurrencies, context);
+                updateResult = UpdateCurrencies(loadedCurrencies, context);
 
-                return true;
+                return updateResult;
             }
 
             return false;

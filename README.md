@@ -1,4 +1,4 @@
-Group project that started in the middle of January - team work ended in the end of June. After that period I try to develop it further. 
+Group project that started in the middle of January 2019 - team work ended in the end of June 2019. After that period I try to develop it further. 
 
 How to run this application?
 

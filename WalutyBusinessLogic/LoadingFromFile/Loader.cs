@@ -8,7 +8,7 @@ namespace WalutyBusinessLogic.LoadingFromFile
     public class Loader : ILoader
     {
         public List<Currency> AllCurrencies { get; set; }
-        public string PathToDirectory { get; private set; } = @"LoadingFromFile\FilesToLoad\omeganbp";
+        public string PathToDirectory { get; private set; } = Path.Combine("LoadingFromFile", "FilesToLoad", "omeganbp");
         private readonly string _assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private readonly string _separator = ",";
 

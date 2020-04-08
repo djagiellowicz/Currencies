@@ -64,7 +64,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
             {
                 foreach (Currency currency in loadedCurrencies)
                 {
-                    var currentCurrency = currenciesDbSet.SingleOrDefault(x => x.Name.ToLower() == currency.Name.ToLower());
+                    var currentCurrency = currenciesDbSet.Include(x => x.ListOfRecords).SingleOrDefault(x => x.Name.ToLower() == currency.Name.ToLower());
                     var latestCurrencyDate = currentCurrency.ListOfRecords.Max(x => x.Date);
 
                     var currencyRecordsToUpdate = currency.ListOfRecords.Where(x => x.Date > latestCurrencyDate).ToList();

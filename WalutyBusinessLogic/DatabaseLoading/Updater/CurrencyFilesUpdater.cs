@@ -14,7 +14,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
         // Can be put inside file, not hardcoded. I've left it this way, but it should be changed.
         private readonly string _databaseZipFileLink = @"https://info.bossa.pl/pub/waluty/omega/omeganbp.zip";
         private readonly string _databaseContentFileLink = @"https://info.bossa.pl/pub/waluty/omega/omeganbp.lst";
-        private readonly string _pathToInternalDirectory = "Files";
+        private readonly string _fileFolderName = "Files";
         private readonly string _contentFileName = "content.lst";
         private readonly string _databaseFileName = "database.zip";
         private readonly ICurrencyFilesDownloader _downloader;
@@ -34,7 +34,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
         {
             DateTime currentDate = DateTime.Now;
             string fullPathToDirectory = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).Parent.FullName,
-                                                      _pathToInternalDirectory,
+                                                      _fileFolderName,
                                                       currentDate.ToString("ddMMyyyy") + @"\");
             bool downloaderResult = false;
             bool unzipperResult = false;

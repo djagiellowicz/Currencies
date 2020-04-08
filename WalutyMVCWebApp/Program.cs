@@ -46,7 +46,7 @@ namespace WalutyMVCWebApp
                     DefaultRolesInitialisation.Init(roleManager);
                     DefaultAdminCreator.CreateAdmin(userManager);
                     DefaultUsersCreator.CreateUsers(userManager);
-                    currencyFilesUpdater.Process(context);
+                    //currencyFilesUpdater.Process(context);
 
                 }
                 catch (Exception e)

@@ -68,10 +68,24 @@ namespace WalutyMVCWebApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult UpdateDatabase()
+        public async Task<IActionResult> UpdateDatabase(Page page)
         {
-            _currencyFilesUpdater.Process(_context);
-            return View("Index");
+            IList<string> comments = new List<string>();
+
+            bool result = _currencyFilesUpdater.Process(_context);
+
+            if (result)
+            {
+                comments.Add("Sucessfully updated database");
+            }
+            else
+            {
+                comments.Add("Couldn't updated database, see logs for details.");
+            }
+
+            ViewData["Comments"] = comments;
+
+            return View("Index", await _userServices.GetUsersPage(page.PageNumber, page.PageSize));
         }
 
         [HttpPost]

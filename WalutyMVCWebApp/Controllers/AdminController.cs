@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WalutyBusinessLogic.DatabaseLoading;
+using WalutyBusinessLogic.DatabaseLoading.Updater;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Models.DTO;
 using WalutyBusinessLogic.Models.Enums;
@@ -16,17 +18,23 @@ namespace WalutyMVCWebApp.Controllers
     [AuthorizeEnumRoles(RolesEnum.Administrator)]
     public class AdminController : Controller
     {
+        private readonly ICurrencyFilesUpdater _currencyFilesUpdater;
         private readonly IUserServices _userServices;
         private readonly IMapper _mapper;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly int _defaultPageSize = 5;
         private readonly int _defaultPageNumber = 1;
+        private readonly WalutyDBContext _context;
+        
 
-        public AdminController(IUserServices userServices, IMapper mapper, RoleManager<IdentityRole> roleManager)
+        public AdminController(IUserServices userServices, IMapper mapper, RoleManager<IdentityRole> roleManager, 
+                               ICurrencyFilesUpdater currencyFilesUpdater, WalutyDBContext context)
         {
             _userServices = userServices;
             _mapper = mapper;
             _roleManager = roleManager;
+            _currencyFilesUpdater = currencyFilesUpdater;
+            _context = context;
         }
 
         public async Task<IActionResult> Index(Page page)
@@ -57,6 +65,27 @@ namespace WalutyMVCWebApp.Controllers
             ViewData["AllRoles"] = _roleManager.Roles.Select(x => x).ToList();
 
             return View(new PageModel<UserModel>(userModel, page));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateDatabase(Page page)
+        {
+            IList<string> comments = new List<string>();
+
+            bool result = _currencyFilesUpdater.Process(_context);
+
+            if (result)
+            {
+                comments.Add("Sucessfully updated database");
+            }
+            else
+            {
+                comments.Add("Couldn't updated database, see logs for details.");
+            }
+
+            ViewData["Comments"] = comments;
+
+            return View("Index", await _userServices.GetUsersPage(page.PageNumber, page.PageSize));
         }
 
         [HttpPost]

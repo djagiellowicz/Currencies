@@ -8,9 +8,9 @@ namespace WalutyBusinessLogic.LoadingFromFile
     public class Loader : ILoader
     {
         public List<Currency> AllCurrencies { get; set; }
-        private string PathToDirectory = @"LoadingFromFile\FilesToLoad\omeganbp";
-        string AssemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        private string Separator = ",";
+        public string PathToDirectory { get; private set; } = Path.Combine("LoadingFromFile", "FilesToLoad", "omeganbp");
+        private readonly string _assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private readonly string _separator = ",";
 
         public void Init()
         {
@@ -20,29 +20,29 @@ namespace WalutyBusinessLogic.LoadingFromFile
                 return;
             }
 
-            this.AllCurrencies = GetListOfAllCurrencies();
+            this.AllCurrencies = GetListOfAllCurrencies(PathToDirectory);
         }
 
-        public Currency LoadCurrencyFromFile(string fileName)
+        public Currency LoadCurrencyFromFile(string fileName, string receivedPathToDirectory)
         {
-            List<string> linesFromFile = LoadLinesFromFile(fileName);
+            List<string> linesFromFile = LoadLinesFromFile(fileName, receivedPathToDirectory);
             return GetCurrency(linesFromFile);
         }
 
-        public List<Currency> GetListOfAllCurrencies()
+        public List<Currency> GetListOfAllCurrencies(string receivedPathToDirectory)
         {
             List<Currency> currencies = new List<Currency>();
 
-            foreach(string currencyFileName in GetAvailableTxtFileNames())
+            foreach(string currencyFileName in GetAvailableTxtFileNames(receivedPathToDirectory))
             {
-                currencies.Add(LoadCurrencyFromFile(currencyFileName));
+                currencies.Add(LoadCurrencyFromFile(currencyFileName, receivedPathToDirectory));
             }
             return currencies;
         }
 
-        public List<string> GetAvailableTxtFileNames()
+        public List<string> GetAvailableTxtFileNames(string receivedPathToDirectory)
         {
-            string pathToDirectory = GetCurrenciesFolderPath();
+            string pathToDirectory = GetCurrenciesFolderPath(receivedPathToDirectory);
             string[] filePaths = Directory.GetFiles(pathToDirectory, "*.txt", SearchOption.TopDirectoryOnly);
             List<string> listOfFileNames = new List<string>();
 
@@ -54,17 +54,18 @@ namespace WalutyBusinessLogic.LoadingFromFile
             return listOfFileNames;
         }
 
-        private string GetCurrenciesFolderPath()
+        private string GetCurrenciesFolderPath(string receivedPathToDirectory)
         {
-            return Path.Combine(AssemblyPath, $"{PathToDirectory}");
+            return Path.Combine(_assemblyPath, $"{receivedPathToDirectory}");
         }
 
-        private List<string> LoadLinesFromFile(string fileName)
+
+        private List<string> LoadLinesFromFile(string fileName, string receivedPathToDirectory)
         {
             StreamReader streamReader;
             List<string> listOfLines = new List<string>();
 
-            var pathToFile = Path.Combine(GetCurrenciesFolderPath(), fileName);
+            var pathToFile = Path.Combine(GetCurrenciesFolderPath(receivedPathToDirectory), fileName);
 
             if (File.Exists(pathToFile))
             {
@@ -75,7 +76,7 @@ namespace WalutyBusinessLogic.LoadingFromFile
                 throw new FileLoadException();
             }
 
-            //Ignore first line from currenty data
+            //Ignore first line from current data
             if (!streamReader.EndOfStream)
             {
                 streamReader.ReadLine();
@@ -97,7 +98,7 @@ namespace WalutyBusinessLogic.LoadingFromFile
             for (int i = 0; i < listOfLines.Count; i++)
             {
                 CurrencyRecord currencyRecord = new CurrencyRecord();
-                var splittedLine = listOfLines[i].Split(Separator);
+                var splittedLine = listOfLines[i].Split(_separator);
 
                 if (i == 0)
                 {
@@ -123,16 +124,16 @@ namespace WalutyBusinessLogic.LoadingFromFile
             return currency;
         }
 
-        public List<CurrencyInfo> LoadCurrencyInformation()
+        public List<CurrencyInfo> LoadCurrencyInformation(string receivedPathToDirectory)
         {
-            List<string> currenciesFilesNames = GetAvailableTxtFileNames();
+            List<string> currenciesFilesNames = GetAvailableTxtFileNames(receivedPathToDirectory);
             List<CurrencyInfo> infoToReturn = new List<CurrencyInfo>();
 
             foreach (string currencyFileName in currenciesFilesNames)
             {
                 StreamReader streamReader;
 
-                var pathToFile = Path.Combine(GetCurrenciesFolderPath(), "omeganbp.lst");
+                var pathToFile = Path.Combine(GetCurrenciesFolderPath(receivedPathToDirectory), "omeganbp.lst");
 
                 if (File.Exists(pathToFile))
                 {

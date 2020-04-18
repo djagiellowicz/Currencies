@@ -6,6 +6,7 @@ using Serilog;
 using Serilog.Events;
 using System;
 using WalutyBusinessLogic.DatabaseLoading;
+using WalutyBusinessLogic.DatabaseLoading.Updater;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
 
@@ -14,7 +15,7 @@ namespace WalutyMVCWebApp
     public class Program
     {
 
-        public static int Main(string[] args)
+        public  static int Main(string[] args)
         {
            var hostBuilder = CreateWebHostBuilder(args).Build();          
 
@@ -36,15 +37,24 @@ namespace WalutyMVCWebApp
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
 
+                    // Uncomment if you want to automatically download and update currency files
+                    //var currencyFilesDownloader = services.GetRequiredService<ICurrencyFilesDownloader>();
+                    //var currencyFilesUnzipper = services.GetRequiredService<ICurrencyFilesUnzipper>();
+                    //var currencyFilesUpdater = services.GetRequiredService<ICurrencyFilesUpdater>();
+
+
                     DBInitialisation.InitialiseDB(context, loader);
                     DefaultRolesInitialisation.Init(roleManager);
                     DefaultAdminCreator.CreateAdmin(userManager);
                     DefaultUsersCreator.CreateUsers(userManager);
+                    // Uncomment if you want to automatically download and update currency files
+                    //currencyFilesUpdater.Process(context);
 
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     Log.Fatal("Failed to initalise DB");
+                    Log.Fatal(e.Message);
                 }
             }
 

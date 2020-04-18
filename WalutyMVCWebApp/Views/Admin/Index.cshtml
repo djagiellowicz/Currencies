@@ -64,3 +64,9 @@
         MaximumPageNumbersToDisplay = 5,
         EllipsesFormat = ""
     })
+
+<form asp-controller="Admin" asp-action="UpdateDatabase" method="get">
+    <input name="pageSize" typeof="text" value="@Model.PageSize" hidden />
+    <input name="pageNumber" typeof="text" value="@Model.PageNumber" hidden />
+    <button class="btn btn-info">Update Database</button>
+</form>

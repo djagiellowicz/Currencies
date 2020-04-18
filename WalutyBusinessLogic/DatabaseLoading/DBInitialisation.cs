@@ -9,8 +9,8 @@ namespace WalutyBusinessLogic.DatabaseLoading
         {
             if (!context.Currencies.Any() && !context.CurrencyInfos.Any())
             {
-            context.AddRange(loader.GetListOfAllCurrencies());
-            context.AddRange(loader.LoadCurrencyInformation());
+            context.AddRange(loader.GetListOfAllCurrencies(loader.PathToDirectory));
+            context.AddRange(loader.LoadCurrencyInformation(loader.PathToDirectory));
             context.SaveChanges();
             }
         }

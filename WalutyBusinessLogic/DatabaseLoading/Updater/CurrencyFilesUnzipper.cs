@@ -10,7 +10,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
 
         public bool UnzipFile(string fileToExtractName, string filePath)
         {
-            string zipFileName = Path.Combine(filePath + fileToExtractName);
+            string zipFileName = Path.Combine(filePath, fileToExtractName);
 
             FastZip fastZip = new FastZip();
             string fileFilter = null;
@@ -27,7 +27,11 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
             {
                 Log.Logger.Error("Couldn't extract database content file");
                 Log.Logger.Error(e.Message);
-                Log.Logger.Error(e.InnerException.Message);
+                if(e.InnerException != null)
+                {
+                    Log.Logger.Error(e.InnerException.Message);
+                }
+    
             }
 
             return false;

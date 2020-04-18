@@ -36,16 +36,18 @@ namespace WalutyMVCWebApp
                     var loader = services.GetRequiredService<ILoader>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
-                    
-                    var currencyFilesDownloader = services.GetRequiredService<ICurrencyFilesDownloader>();
-                    var currencyFilesUnzipper = services.GetRequiredService<ICurrencyFilesUnzipper>();
-                    var currencyFilesUpdater = services.GetRequiredService<ICurrencyFilesUpdater>();
+
+                    // Uncomment if you want to automatically download and update currency files
+                    //var currencyFilesDownloader = services.GetRequiredService<ICurrencyFilesDownloader>();
+                    //var currencyFilesUnzipper = services.GetRequiredService<ICurrencyFilesUnzipper>();
+                    //var currencyFilesUpdater = services.GetRequiredService<ICurrencyFilesUpdater>();
 
 
                     DBInitialisation.InitialiseDB(context, loader);
                     DefaultRolesInitialisation.Init(roleManager);
                     DefaultAdminCreator.CreateAdmin(userManager);
                     DefaultUsersCreator.CreateUsers(userManager);
+                    // Uncomment if you want to automatically download and update currency files
                     //currencyFilesUpdater.Process(context);
 
                 }

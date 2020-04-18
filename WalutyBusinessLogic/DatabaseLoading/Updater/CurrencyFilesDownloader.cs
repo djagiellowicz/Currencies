@@ -19,6 +19,8 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
         {
             bool result = true;
             WebClient webClient = new WebClient();
+            string fullPathWithContentFileName = Path.Combine(fullPathToDirectory + contentFileName);
+            string fullPathWithDatabaseFileName = Path.Combine(fullPathToDirectory, databaseFileName);
 
             if (!Directory.Exists(fullPathToDirectory))
             {
@@ -27,27 +29,33 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
 
             try
             {
-               await webClient.DownloadFileTaskAsync(new Uri(databaseContentFileLink), fullPathToDirectory + contentFileName);
+               await webClient.DownloadFileTaskAsync(new Uri(databaseContentFileLink), fullPathWithContentFileName);
                Log.Logger.Information($"Downloaded files to: {fullPathToDirectory}");
             }
             catch (WebException e)
             {
                 Log.Logger.Error("Couldn't download database content file");
                 Log.Logger.Error(e.Message);
-                Log.Logger.Error(e.InnerException.Message);
+                if (e.InnerException != null)
+                {
+                    Log.Logger.Error(e.InnerException.Message);
+                }
                 result = false;
             }
 
             try
             {
-                await webClient.DownloadFileTaskAsync(new Uri(databaseZipFileLink), fullPathToDirectory + databaseFileName);
+                await webClient.DownloadFileTaskAsync(new Uri(databaseZipFileLink), fullPathWithDatabaseFileName);
                 Log.Logger.Information($"Downloaded files to: {fullPathToDirectory}");
             }
             catch (WebException e)
             {
                 Log.Logger.Error("Couldn't download database zip file");
                 Log.Logger.Error(e.Message);
-                Log.Logger.Error(e.InnerException.Message);
+                if (e.InnerException != null)
+                {
+                    Log.Logger.Error(e.InnerException.Message);
+                }
                 result = false;
             }
 

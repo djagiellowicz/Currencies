@@ -35,7 +35,7 @@ namespace WalutyBusinessLogic.DatabaseLoading.Updater
             DateTime currentDate = DateTime.Now;
             string fullPathToDirectory = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).Parent.FullName,
                                                       _fileFolderName,
-                                                      currentDate.ToString("ddMMyyyy") + @"\");
+                                                      currentDate.ToString("ddMMyyyy"));
             bool downloaderResult = false;
             bool unzipperResult = false;
             bool updateResult = false;

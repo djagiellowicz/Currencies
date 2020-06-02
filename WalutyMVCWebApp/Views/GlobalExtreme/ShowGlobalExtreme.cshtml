@@ -1,6 +1,21 @@
 ﻿@model WalutyBusinessLogic.Models.GlobalExtremeValueModel
 
-<h4>For @Model.NameCurrency:</h4><br/> 
--Max value @Model.MaxValue
-<br/>
--Min value @Model.MinValue
+<h3>Global extremes for @Model.NameCurrency in comparision to PLN</h3>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Currency</th>
+            <th scope="col">Maximum value</th>
+            <th scope="col">Minimum Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.NameCurrency</td>
+            <td>@Model.MaxValue</td>
+            <td>@Model.MinValue</td>
+        </tr>
+    </tbody>
+</table>

@@ -3,8 +3,22 @@
     ViewData["Title"] = "ShowCurrenciesComparator";
 }
 
-    <h2>Currencies Comparator</h2>
-<h3>
-    @Model.ComparatorResult
-</h3>
+<h2>Currencies Comparator</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">First currency code</th>
+            <th scope="col">Second currency code</th>
+            <th scope="col">Result</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.FirstCurrencyCode</td>
+            <td>@Model.SecondCurrencyCode</td>
+            <td>@Model.ComparatorResult</td>
+        </tr>
+    </tbody>
+</table>
 

@@ -1,9 +1,24 @@
 ﻿@model WalutyBusinessLogic.Models.CurrencyConversionModel
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
 
-    <h3>
-        Convertion currency in @Model.Date.ToString("dd/MM/yyyy") <br />
-        @Model.AmountFirstCurrency @Model.FirstCurrency = @Model.AmountSecondCurrency @Model.SecondCurrency
-    </h3>
+    <h3>Currency conversion</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">First currency</th>
+            <th scope="col">Second currency</th>
+            <th scope="col">First currency Ammount</th>
+            <th scope="col">Second currency Ammount</th>
+            <th scope="col">Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.FirstCurrency</td>
+            <td>@Model.SecondCurrency</td>
+            <td>@Model.AmountFirstCurrency</td>
+            <td>@Model.AmountSecondCurrency</td>
+            <td>@Model.Date.ToString("dd/MM/yyyy")</td>
+        </tr>
+    </tbody>
+</table>

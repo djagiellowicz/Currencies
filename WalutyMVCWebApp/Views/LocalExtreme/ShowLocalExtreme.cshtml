@@ -3,9 +3,22 @@
     ViewData["Title"] = "ShowLocalExtreme";
 }
 
-<h1>Local Extreme</h1>
-<h4>For @Model.NameCurrency from @Model.StartDate.ToString("dd/MM/yyyy") to @Model.EndDate.ToString("dd/MM/yyyy") :</h4>
-<br />
--Max value @Model.MaxValue
-<br />
--Min value @Model.MinValue
+<h1>Local Extremes</h1>
+<h4>Date from @Model.StartDate.ToString("dd/MM/yyyy") to @Model.EndDate.ToString("dd/MM/yyyy") :</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">@Model.NameCurrency</th>
+            <th scope="col">Minimum value</th>
+            <th scope="col">Maximum value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.NameCurrency</td>
+            <td>@Model.MinValue</td>
+            <td>@Model.MaxValue</td>
+        </tr>
+    </tbody>
+</table>

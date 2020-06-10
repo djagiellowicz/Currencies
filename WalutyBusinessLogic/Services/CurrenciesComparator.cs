@@ -30,7 +30,7 @@ namespace WalutyBusinessLogic.Services
 
             float comparision = firstCloseValue / secondCloseValue;
 
-            model.ComparatorResult = $"In day {model.Date.ToShortDateString()} {firstCurrency.Name} is worth {comparision} {secondCurrency.Name}";
+            model.ComparatorResult = $"On the day of {model.Date.ToShortDateString()} {firstCurrency.Name} is worth {comparision} {secondCurrency.Name}";
             return model;
         }
     }

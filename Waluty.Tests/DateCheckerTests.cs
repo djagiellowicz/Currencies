@@ -80,23 +80,21 @@ namespace Waluty.Tests.Services
             Assert.True(result);
         }
 
-        //[Fact]
-        //public void DateChecker_For_Two_Currencies_Must_Return_False_On_Holiday()
-        //{
-        //    // Arrange
-        //    var unitUnderTest = this.CreateDateChecker();
-        //    DateTime dateCurrency = new DateTime(2001, 06, 10);
-        //    string firstNameCurrency = "USD";
-        //    string secondNameCurrency = "AUD";
+        [Fact]
+        public async void DateChecker_For_Two_Currencies_Must_Return_False_On_Non_Existent_Day()
+        {
+            // Arrange
+            var unitUnderTest = this.CreateDateChecker();
+            DateTime dateCurrency = new DateTime(_startYear, _startMonth, 30);
 
-        //    // Act
-        //    var result = unitUnderTest.CheckIfDateExistsForTwoCurrencies(
-        //        dateCurrency,
-        //        firstNameCurrency,
-        //        secondNameCurrency);
+            // Act
+            var result = await unitUnderTest.CheckIfDateExistsForTwoCurrencies(
+                dateCurrency,
+                _firstCurrencyName,
+                _secondCurrencyName);
 
-        //    // Assert
-        //    Assert.False(result);
-        //}
+            // Assert
+            Assert.False(result);
+        }
     }
 }

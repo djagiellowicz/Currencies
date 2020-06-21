@@ -1,5 +1,8 @@
 using Moq;
 using System;
+using System.Collections.Generic;
+using WalutyBusinessLogic.DatabaseLoading;
+using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Services;
 using Xunit;
 
@@ -7,21 +10,48 @@ namespace Waluty.Tests.Services
 {
     public class DateCheckerTests : IDisposable
     {
-        private MockRepository mockRepository;
+        private MockRepository _mockRepository;
+        private readonly string _firstCurrencyName = "USD";
+        private readonly string _secondCurrencyName = "AUD";
 
         public DateCheckerTests()
         {
-            this.mockRepository = new MockRepository(MockBehavior.Strict);
+            this._mockRepository = new MockRepository(MockBehavior.Strict);
         }
 
         public void Dispose()
         {
-            this.mockRepository.VerifyAll();
+            this._mockRepository.VerifyAll();
         }
 
         private DateChecker CreateDateChecker()
         {
-            return new DateChecker();
+            var moq = new Mock<ICurrencyRepository>();
+
+            var firstCurrency = CreateTestCurrency(0);
+            var secondCurrency = CreateTestCurrency(2);
+
+            moq.Setup(x => x.GetCurrency(_firstCurrencyName)).ReturnsAsync(firstCurrency);
+            moq.Setup(x => x.GetCurrency(_secondCurrencyName)).ReturnsAsync(secondCurrency);
+
+            var firstCurrencyRecords = new List<CurrencyRecord>();
+
+            return new DateChecker(moq.Object);
+        }
+
+        private Currency CreateTestCurrency(int startingPoint)
+        {
+            Currency testCurrency = new Currency();
+
+            for (int i = startingPoint; i <= startingPoint + 7; i++)
+            {
+                CurrencyRecord currencyRecord = new CurrencyRecord();
+                currencyRecord.Date.AddDays(i);
+
+                testCurrency.ListOfRecords.Add(currencyRecord);
+            }
+
+            return testCurrency;
         }
 
         [Fact]

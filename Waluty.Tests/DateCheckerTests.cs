@@ -28,7 +28,6 @@ namespace Waluty.Tests.Services
         {
             var moq = new Mock<ICurrencyRepository>();
 
-
             var firstCurrency = CreateTestCurrency(firstCurrencyStartDay, startYear, startMonth);
             var secondCurrency = CreateTestCurrency(secondCurrencyStartDay, startYear, startMonth);
 

@@ -6,7 +6,7 @@ namespace Waluty.Tests
     public class CurrencyNameCheckerTests
     {
         [Fact]
-        public void CurrencyNameChecker_Check_If_Two_Different_Currency_Names_Are_Not_Equal()
+        public void CurrencyNameChecker_Check_If_Two_Different_Currencies_Names_Are_Not_Equal()
         {
             //Arrange
             CurrencyNameChecker nameChecker = new CurrencyNameChecker();

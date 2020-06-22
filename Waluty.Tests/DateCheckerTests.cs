@@ -44,6 +44,7 @@ namespace Waluty.Tests.Services
         {
             Currency testCurrency = new Currency();
 
+            // Creates 7 additional, concurent days to currency.
             for (int i = startingPoint; i <= startingPoint + 7; i++)
             {
                 CurrencyRecord currencyRecord = new CurrencyRecord
@@ -58,7 +59,7 @@ namespace Waluty.Tests.Services
         }
 
         [Fact]
-        public async void DateChecker_For_Two_Currencies_Must_Return_True_On_WorkingDay()
+        public async void DateChecker_For_Two_Currencies_Must_Return_True_On_CommonDay()
         {
             // Arrange
             int startYear = 2000;
@@ -81,7 +82,7 @@ namespace Waluty.Tests.Services
         }
 
         [Fact]
-        public async void DateChecker_For_Two_Currencies_Must_Return_False_On_Non_Existent_Day()
+        public async void DateChecker_For_Two_Currencies_Must_Return_False_On_Non_Common_Day()
         {
             // Arrange
             int startYear = 2000;
@@ -91,6 +92,28 @@ namespace Waluty.Tests.Services
 
             var unitUnderTest = this.CreateDateChecker(firstCurrencyStartDay, secondCurrencyStartDay, startMonth, startYear);
             DateTime dateCurrency = new DateTime(startYear, startMonth, 30);
+
+            // Act
+            var result = await unitUnderTest.CheckIfDateExistsForTwoCurrencies(
+                dateCurrency,
+                _firstCurrencyName,
+                _secondCurrencyName);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async void DateChecker_For_Two_Currencies_Must_Return_False_On_Day_Existing_Only_In_One_Currency()
+        {
+            // Arrange
+            int startYear = 2000;
+            int startMonth = 1;
+            int firstCurrencyStartDay = 1;
+            int secondCurrencyStartDay = 3;
+
+            var unitUnderTest = this.CreateDateChecker(firstCurrencyStartDay, secondCurrencyStartDay, startMonth, startYear);
+            DateTime dateCurrency = new DateTime(startYear, startMonth, 2);
 
             // Act
             var result = await unitUnderTest.CheckIfDateExistsForTwoCurrencies(

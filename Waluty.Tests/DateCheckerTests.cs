@@ -13,8 +13,6 @@ namespace Waluty.Tests.Services
         private MockRepository _mockRepository;
         private readonly string _firstCurrencyName = "USD";
         private readonly string _secondCurrencyName = "AUD";
-        private readonly int _startYear = 2001;
-        private readonly int _startMonth = 1;
 
         public DateCheckerTests()
         {
@@ -26,16 +24,13 @@ namespace Waluty.Tests.Services
             this._mockRepository.VerifyAll();
         }
 
-        private DateChecker CreateDateChecker()
+        private DateChecker CreateDateChecker(int firstCurrencyStartDay, int secondCurrencyStartDay, int startMonth, int startYear)
         {
             var moq = new Mock<ICurrencyRepository>();
 
-            int _startYear = 2001;
-            int firstCurrencyStartDay = 1;
-            int secondCurrencyStartDay = 3;
 
-            var firstCurrency = CreateTestCurrency(firstCurrencyStartDay, _startYear, _startMonth);
-            var secondCurrency = CreateTestCurrency(secondCurrencyStartDay, _startYear, _startMonth);
+            var firstCurrency = CreateTestCurrency(firstCurrencyStartDay, startYear, startMonth);
+            var secondCurrency = CreateTestCurrency(secondCurrencyStartDay, startYear, startMonth);
 
             moq.Setup(x => x.GetCurrency(_firstCurrencyName)).ReturnsAsync(firstCurrency);
             moq.Setup(x => x.GetCurrency(_secondCurrencyName)).ReturnsAsync(secondCurrency);
@@ -66,8 +61,13 @@ namespace Waluty.Tests.Services
         public async void DateChecker_For_Two_Currencies_Must_Return_True_On_WorkingDay()
         {
             // Arrange
-            var unitUnderTest = CreateDateChecker();
-            var dateTime = new DateTime(_startYear, _startMonth, 4);
+            int startYear = 2000;
+            int startMonth = 1;
+            int firstCurrencyStartDay = 1;
+            int secondCurrencyStartDay = 3;
+
+            var unitUnderTest = CreateDateChecker(firstCurrencyStartDay, secondCurrencyStartDay, startMonth, startYear);
+            var dateTime = new DateTime(startYear, startMonth, 4);
 
             // Act
 
@@ -84,8 +84,13 @@ namespace Waluty.Tests.Services
         public async void DateChecker_For_Two_Currencies_Must_Return_False_On_Non_Existent_Day()
         {
             // Arrange
-            var unitUnderTest = this.CreateDateChecker();
-            DateTime dateCurrency = new DateTime(_startYear, _startMonth, 30);
+            int startYear = 2000;
+            int startMonth = 1;
+            int firstCurrencyStartDay = 1;
+            int secondCurrencyStartDay = 3;
+
+            var unitUnderTest = this.CreateDateChecker(firstCurrencyStartDay, secondCurrencyStartDay, startMonth, startYear);
+            DateTime dateCurrency = new DateTime(startYear, startMonth, 30);
 
             // Act
             var result = await unitUnderTest.CheckIfDateExistsForTwoCurrencies(

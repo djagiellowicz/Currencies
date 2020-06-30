@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,8 @@ using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Services;
 using Xunit;
+using MockQueryable;
+using MockQueryable.Moq;
 
 namespace Waluty.Tests
 {
@@ -27,7 +31,7 @@ namespace Waluty.Tests
                 new Mock<ILookupNormalizer>().Object,
                 new Mock<IdentityErrorDescriber>().Object,
                 new Mock<IServiceProvider>().Object,
-                new Mock<ILogger<UserManager<User>>>().Object);      
+                new Mock<ILogger<UserManager<User>>>().Object);  
 
             List<CurrencyInfo> currencyInfoList = new List<CurrencyInfo>();
             currencyInfoList.Add(new CurrencyInfo("Dollar","USD"));
@@ -38,30 +42,34 @@ namespace Waluty.Tests
             User user = new User()
                 {
                     Id = "Test",
-                    UserName = "TestUser"   
+                    UserName = "TestUser",               
+                   
                 };
             user.UserFavoriteCurrencies = new List<UserCurrency>()
                 {
-                    new UserCurrency() { Currency = new Currency("USD"), CurrencyId = 1, User = user, UserId = user.Id },
-                    new UserCurrency() { Currency = new Currency("AUD"), CurrencyId = 2, User = user, UserId = user.Id  },
+                    new UserCurrency() { Currency = new Currency("USD"), CurrencyId = 0, User = user, UserId = user.Id },
+                    new UserCurrency() { Currency = new Currency("AUD"), CurrencyId = 0, User = user, UserId = user.Id  },
                 };
 
-            IQueryable<User> usersMock = new List<User>() { user }.AsQueryable<User>();
+
+            var users = new List<User>() { user };
+
+
+            var mock = users.AsQueryable().BuildMock();
 
             currencyRepositoryMock.Setup(x => x.GetAllCurrencyInfo()).ReturnsAsync(currencyInfoList);
-            userManagerMock.SetupGet(x => x.Users).Returns(usersMock);
+            userManagerMock.Setup(x => x.Users).Returns(mock.Object);
 
             return new CurrenciesSelectList(userManagerMock.Object, currencyRepositoryMock.Object);
         }
 
         [Fact]
-        public async void CurrenciesSelectList_Proper_Favorites_Are_Returned()
-        {
+        public void CurrenciesSelectList_Proper_Favorites_Are_Returned() { 
+        
             CurrenciesSelectList currenciesSelectList = CreateCurrenciesSelectList();
-            var result = await currenciesSelectList.GetCurrencyCodes("TestUser");
+            var result =  currenciesSelectList.GetCurrencyCodes("TestUser");
+            return;
         }
-
-
 
     }
 }

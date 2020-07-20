@@ -1,10 +1,8 @@
 ﻿using Moq;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
-using WalutyBusinessLogic.LoadingFromFile.DatabaseLoading;
 using WalutyBusinessLogic.Services;
 
 namespace Waluty.Tests
@@ -14,6 +12,13 @@ namespace Waluty.Tests
         private readonly string _firstCurrencyName = "GBP";
         private readonly string _secondCurrencyName = "EUR";
         private readonly DateTime _commonDate = DateTime.Now;
+
+        private CurrencyConversionService CreateCurrencyConversionService()
+        {
+            ICurrencyRepository currencyRepository = CreateICurrencyRepositoryMoq();
+
+            return new CurrencyConversionService(currencyRepository);
+        }
 
         private ICurrencyRepository CreateICurrencyRepositoryMoq()
         {

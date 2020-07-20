@@ -3,15 +3,19 @@ using System;
 using System.Collections.Generic;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
+using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Services;
+using Xunit;
 
 namespace Waluty.Tests
 {
-    class CurrencyConversionServiceTests
+    public class CurrencyConversionServiceTests
     {
         private readonly string _firstCurrencyName = "GBP";
         private readonly string _secondCurrencyName = "EUR";
         private readonly DateTime _commonDate = DateTime.Now;
+        private readonly int _firstCurrencyCloseValue = 5;
+        private readonly int _secondCurrencyCloseValue = 10;
 
         private CurrencyConversionService CreateCurrencyConversionService()
         {
@@ -22,11 +26,10 @@ namespace Waluty.Tests
 
         private ICurrencyRepository CreateICurrencyRepositoryMoq()
         {
-            int firstCurrencyCloseValue = 5;
-            int secondCurrencyCloseValue = 10;
+            
             Mock<ICurrencyRepository> mockRepository = new Mock<ICurrencyRepository>();
-            Currency firstCurrency = CreateCurrency(firstCurrencyCloseValue, _firstCurrencyName, _commonDate);
-            Currency secondCurrency = CreateCurrency(secondCurrencyCloseValue, _secondCurrencyName, _commonDate);
+            Currency firstCurrency = CreateCurrency(_firstCurrencyCloseValue, _firstCurrencyName, _commonDate);
+            Currency secondCurrency = CreateCurrency(_secondCurrencyCloseValue, _secondCurrencyName, _commonDate);
           
             mockRepository.Setup(x => x.GetCurrency(_firstCurrencyName)).ReturnsAsync(firstCurrency);
             mockRepository.Setup(x => x.GetCurrency(_secondCurrencyName)).ReturnsAsync(secondCurrency);
@@ -58,6 +61,30 @@ namespace Waluty.Tests
             return currency;
         }
 
+        [Fact]
+        public async void CurrencyConversionService_is_conversion_correct()
+        {
+            //Arange
+            CurrencyConversionService testService = CreateCurrencyConversionService();
+            CurrencyConversionModel currencyConversionModel = new CurrencyConversionModel();
+            currencyConversionModel.FirstCurrency = _firstCurrencyName;
+            currencyConversionModel.SecondCurrency = _secondCurrencyName;
+            currencyConversionModel.AmountFirstCurrency = 10;
+            currencyConversionModel.Date = _commonDate;
+            float expectedResult = currencyConversionModel.AmountFirstCurrency * _firstCurrencyCloseValue / _secondCurrencyCloseValue;
+            bool resultFlag = false;
+
+            //Act
+            currencyConversionModel = await testService.CalculateCurrencyConversionAmount(currencyConversionModel);
+
+            if(currencyConversionModel.AmountSecondCurrency == expectedResult)
+            {
+                resultFlag = true;
+            }
+
+            //Asert
+            Assert.True(resultFlag);
+        }
 
     }
 }

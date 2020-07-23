@@ -1,13 +1,14 @@
 ﻿using Moq;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
+using WalutyBusinessLogic.Services;
+using Xunit;
 
 namespace Waluty.Tests
 {
-    class DateRangeTests
+    public class DateRangeTests
     {
         private readonly string _firstCurrencyName = "GBP";
         private readonly string _secondCurrencyName = "EUR";
@@ -17,7 +18,7 @@ namespace Waluty.Tests
         private ICurrencyRepository CreateICurrencyRepositoryMoq()
         {
             Mock<ICurrencyRepository> mockRepository = new Mock<ICurrencyRepository>();
-            Currency firstCurrency = CreateCurrency(_firstCurrencyName, _firstCurrencyStartDate, 10);
+            Currency firstCurrency = CreateCurrency(_firstCurrencyName, _firstCurrencyStartDate, 5);
             Currency secondCurrency = CreateCurrency(_secondCurrencyName, _secondCurrencyStartDate, 10);
 
             mockRepository.Setup(x => x.GetCurrency(_firstCurrencyName)).ReturnsAsync(firstCurrency);
@@ -44,6 +45,20 @@ namespace Waluty.Tests
             currency.ListOfRecords = records;
 
             return currency;
+        }
+
+        [Fact]
+        public async void DateRangeTests_Are_Proper_Common_Days_Returned()
+        {
+            //Arrange
+            IDateRange dateRange = new DateRange(CreateICurrencyRepositoryMoq());
+            string expectedResult = "Date common for GBP and EUR exist in this app is from 05.10.2000 to 10.10.2000. Without weekends and holidays";
+
+            //Act
+            var result = await dateRange.GetCommonDateRangeForTwoCurrencies(_firstCurrencyName, _secondCurrencyName);
+
+            //Asert
+            Assert.Equal(expectedResult, result);
         }
     }
 }

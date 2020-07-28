@@ -1,16 +1,25 @@
 ﻿using Moq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
+using WalutyBusinessLogic.Models;
+using WalutyBusinessLogic.Services;
+using Xunit;
 
 namespace Waluty.Tests
 {
-    class ChartServiceTests
+    public class ChartServiceTests
     {
         private readonly string _firstCurrencyName = "AUD";
         private readonly string _secondCurrencyName = "USD";
         private readonly string _thirdCurrencyName = "JPY";
 
+        private ChartService CreateChartService(ICurrencyRepository currencyRepository)
+        {
+            return new ChartService(currencyRepository);
+        }
 
         private ICurrencyRepository CreateICurrencyRepositoryMoq()
         {
@@ -32,8 +41,7 @@ namespace Waluty.Tests
             Currency testCurrency = new Currency();
             Random random = new Random();
 
-            // Creates 7 additional, concurent days to currency.
-            for (int i = 0; i <= random.Next(2,10); i++)
+            for (int i = 1; i <= random.Next(3,10); i++)
             {
                 CurrencyRecord currencyRecord = new CurrencyRecord
                 {
@@ -47,5 +55,76 @@ namespace Waluty.Tests
 
             return testCurrency;
         }
+
+        [Fact]
+        public async void ChartServiceTests_AUD_Model_Should_Be_Returned()
+        {
+            //Arange
+            ICurrencyRepository repository = CreateICurrencyRepositoryMoq();
+            ChartService chartService = CreateChartService(repository);
+            Currency testedCurrency = await repository.GetCurrency(_firstCurrencyName);
+            ChartModel expectedModel = new ChartModel(testedCurrency.Name, testedCurrency.ListOfRecords);
+            bool testResult = false;
+
+            //Act
+
+            ChartModel resultModel = await chartService.CreateChartModel(_firstCurrencyName);
+
+            if (resultModel.CurrencyCode.Equals(_firstCurrencyName) && resultModel.CurrencyRecords.SequenceEqual(expectedModel.CurrencyRecords))
+            {
+                testResult = true;
+            }
+
+            //Asert
+            Assert.True(testResult);
+
+        }
+
+        [Fact]
+        public async void ChartServiceTests_USD_Model_Should_Be_Returned()
+        {
+            //Arange
+            ICurrencyRepository repository = CreateICurrencyRepositoryMoq();
+            ChartService chartService = CreateChartService(repository);
+            Currency testedCurrency = await repository.GetCurrency(_secondCurrencyName);
+            ChartModel expectedModel = new ChartModel(testedCurrency.Name, testedCurrency.ListOfRecords);
+            bool testResult = false;
+
+            //Act
+
+            ChartModel resultModel = await chartService.CreateChartModel(_secondCurrencyName);
+
+            if (resultModel.CurrencyCode.Equals(_secondCurrencyName) && resultModel.CurrencyRecords.SequenceEqual(expectedModel.CurrencyRecords))
+            {
+                testResult = true;
+            }
+
+            //Asert
+            Assert.True(testResult);
+        }
+
+        [Fact]
+        public async  void ChartServiceTests_JPY_Model_Should_Be_Returned()
+        {
+            //Arange
+            ICurrencyRepository repository = CreateICurrencyRepositoryMoq();
+            ChartService chartService = CreateChartService(repository);
+            Currency testedCurrency = await repository.GetCurrency(_thirdCurrencyName);
+            ChartModel expectedModel = new ChartModel(testedCurrency.Name, testedCurrency.ListOfRecords);
+            bool testResult = false;
+
+            //Act
+
+            ChartModel resultModel = await chartService.CreateChartModel(_thirdCurrencyName);
+
+            if (resultModel.CurrencyCode.Equals(_thirdCurrencyName) && resultModel.CurrencyRecords.SequenceEqual(expectedModel.CurrencyRecords))
+            {
+                testResult = true;
+            }
+
+            //Asert
+            Assert.True(testResult);
+        }
+
     }
 }

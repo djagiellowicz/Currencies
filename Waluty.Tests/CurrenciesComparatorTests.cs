@@ -26,29 +26,6 @@ namespace Waluty.Tests
             this._mockRepository.VerifyAll();
         }
 
-        [Fact]
-        public async void CurrencyNameChecker_1_USD_Should_Be_Worth_Half_Of_AUD()
-        {
-            //Arrange
-            int usdStartValue = 1;
-            int audStartValue = 3;
-            //bool result;
-
-            CurrenciesComparator currenciesComparator = CreateCurrencyNameChecker(usdStartValue, audStartValue);
-            CurrenciesComparatorModel currenciesComparatorModel = new CurrenciesComparatorModel();
-            currenciesComparatorModel.FirstCurrencyCode = _firstCurrencyName;
-            currenciesComparatorModel.SecondCurrencyCode = _secondCurrencyName;
-            currenciesComparatorModel.Date = new DateTime(_date.Year, _date.Month, _date.Day + 1);
-
-            //Act
-            var result = await currenciesComparator.CompareCurrencies(currenciesComparatorModel);
-            
-
-            //Asert
-            Assert.Equal(($"On the day of {currenciesComparatorModel.Date.ToShortDateString()} {_firstCurrencyName} is worth 0,5 {_secondCurrencyName}").ToLower()
-                         ,result.ComparatorResult.ToLower());
-        }
-
         private CurrenciesComparator CreateCurrencyNameChecker(int firstStartValue,int secondStartValue )
         {
             var moq = new Mock<ICurrencyRepository>();
@@ -81,6 +58,29 @@ namespace Waluty.Tests
                 testCurrency.ListOfRecords.Add(currencyRecord);
             }
             return testCurrency;
+        }
+
+        [Fact]
+        public async void CurrencyNameChecker_1_USD_Should_Be_Worth_Half_Of_AUD()
+        {
+            //Arrange
+            int usdStartValue = 1;
+            int audStartValue = 3;
+            //bool result;
+
+            CurrenciesComparator currenciesComparator = CreateCurrencyNameChecker(usdStartValue, audStartValue);
+            CurrenciesComparatorModel currenciesComparatorModel = new CurrenciesComparatorModel();
+            currenciesComparatorModel.FirstCurrencyCode = _firstCurrencyName;
+            currenciesComparatorModel.SecondCurrencyCode = _secondCurrencyName;
+            currenciesComparatorModel.Date = new DateTime(_date.Year, _date.Month, _date.Day + 1);
+
+            //Act
+            var result = await currenciesComparator.CompareCurrencies(currenciesComparatorModel);
+
+
+            //Asert
+            Assert.Equal(($"On the day of {currenciesComparatorModel.Date.ToShortDateString()} {_firstCurrencyName} is worth 0,5 {_secondCurrencyName}").ToLower()
+                         , result.ComparatorResult.ToLower());
         }
     }
 }

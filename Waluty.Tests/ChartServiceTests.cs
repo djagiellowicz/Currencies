@@ -1,6 +1,5 @@
 ﻿using Moq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
@@ -110,30 +109,6 @@ namespace Waluty.Tests
             ICurrencyRepository repository = CreateICurrencyRepositoryMoq();
             ChartService chartService = CreateChartService(repository);
             Currency testedCurrency = await repository.GetCurrency(_thirdCurrencyName);
-            ChartModel expectedModel = new ChartModel(testedCurrency.Name, testedCurrency.ListOfRecords);
-            bool testResult = false;
-
-            //Act
-
-            ChartModel resultModel = await chartService.CreateChartModel(_thirdCurrencyName);
-
-            if (resultModel.CurrencyCode.Equals(_thirdCurrencyName) && resultModel.CurrencyRecords.SequenceEqual(expectedModel.CurrencyRecords))
-            {
-                testResult = true;
-            }
-
-            //Asert
-            Assert.True(testResult);
-        }
-
-        [Fact]
-        public async void ChartServiceTests_Non_Existent_Currency_Should_Be_Null()
-        {
-           
-            //Arange
-            ICurrencyRepository repository = CreateICurrencyRepositoryMoq();
-            ChartService chartService = CreateChartService(repository);
-            Currency testedCurrency = await repository.GetCurrency(" ");
             ChartModel expectedModel = new ChartModel(testedCurrency.Name, testedCurrency.ListOfRecords);
             bool testResult = false;
 

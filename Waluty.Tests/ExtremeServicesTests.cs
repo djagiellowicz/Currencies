@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
+using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Services;
+using Xunit;
 
 namespace Waluty.Tests
 {
@@ -24,7 +26,7 @@ namespace Waluty.Tests
             Mock<ICurrencyRepository> mockRepository = new Mock<ICurrencyRepository>();
             Currency firstCurrency = CreateCurrency(1, 10, 2000, _firstCurrencyName, 2, 1);
             Currency secondCurrency = CreateCurrency(1, 10, 2000, _secondCurrencyName, 3, 0.5f);
-            Currency thirdCurrency = CreateCurrency(1, 10, 2000, _thirdCurrencyName, 2, 1);
+            Currency thirdCurrency = CreateCurrency(1, 10, 2000, _thirdCurrencyName, 4, 2);
 
             mockRepository.Setup(x => x.GetCurrency(_firstCurrencyName)).ReturnsAsync(firstCurrency);
             mockRepository.Setup(x => x.GetCurrency(_secondCurrencyName)).ReturnsAsync(secondCurrency);
@@ -44,7 +46,10 @@ namespace Waluty.Tests
             {
                 CurrencyRecord currencyRecord = new CurrencyRecord
                 {
-                    Date = new DateTime(startYear, startMonth, i)
+                    Date = new DateTime(startYear, startMonth, i),
+                    Close = startCloseValue + i * incrementCloseValue,
+                    High = startCloseValue + i * incrementCloseValue + incrementCloseValue,
+                    Low = startCloseValue + i * incrementCloseValue - incrementCloseValue
                 };
 
                 testCurrency.ListOfRecords.Add(currencyRecord);
@@ -54,6 +59,32 @@ namespace Waluty.Tests
             return testCurrency;
         }
 
+        [Fact]
+        public async void ExtremeServicesTests_Get_Global_Extreme_Should_Return_MinValue_2_MaxValue_11_GBP()
+        {
+            //Arrange
+            bool result = false;
+            ICurrencyRepository repository = CreateICurrencyRepositoryMoq();
+            ExtremesServices extremesServices = CreateExtremeServices(repository);
+            GlobalExtremeValueModel resultModel = new GlobalExtremeValueModel { NameCurrency = _firstCurrencyName };
+            GlobalExtremeValueModel expectedModel = new GlobalExtremeValueModel
+            {
+                NameCurrency = _firstCurrencyName,
+                MaxValue = 11,
+                MinValue = 2
+            };
 
+            //Act
+            resultModel = await extremesServices.GetGlobalExtreme(resultModel);
+
+            if(resultModel.NameCurrency == expectedModel.NameCurrency && resultModel.MinValue == expectedModel.MinValue 
+                && resultModel.MaxValue == expectedModel.MaxValue)
+            {
+                result = true;
+            }
+
+            //Assert
+            Assert.True(result);
+        }
     }
 }

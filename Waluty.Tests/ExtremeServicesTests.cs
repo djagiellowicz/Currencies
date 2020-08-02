@@ -1,7 +1,5 @@
 ﻿using Moq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
@@ -15,6 +13,10 @@ namespace Waluty.Tests
         private readonly string _firstCurrencyName = "GBP";
         private readonly string _secondCurrencyName = "EUR";
         private readonly string _thirdCurrencyName = "USD";
+        private readonly int _startDay = 1;
+        private readonly int _startMonth = 10;
+        private readonly int _startYear = 2000;
+
 
         public ExtremesServices CreateExtremeServices(ICurrencyRepository repository)
         {
@@ -24,9 +26,9 @@ namespace Waluty.Tests
         private ICurrencyRepository CreateICurrencyRepositoryMoq()
         {
             Mock<ICurrencyRepository> mockRepository = new Mock<ICurrencyRepository>();
-            Currency firstCurrency = CreateCurrency(1, 10, 2000, _firstCurrencyName, 2, 1);
-            Currency secondCurrency = CreateCurrency(1, 10, 2000, _secondCurrencyName, 3, 0.5f);
-            Currency thirdCurrency = CreateCurrency(1, 10, 2000, _thirdCurrencyName, 4, 2);
+            Currency firstCurrency = CreateCurrency(_startDay, _startMonth, _startYear, _firstCurrencyName, 2, 1);
+            Currency secondCurrency = CreateCurrency(_startDay, _startMonth, _startYear, _secondCurrencyName, 3, 0.5f);
+            Currency thirdCurrency = CreateCurrency(_startDay, _startMonth, _startYear, _thirdCurrencyName, 4, 2);
 
             mockRepository.Setup(x => x.GetCurrency(_firstCurrencyName)).ReturnsAsync(firstCurrency);
             mockRepository.Setup(x => x.GetCurrency(_secondCurrencyName)).ReturnsAsync(secondCurrency);
@@ -78,6 +80,37 @@ namespace Waluty.Tests
             resultModel = await extremesServices.GetGlobalExtreme(resultModel);
 
             if(resultModel.NameCurrency == expectedModel.NameCurrency && resultModel.MinValue == expectedModel.MinValue 
+                && resultModel.MaxValue == expectedModel.MaxValue)
+            {
+                result = true;
+            }
+
+            //Assert
+            Assert.True(result);
+        }
+        [Fact]
+        public async void ExtremeServicesTests_Get_Local_Extreme_Should_Return_MinValue_3_MaxValue_6_GBP()
+        {
+            //Arrange
+            bool result = false;
+            ICurrencyRepository repository = CreateICurrencyRepositoryMoq();
+            ExtremesServices extremesServices = CreateExtremeServices(repository);
+            LocalExtremeValueModel resultModel = new LocalExtremeValueModel {
+                NameCurrency = _firstCurrencyName,
+                StartDate = new DateTime(_startYear, _startMonth, _startDay + 1),
+                EndDate = new DateTime(_startYear, _startMonth, _startDay + 2)
+            };
+            LocalExtremeValueModel expectedModel = new LocalExtremeValueModel
+            {
+                NameCurrency = _firstCurrencyName,
+                MinValue = 3,
+                MaxValue = 6
+            };
+
+            //Act
+            resultModel = await extremesServices.GetLocalExtremes(resultModel);
+
+            if (resultModel.NameCurrency == expectedModel.NameCurrency && resultModel.MinValue == expectedModel.MinValue
                 && resultModel.MaxValue == expectedModel.MaxValue)
             {
                 result = true;

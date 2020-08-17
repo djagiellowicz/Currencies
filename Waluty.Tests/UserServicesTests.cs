@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using System;
+using System.Collections.Generic;
 using WalutyBusinessLogic.AutoMapper.Profiles;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.Models;
@@ -16,7 +17,7 @@ namespace Waluty.Tests
 {
     public class UserServicesTests
     {
-        private void CreateUserServices()
+        private UserServices CreateUserServices()
         {
             Mock<UserManager<User>> userManagerMock = new Mock<UserManager<User>>(
                 new Mock<IUserStore<User>>().Object,
@@ -32,18 +33,26 @@ namespace Waluty.Tests
             IMapper iMapper = new MapperConfiguration(c => c.AddProfile<UserProfileMap>()).CreateMapper();
 
             Mock<IPasswordValidator<User>> iPasswordValidatorMock = new Mock<IPasswordValidator<User>>();
-            Mock<RoleManager<IdentityRole>> roleManagerMock = new Mock<RoleManager<IdentityRole>>();
+            Mock<RoleManager<IdentityRole>> roleManagerMock = new Mock<RoleManager<IdentityRole>>(
+                new Mock<IRoleStore<IdentityRole>>().Object,
+                null,
+                null,
+                null,
+                null);
 
-            DbContextOptions contextOptions = new DbContextOptions<WalutyDBContext>();
-            var options = new DbContextOptionsBuilder<WalutyDBContext>().UseInMemoryDatabase("test").Options;
+            //IRoleStore<TRole> store, IEnumerable< IRoleValidator < TRole >> roleValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, ILogger<RoleManager<TRole>> logger
 
-            WalutyDBContext context = new WalutyDBContext(options);
+            var dbOptions = new DbContextOptionsBuilder<WalutyDBContext>()
+                            .UseInMemoryDatabase(databaseName: "ToDoDb")
+                            .Options;
+            WalutyDBContext context = new WalutyDBContext(dbOptions);
 
             User userToReturn = new User() { Id = "1234", Email = "John@john.com" };
 
 
             //Give proper user
             userManagerMock.Setup(x => x.FindByIdAsync("1234")).ReturnsAsync(userToReturn);
+            userManagerMock.Setup(x => x.GetRolesAsync(userToReturn)).ReturnsAsync(new List<string>());
 
             UserServices userServices = new UserServices(userManagerMock.Object,
                 context,
@@ -51,12 +60,29 @@ namespace Waluty.Tests
                 iPasswordValidatorMock.Object,
                 roleManagerMock.Object);
 
+            return userServices;
+
         }
 
         [Fact]
-        public void CreateUserServices_Correct_User_Is_Returned()
+        public async void CreateUserServices_Correct_User_Is_Returned()
         {
+            //Arrange
+            UserServices userServices = CreateUserServices();
+            UserDTO expectedUserDTO = new UserDTO { Email = "John@john.com", Id = "1234" };
+            UserDTO resultDTO;
+            bool result = false;
 
+            //Act
+            resultDTO = await userServices.GetUser("1234");
+
+            if(resultDTO.Id == expectedUserDTO.Id && resultDTO.Email == expectedUserDTO.Email)
+            {
+                result = true;
+            }
+
+            //Assert
+            Assert.True(result);
         }
 
     }

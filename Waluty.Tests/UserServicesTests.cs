@@ -3,14 +3,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MockQueryable.Moq;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using WalutyBusinessLogic.AutoMapper.Profiles;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Models.DTO;
 using WalutyBusinessLogic.Services;
+using X.PagedList;
 using Xunit;
 
 namespace Waluty.Tests
@@ -48,11 +51,15 @@ namespace Waluty.Tests
             WalutyDBContext context = new WalutyDBContext(dbOptions);
 
             User userToReturn = new User() { Id = "1234", Email = "John@john.com" };
+            List<User> usersToReturn = new List<User>() { userToReturn };
+
+            
 
 
             //Give proper user
             userManagerMock.Setup(x => x.FindByIdAsync("1234")).ReturnsAsync(userToReturn);
             userManagerMock.Setup(x => x.GetRolesAsync(userToReturn)).ReturnsAsync(new List<string>());
+            userManagerMock.Setup(x => x.Users).Returns(usersToReturn.AsQueryable().BuildMock().Object);
 
             UserServices userServices = new UserServices(userManagerMock.Object,
                 context,
@@ -62,6 +69,35 @@ namespace Waluty.Tests
 
             return userServices;
 
+        }
+
+        [Fact]
+        public async void CreateUserServices_Get_Correct_Page()
+        {
+            //Arrange
+            UserServices userServices = CreateUserServices();
+            UserDTO expectedUserDTO = new UserDTO { Email = "John@john.com", Id = "1234" };
+            List<UserDTO> expectedUserDTOs = new List<UserDTO>() { expectedUserDTO };
+            IPagedList<UserDTO> expectedDTOList = new StaticPagedList<UserDTO>(expectedUserDTOs,1,1,1);
+            IPagedList<UserDTO> resultDTOList;
+            bool result = false;
+
+            //Act
+             resultDTOList = await userServices.GetUsersPage(1 , 1);
+
+            if(expectedDTOList.PageNumber == resultDTOList.PageNumber &&
+               expectedDTOList.PageSize == resultDTOList.PageSize &&
+               expectedDTOList.TotalItemCount == resultDTOList.TotalItemCount)
+            {
+                if(resultDTOList[0].Email == expectedUserDTO.Email &&
+                   resultDTOList[0].Id == expectedUserDTO.Id)
+                {
+                    result = true;
+                }
+            }
+
+            //Assert
+            Assert.True(result);
         }
 
         [Fact]

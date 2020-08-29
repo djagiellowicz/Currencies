@@ -60,6 +60,7 @@ namespace Waluty.Tests
             userManagerMock.Setup(x => x.FindByIdAsync("1234")).ReturnsAsync(userToReturn);
             userManagerMock.Setup(x => x.GetRolesAsync(userToReturn)).ReturnsAsync(new List<string>());
             userManagerMock.Setup(x => x.Users).Returns(usersToReturn.AsQueryable().BuildMock().Object);
+            userManagerMock.Setup(x => x.DeleteAsync(userToReturn)).ReturnsAsync(IdentityResult.Success);
 
             UserServices userServices = new UserServices(userManagerMock.Object,
                 context,
@@ -72,7 +73,7 @@ namespace Waluty.Tests
         }
 
         [Fact]
-        public async void CreateUserServices_Get_Correct_Page()
+        public async void UserServices_Get_Correct_Page()
         {
             //Arrange
             UserServices userServices = CreateUserServices();
@@ -101,7 +102,7 @@ namespace Waluty.Tests
         }
 
         [Fact]
-        public async void CreateUserServices_Correct_User_Is_Returned()
+        public async void UserServices_Correct_User_Is_Returned()
         {
             //Arrange
             UserServices userServices = CreateUserServices();
@@ -116,6 +117,21 @@ namespace Waluty.Tests
             {
                 result = true;
             }
+
+            //Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async void UserServices_User_Has_Been_Properly_Deleted()
+        {
+            //Arrange
+            UserServices userServices = CreateUserServices();
+            string userId = "1234";
+            bool result = false;
+
+            //Act
+            result = await userServices.Delete(userId);
 
             //Assert
             Assert.True(result);

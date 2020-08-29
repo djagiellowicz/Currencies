@@ -22,6 +22,7 @@ namespace Waluty.Tests
     {
         private IdentityRole _userRole = new IdentityRole("User");
         private IdentityRole _adminRole = new IdentityRole("Admin");
+        private User _testUser = new User() { Id = "1234", Email = "John@john.com" };
 
         private UserServices CreateUserServices()
         {
@@ -54,17 +55,17 @@ namespace Waluty.Tests
                 new Mock<IServiceProvider>().Object,
                 new Mock<ILogger<UserManager<User>>>().Object);
 
-            User testUser = new User() { Id = "1234", Email = "John@john.com" };
-            List<User> testUsers = new List<User>() { testUser };
+            
+            List<User> testUsers = new List<User>() { _testUser };
 
-            userManagerMock.Setup(x => x.FindByIdAsync("1234")).ReturnsAsync(testUser);
-            userManagerMock.Setup(x => x.GetRolesAsync(testUser)).ReturnsAsync(new List<string>());
+            userManagerMock.Setup(x => x.FindByIdAsync("1234")).ReturnsAsync(_testUser);
+            userManagerMock.Setup(x => x.GetRolesAsync(_testUser)).ReturnsAsync(new List<string>());
             userManagerMock.Setup(x => x.Users).Returns(testUsers.AsQueryable().BuildMock().Object);
-            userManagerMock.Setup(x => x.DeleteAsync(testUser)).ReturnsAsync(IdentityResult.Success);
-            userManagerMock.Setup(x => x.AddToRoleAsync(testUser, _userRole.Name)).ReturnsAsync(IdentityResult.Success);
-            userManagerMock.Setup(x => x.AddToRoleAsync(testUser, _adminRole.Name)).ReturnsAsync(IdentityResult.Success);
-            userManagerMock.Setup(x => x.RemoveFromRoleAsync(testUser, _userRole.Name)).ReturnsAsync(IdentityResult.Success);
-            userManagerMock.Setup(x => x.RemoveFromRoleAsync(testUser, _adminRole.Name)).ReturnsAsync(IdentityResult.Success);
+            userManagerMock.Setup(x => x.DeleteAsync(_testUser)).ReturnsAsync(IdentityResult.Success);
+            userManagerMock.Setup(x => x.AddToRoleAsync(_testUser, _userRole.Name)).ReturnsAsync(IdentityResult.Success);
+            userManagerMock.Setup(x => x.AddToRoleAsync(_testUser, _adminRole.Name)).ReturnsAsync(IdentityResult.Success);
+            userManagerMock.Setup(x => x.RemoveFromRoleAsync(_testUser, _userRole.Name)).ReturnsAsync(IdentityResult.Success);
+            userManagerMock.Setup(x => x.RemoveFromRoleAsync(_testUser, _adminRole.Name)).ReturnsAsync(IdentityResult.Success);
             
             return userManagerMock;
         }

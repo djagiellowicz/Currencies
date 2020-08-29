@@ -20,7 +20,28 @@ namespace Waluty.Tests
 {
     public class UserServicesTests
     {
+        private IdentityRole _userRole = new IdentityRole("User");
+        private IdentityRole _adminRole = new IdentityRole("Admin");
+
         private UserServices CreateUserServices()
+        {
+            Mock<UserManager<User>> userManagerMock = CreateUserManagerMock();
+            Mock<RoleManager<IdentityRole>> roleManagerMock = CreateRoleManagerMock();
+            Mock<IPasswordValidator<User>> iPasswordValidatorMock = new Mock<IPasswordValidator<User>>();
+            IMapper iMapper = CreateMapper();
+            WalutyDBContext context = CreateInMemoryDBContext();
+
+            UserServices userServices = new UserServices(userManagerMock.Object,
+                context,
+                iMapper,
+                iPasswordValidatorMock.Object,
+                roleManagerMock.Object);
+
+            return userServices;
+
+        }
+
+        private Mock<UserManager<User>> CreateUserManagerMock()
         {
             Mock<UserManager<User>> userManagerMock = new Mock<UserManager<User>>(
                 new Mock<IUserStore<User>>().Object,
@@ -33,9 +54,33 @@ namespace Waluty.Tests
                 new Mock<IServiceProvider>().Object,
                 new Mock<ILogger<UserManager<User>>>().Object);
 
-            IMapper iMapper = new MapperConfiguration(c => c.AddProfile<UserProfileMap>()).CreateMapper();
+            User testUser = new User() { Id = "1234", Email = "John@john.com" };
+            List<User> testUsers = new List<User>() { testUser };
 
-            Mock<IPasswordValidator<User>> iPasswordValidatorMock = new Mock<IPasswordValidator<User>>();
+            userManagerMock.Setup(x => x.FindByIdAsync("1234")).ReturnsAsync(testUser);
+            userManagerMock.Setup(x => x.GetRolesAsync(testUser)).ReturnsAsync(new List<string>());
+            userManagerMock.Setup(x => x.Users).Returns(testUsers.AsQueryable().BuildMock().Object);
+            userManagerMock.Setup(x => x.DeleteAsync(testUser)).ReturnsAsync(IdentityResult.Success);
+            userManagerMock.Setup(x => x.AddToRoleAsync(testUser, _userRole.Name)).ReturnsAsync(IdentityResult.Success);
+            userManagerMock.Setup(x => x.AddToRoleAsync(testUser, _adminRole.Name)).ReturnsAsync(IdentityResult.Success);
+            userManagerMock.Setup(x => x.RemoveFromRoleAsync(testUser, _userRole.Name)).ReturnsAsync(IdentityResult.Success);
+            userManagerMock.Setup(x => x.RemoveFromRoleAsync(testUser, _adminRole.Name)).ReturnsAsync(IdentityResult.Success);
+            
+            return userManagerMock;
+        }
+
+        private IMapper CreateMapper()
+        {
+            return new MapperConfiguration(c => c.AddProfile<UserProfileMap>()).CreateMapper();
+        }
+
+        private List<IdentityRole> GetRoles()
+        {
+            return new List<IdentityRole>() { _userRole, _adminRole };
+        }
+
+        private Mock<RoleManager<IdentityRole>> CreateRoleManagerMock()
+        {
             Mock<RoleManager<IdentityRole>> roleManagerMock = new Mock<RoleManager<IdentityRole>>(
                 new Mock<IRoleStore<IdentityRole>>().Object,
                 null,
@@ -43,42 +88,20 @@ namespace Waluty.Tests
                 null,
                 null);
 
-            IdentityRole identityRoleAdmin = new IdentityRole("Admin");
-            IdentityRole identityRoleUser = new IdentityRole("User");
-            List<IdentityRole> roles = new List<IdentityRole>() { identityRoleAdmin, identityRoleUser };
-            
-            //IRoleStore<TRole> store, IEnumerable< IRoleValidator < TRole >> roleValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, ILogger<RoleManager<TRole>> logger
+            roleManagerMock.Setup(x => x.Roles).Returns(GetRoles().AsQueryable().BuildMock().Object);
 
+            return roleManagerMock;
+        }
+
+        private WalutyDBContext CreateInMemoryDBContext()
+        {
             var dbOptions = new DbContextOptionsBuilder<WalutyDBContext>()
                             .UseInMemoryDatabase(databaseName: "ToDoDb")
                             .Options;
+
             WalutyDBContext context = new WalutyDBContext(dbOptions);
 
-            User userToReturn = new User() { Id = "1234", Email = "John@john.com" };
-            List<User> usersToReturn = new List<User>() { userToReturn };
-
-            
-
-
-            //Give proper user
-            userManagerMock.Setup(x => x.FindByIdAsync("1234")).ReturnsAsync(userToReturn);
-            userManagerMock.Setup(x => x.GetRolesAsync(userToReturn)).ReturnsAsync(new List<string>());
-            userManagerMock.Setup(x => x.Users).Returns(usersToReturn.AsQueryable().BuildMock().Object);
-            userManagerMock.Setup(x => x.DeleteAsync(userToReturn)).ReturnsAsync(IdentityResult.Success);
-            userManagerMock.Setup(x => x.AddToRoleAsync(userToReturn, identityRoleUser.Name)).ReturnsAsync(IdentityResult.Success);
-            userManagerMock.Setup(x => x.AddToRoleAsync(userToReturn, identityRoleAdmin.Name)).ReturnsAsync(IdentityResult.Success);
-            userManagerMock.Setup(x => x.RemoveFromRoleAsync(userToReturn, identityRoleUser.Name)).ReturnsAsync(IdentityResult.Success);
-            userManagerMock.Setup(x => x.RemoveFromRoleAsync(userToReturn, identityRoleAdmin.Name)).ReturnsAsync(IdentityResult.Success);
-            roleManagerMock.Setup(x => x.Roles).Returns(roles.AsQueryable().BuildMock().Object);
-
-            UserServices userServices = new UserServices(userManagerMock.Object,
-                context,
-                iMapper,
-                iPasswordValidatorMock.Object,
-                roleManagerMock.Object);
-
-            return userServices;
-
+            return context;
         }
 
         [Fact]
@@ -157,13 +180,19 @@ namespace Waluty.Tests
             userModelToUpdate.Roles = new List<string>() { "User" };
             userModelToUpdate.NewRoles = new List<string>() { "Admin", "User" };
             UpdateUserResult updateResult = null;
+            bool result = false;
 
             //Act
 
             updateResult = await userServices.Update(userModelToUpdate);
 
+            if(updateResult.AreRolesUpdated == true && updateResult.IsPasswordUpdated == false)
+            {
+                result = true;
+            }
+
             //Assert
-            Assert.True(updateResult.AreRolesUpdated);
+            Assert.True(result);
         }
 
     }

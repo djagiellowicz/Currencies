@@ -43,6 +43,10 @@ namespace Waluty.Tests
                 null,
                 null);
 
+            IdentityRole identityRoleAdmin = new IdentityRole("Admin");
+            IdentityRole identityRoleUser = new IdentityRole("User");
+            List<IdentityRole> roles = new List<IdentityRole>() { identityRoleAdmin, identityRoleUser };
+            
             //IRoleStore<TRole> store, IEnumerable< IRoleValidator < TRole >> roleValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, ILogger<RoleManager<TRole>> logger
 
             var dbOptions = new DbContextOptionsBuilder<WalutyDBContext>()
@@ -61,6 +65,11 @@ namespace Waluty.Tests
             userManagerMock.Setup(x => x.GetRolesAsync(userToReturn)).ReturnsAsync(new List<string>());
             userManagerMock.Setup(x => x.Users).Returns(usersToReturn.AsQueryable().BuildMock().Object);
             userManagerMock.Setup(x => x.DeleteAsync(userToReturn)).ReturnsAsync(IdentityResult.Success);
+            userManagerMock.Setup(x => x.AddToRoleAsync(userToReturn, identityRoleUser.Name)).ReturnsAsync(IdentityResult.Success);
+            userManagerMock.Setup(x => x.AddToRoleAsync(userToReturn, identityRoleAdmin.Name)).ReturnsAsync(IdentityResult.Success);
+            userManagerMock.Setup(x => x.RemoveFromRoleAsync(userToReturn, identityRoleUser.Name)).ReturnsAsync(IdentityResult.Success);
+            userManagerMock.Setup(x => x.RemoveFromRoleAsync(userToReturn, identityRoleAdmin.Name)).ReturnsAsync(IdentityResult.Success);
+            roleManagerMock.Setup(x => x.Roles).Returns(roles.AsQueryable().BuildMock().Object);
 
             UserServices userServices = new UserServices(userManagerMock.Object,
                 context,
@@ -135,6 +144,26 @@ namespace Waluty.Tests
 
             //Assert
             Assert.True(result);
+        }
+
+        [Fact]
+        public async void UserServices_User_Roles_Have_Been_Properly_Updated()
+        {
+            //Arrange
+            UserServices userServices = CreateUserServices();
+            string userId = "1234";
+            UserModel userModelToUpdate = new UserModel();
+            userModelToUpdate.Id = userId;
+            userModelToUpdate.Roles = new List<string>() { "User" };
+            userModelToUpdate.NewRoles = new List<string>() { "Admin", "User" };
+            UpdateUserResult updateResult = null;
+
+            //Act
+
+            updateResult = await userServices.Update(userModelToUpdate);
+
+            //Assert
+            Assert.True(updateResult.AreRolesUpdated);
         }
 
     }

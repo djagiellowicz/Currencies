@@ -5,7 +5,7 @@ using WalutyBusinessLogic.Models;
 
 namespace WalutyBusinessLogic.DatabaseLoading
 {
-    public class WalutyDBContext : IdentityDbContext<User> // DbContext 
+    public class WalutyDBContext : IdentityDbContext<User> 
     {
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<CurrencyInfo> CurrencyInfos { get; set; }

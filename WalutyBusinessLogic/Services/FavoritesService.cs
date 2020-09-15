@@ -51,5 +51,16 @@ namespace WalutyBusinessLogic.Services
             _context.SaveChanges();
         }
 
+        public async void DeleteFavCurrency(int currencyId, ClaimsPrincipal user)
+        {
+            var loggedInUser = await _userManager.Users.Include(u => u.UserFavoriteCurrencies)
+                .SingleAsync(u => u.UserName == user.Identity.Name);
+
+            var userCurrencies = _context.UsersCurrencies.Single(x => x.User.Id == loggedInUser.Id && x.CurrencyId == currencyId);
+
+            _context.UsersCurrencies.Remove(userCurrencies);
+            _context.SaveChanges();
+        }
+
     }
 }

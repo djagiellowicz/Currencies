@@ -21,7 +21,7 @@ namespace WalutyBusinessLogic.Services
             _context = context;
         }
 
-        public async Task<List<Currency>> GetLoggedUserFavCurrenciesAsync(ClaimsPrincipal user)
+        public async Task<List<Currency>> GetLoggedUserFavCurrencies(ClaimsPrincipal user)
         {
             var loggedInUser = await _userManager.Users
                     .Include(u => u.UserFavoriteCurrencies)
@@ -31,5 +31,25 @@ namespace WalutyBusinessLogic.Services
 
             return currencies;
         }
+
+        public async void AddFavCurrency(int currencyId, ClaimsPrincipal user)
+        {
+            var loggedInUser = await _userManager.Users
+                .Include(u => u.UserFavoriteCurrencies)
+                .SingleAsync(u => u.UserName == user.Identity.Name);
+
+            var favoriteCurrency = _context.Currencies.Find(currencyId);
+
+            _context.UsersCurrencies.Add(new UserCurrency()
+            {
+                Currency = favoriteCurrency,
+                User = loggedInUser,
+                UserId = loggedInUser.Id,
+                CurrencyId = currencyId
+            });
+
+            _context.SaveChanges();
+        }
+
     }
 }

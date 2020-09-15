@@ -18,15 +18,10 @@ namespace WalutyMVCWebApp.Controllers
     public class FavoritesController : Controller
     {
         // Remember to create separate controller for these methods, pushed due to deadline
-
-        private readonly UserManager<User> _userManager;
-        private readonly WalutyDBContext _context;
         private readonly IFavoritesService _favoritesService;
 
-        public FavoritesController(UserManager<User> userManager, WalutyDBContext context, IFavoritesService favoritesService)
+        public FavoritesController(IFavoritesService favoritesService)
         {
-            _userManager = userManager;
-            _context = context;
             _favoritesService = favoritesService;
         }
         // GET: Favorites

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Models.Enums;
+using WalutyBusinessLogic.Services;
 using WalutyMVCWebApp.AuthorizeAttributes;
 
 namespace WalutyMVCWebApp.Controllers
@@ -19,22 +21,20 @@ namespace WalutyMVCWebApp.Controllers
 
         private readonly UserManager<User> _userManager;
         private readonly WalutyDBContext _context;
+        private readonly IFavoritesService _favoritesService;
 
-        public FavoritesController(UserManager<User> userManager, WalutyDBContext context)
+        public FavoritesController(UserManager<User> userManager, WalutyDBContext context, IFavoritesService favoritesService)
         {
             _userManager = userManager;
             _context = context;
+            _favoritesService = favoritesService;
         }
         // GET: Favorites
         public async Task<ActionResult> Index()
         {
-            var loggedInUser = await _userManager.Users
-                .Include(u => u.UserFavoriteCurrencies)
-                .SingleAsync(u => u.UserName == User.Identity.Name);
+            ClaimsPrincipal logged = User;
 
-            System.Security.Claims.ClaimsPrincipal logged = User;
-
-            List<Currency> currencies = _context.UsersCurrencies.Where(u => u.User.Id == loggedInUser.Id).Select(x => x.Currency).ToList();
+            List<Currency> currencies = await _favoritesService.GetLoggedUserFavCurrencies(User);
 
             return View(currencies);
         }

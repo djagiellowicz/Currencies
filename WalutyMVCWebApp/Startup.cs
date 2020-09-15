@@ -49,6 +49,7 @@ namespace WalutyMVCWebApp
             services.AddTransient<ICurrenciesSelectList, CurrenciesSelectList>();
             services.AddTransient<IUserServices, UserServices>();
             services.AddTransient<IChartService, ChartService>();
+            services.AddTransient<IFavoritesService, FavoritesService>();
             services.AddSingleton<ICurrencyFilesUpdater, CurrencyFilesUpdater>();
 
 

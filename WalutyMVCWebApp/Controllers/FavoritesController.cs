@@ -32,6 +32,8 @@ namespace WalutyMVCWebApp.Controllers
                 .Include(u => u.UserFavoriteCurrencies)
                 .SingleAsync(u => u.UserName == User.Identity.Name);
 
+            System.Security.Claims.ClaimsPrincipal logged = User;
+
             List<Currency> currencies = _context.UsersCurrencies.Where(u => u.User.Id == loggedInUser.Id).Select(x => x.Currency).ToList();
 
             return View(currencies);

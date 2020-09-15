@@ -32,34 +32,61 @@ namespace WalutyBusinessLogic.Services
             return currencies;
         }
 
-        public async void AddFavCurrency(int currencyId, ClaimsPrincipal user)
+        public async Task<bool> AddFavCurrency(int currencyId, ClaimsPrincipal user)
         {
+            bool result = false;
+
             var loggedInUser = await _userManager.Users
                 .Include(u => u.UserFavoriteCurrencies)
                 .SingleAsync(u => u.UserName == user.Identity.Name);
 
-            var favoriteCurrency = _context.Currencies.Find(currencyId);
-
-            _context.UsersCurrencies.Add(new UserCurrency()
+            if (loggedInUser != null)
             {
-                Currency = favoriteCurrency,
-                User = loggedInUser,
-                UserId = loggedInUser.Id,
-                CurrencyId = currencyId
-            });
 
-            _context.SaveChanges();
+                var favoriteCurrency = _context.Currencies.Find(currencyId);
+
+                if (favoriteCurrency != null)
+                {
+
+                    _context.UsersCurrencies.Add(new UserCurrency()
+                    {
+                        Currency = favoriteCurrency,
+                        User = loggedInUser,
+                        UserId = loggedInUser.Id,
+                        CurrencyId = currencyId
+                    });
+
+                    _context.SaveChanges();
+
+                    result = true;
+
+                }
+            }
+
+            return result;
         }
 
-        public async void DeleteFavCurrency(int currencyId, ClaimsPrincipal user)
+        public async Task<bool> DeleteFavCurrency(int currencyId, ClaimsPrincipal user)
         {
+            bool result = false;
+
             var loggedInUser = await _userManager.Users.Include(u => u.UserFavoriteCurrencies)
                 .SingleAsync(u => u.UserName == user.Identity.Name);
 
-            var userCurrencies = _context.UsersCurrencies.Single(x => x.User.Id == loggedInUser.Id && x.CurrencyId == currencyId);
+            if (loggedInUser != null)
+            {
+                var userCurrencies = _context.UsersCurrencies.Single(x => x.User.Id == loggedInUser.Id && x.CurrencyId == currencyId);
 
-            _context.UsersCurrencies.Remove(userCurrencies);
-            _context.SaveChanges();
+                if (userCurrencies != null)
+                {
+                    _context.UsersCurrencies.Remove(userCurrencies);
+                    _context.SaveChanges();
+
+                    result = true;
+                }
+            }
+
+            return result;
         }
 
     }

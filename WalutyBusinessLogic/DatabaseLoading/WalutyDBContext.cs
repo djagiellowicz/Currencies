@@ -5,11 +5,11 @@ using WalutyBusinessLogic.Models;
 
 namespace WalutyBusinessLogic.DatabaseLoading
 {
-    public class WalutyDBContext : IdentityDbContext<User> 
+    public class WalutyDBContext : IdentityDbContext<User>
     {
-        public DbSet<Currency> Currencies { get; set; }
-        public DbSet<CurrencyInfo> CurrencyInfos { get; set; }
-        public DbSet<UserCurrency> UsersCurrencies { get; set; }
+        public virtual DbSet<Currency> Currencies { get; set; }
+        public virtual DbSet<CurrencyInfo> CurrencyInfos { get; set; }
+        public virtual DbSet<UserCurrency> UsersCurrencies { get; set; }
 
         public WalutyDBContext(DbContextOptions<WalutyDBContext> options) : base(options)
         {

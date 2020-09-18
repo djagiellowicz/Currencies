@@ -44,7 +44,6 @@ namespace WalutyBusinessLogic.Services
 
             if (loggedInUser != null)
             {
-
                 var favoriteCurrency = await _currencyRepository.GetCurrency(currencyId);
 
                 if (favoriteCurrency != null)
@@ -65,6 +64,7 @@ namespace WalutyBusinessLogic.Services
                     }
                 }
             }
+
             return result;
         }
 
@@ -72,7 +72,8 @@ namespace WalutyBusinessLogic.Services
         {
             bool result = false;
 
-            var loggedInUser = await _userManager.Users.Include(u => u.UserFavoriteCurrencies)
+            var loggedInUser = await _userManager.Users
+                .Include(u => u.UserFavoriteCurrencies)
                 .SingleAsync(u => u.UserName == user.Identity.Name);
 
             if (loggedInUser != null)

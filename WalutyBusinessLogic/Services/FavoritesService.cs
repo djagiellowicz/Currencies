@@ -13,12 +13,14 @@ namespace WalutyBusinessLogic.Services
     public class FavoritesService : IFavoritesService
     {
         private readonly UserManager<User> _userManager;
-        private readonly WalutyDBContext _context;
+        private readonly IUserCurrencyRepository _userCurrencyRepository;
+        private readonly ICurrencyRepository _currencyRepository;
 
-        public FavoritesService(UserManager<User> userManager, WalutyDBContext context)
+        public FavoritesService(UserManager<User> userManager, IUserCurrencyRepository userCurrencyRepository, ICurrencyRepository currencyRepository)
         {
             _userManager = userManager;
-            _context = context;
+            _userCurrencyRepository = userCurrencyRepository;
+            _currencyRepository = currencyRepository;
         }
 
         public async Task<List<Currency>> GetLoggedUserFavCurrencies(ClaimsPrincipal user)
@@ -27,7 +29,7 @@ namespace WalutyBusinessLogic.Services
                     .Include(u => u.UserFavoriteCurrencies)
                     .SingleAsync(u => u.UserName == user.Identity.Name);
 
-            List<Currency> currencies = _context.UsersCurrencies.Where(u => u.User.Id == loggedInUser.Id).Select(x => x.Currency).ToList();
+            List<Currency> currencies = await _userCurrencyRepository.GetUserFavoriteCurrencies(loggedInUser.Id);
 
             return currencies;
         }
@@ -43,26 +45,26 @@ namespace WalutyBusinessLogic.Services
             if (loggedInUser != null)
             {
 
-                var favoriteCurrency = _context.Currencies.Find(currencyId);
+                var favoriteCurrency = await _currencyRepository.GetCurrency(currencyId);
 
                 if (favoriteCurrency != null)
                 {
-
-                    _context.UsersCurrencies.Add(new UserCurrency()
+                    try
                     {
-                        Currency = favoriteCurrency,
-                        User = loggedInUser,
-                        UserId = loggedInUser.Id,
-                        CurrencyId = currencyId
-                    });
-
-                    _context.SaveChanges();
-
-                    result = true;
-
+                        _userCurrencyRepository.AddUserFavoriteCurrency(new UserCurrency()
+                        {
+                            Currency = favoriteCurrency,
+                            User = loggedInUser,
+                            UserId = loggedInUser.Id,
+                            CurrencyId = currencyId
+                        });
+                        result = true;
+                    } catch (DbUpdateException e)
+                    {
+                        result = false;
+                    }
                 }
             }
-
             return result;
         }
 
@@ -75,14 +77,19 @@ namespace WalutyBusinessLogic.Services
 
             if (loggedInUser != null)
             {
-                var userCurrencies = _context.UsersCurrencies.Single(x => x.User.Id == loggedInUser.Id && x.CurrencyId == currencyId);
+                UserCurrency userCurrency = await _userCurrencyRepository.GetUserCurrency(loggedInUser.Id, currencyId);
 
-                if (userCurrencies != null)
+                if (userCurrency != null)
                 {
-                    _context.UsersCurrencies.Remove(userCurrencies);
-                    _context.SaveChanges();
-
-                    result = true;
+                    try
+                    {
+                        _userCurrencyRepository.DeleteUserFavoriteCurrency(userCurrency);
+                        result = true;
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        result = false;
+                    }  
                 }
             }
 

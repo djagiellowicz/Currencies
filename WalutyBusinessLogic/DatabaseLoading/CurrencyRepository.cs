@@ -55,6 +55,12 @@ namespace WalutyBusinessLogic.LoadingFromFile.DatabaseLoading
                                                     .SingleAsync(x => x.Name.ToLower() == currencyCode.ToLower()); ;
         }
 
+        public async Task<Currency> GetCurrency(int currencyId)
+        {
+            return await _walutyDBContext.Currencies.Include(lor => lor.ListOfRecords)
+                                                    .SingleAsync(x => x.Id == currencyId); ;
+        }
+
         public async Task<List<CurrencyRecord>> GetCurrencyRecordsBtwnDates(string currencyCode, DateTime begDate, DateTime endDate)
         {
             return await _walutyDBContext.Currencies.Single(c => c.Name.ToLower() == currencyCode.ToLower())

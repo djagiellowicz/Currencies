@@ -11,7 +11,7 @@ namespace WalutyBusinessLogic.DatabaseLoading
     {
         Task<List<Currency>> GetUserFavoriteCurrencies(string userId);
 
-        Task<UserCurrency> GetUserFavoriteCurrency(string userId, int currencyId);
+        Task<UserCurrency> GetUserCurrency(string userId, int currencyId);
 
         void AddUserFavoriteCurrency(UserCurrency userCurrency);
 

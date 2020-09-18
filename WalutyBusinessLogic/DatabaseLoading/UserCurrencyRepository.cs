@@ -23,7 +23,7 @@ namespace WalutyBusinessLogic.DatabaseLoading
             return favCurrencies;
         }
 
-        public async Task<UserCurrency> GetUserFavoriteCurrency(string userId, int currencyId)
+        public async Task<UserCurrency> GetUserCurrency(string userId, int currencyId)
         {
             UserCurrency userCurrency = await _context.UsersCurrencies.SingleAsync(x => x.User.Id == userId && x.CurrencyId == currencyId);
 

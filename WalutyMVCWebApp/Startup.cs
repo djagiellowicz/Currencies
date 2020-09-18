@@ -40,6 +40,7 @@ namespace WalutyMVCWebApp
             services.AddTransient<ICurrencyFilesDownloader, CurrencyFilesDownloader>();
             services.AddTransient<ICurrencyFilesUnzipper, CurrencyFilesUnzipper>();
             services.AddTransient<ICurrencyRepository, CurrencyRepository>();
+            services.AddTransient<IUserCurrencyRepository, UserCurrencyRepository>();
             services.AddTransient<IExtremesServices, ExtremesServices>();
             services.AddTransient<IDateRange, DateRange>();
             services.AddTransient<IDateChecker, DateChecker>();

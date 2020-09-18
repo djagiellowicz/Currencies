@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WalutyBusinessLogic.DatabaseLoading;
@@ -59,7 +59,7 @@ namespace WalutyBusinessLogic.Services
                             CurrencyId = currencyId
                         });
                         result = true;
-                    } catch (DbUpdateException e)
+                    } catch (ArgumentException e)
                     {
                         result = false;
                     }
@@ -86,7 +86,7 @@ namespace WalutyBusinessLogic.Services
                         _userCurrencyRepository.DeleteUserFavoriteCurrency(userCurrency);
                         result = true;
                     }
-                    catch (DbUpdateException e)
+                    catch (ArgumentException e)
                     {
                         result = false;
                     }  

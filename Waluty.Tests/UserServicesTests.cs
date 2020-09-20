@@ -30,10 +30,8 @@ namespace Waluty.Tests
             Mock<RoleManager<IdentityRole>> roleManagerMock = CreateRoleManagerMock();
             Mock<IPasswordValidator<User>> iPasswordValidatorMock = new Mock<IPasswordValidator<User>>();
             IMapper iMapper = CreateMapper();
-            WalutyDBContext context = CreateInMemoryDBContext();
 
             UserServices userServices = new UserServices(userManagerMock.Object,
-                context,
                 iMapper,
                 iPasswordValidatorMock.Object,
                 roleManagerMock.Object);
@@ -92,17 +90,6 @@ namespace Waluty.Tests
             roleManagerMock.Setup(x => x.Roles).Returns(GetRoles().AsQueryable().BuildMock().Object);
 
             return roleManagerMock;
-        }
-
-        private WalutyDBContext CreateInMemoryDBContext()
-        {
-            var dbOptions = new DbContextOptionsBuilder<WalutyDBContext>()
-                            .UseInMemoryDatabase(databaseName: "ToDoDb")
-                            .Options;
-
-            WalutyDBContext context = new WalutyDBContext(dbOptions);
-
-            return context;
         }
 
         [Fact]

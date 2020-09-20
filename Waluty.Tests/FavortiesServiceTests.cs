@@ -19,8 +19,8 @@ namespace Waluty.Tests
     {
         private readonly string _testUserName = "Mark";
         private readonly string _testUserId = "1";
-        private readonly string _testCurrencyName = "USD";
-        private readonly int _testCurrencyId = 1;
+        private readonly string _firstTestCurrencyName = "USD";
+        private readonly int _firstTestCurrencyId = 1;
         private readonly string _secondTestCurrencyName = "AUD";
         private readonly int _secondTestCurrencyId = 2;
 
@@ -44,8 +44,8 @@ namespace Waluty.Tests
             };
             Currency testCurrency = new Currency()
             {
-                Id = _testCurrencyId,
-                Name = _testCurrencyName,
+                Id = _firstTestCurrencyId,
+                Name = _firstTestCurrencyName,
                 FavoritedByUsers = new List<UserCurrency> { testUserCurrency }
             };
 
@@ -87,8 +87,8 @@ namespace Waluty.Tests
             };
             Currency testCurrency = new Currency()
             {
-                Id = _testCurrencyId,
-                Name = _testCurrencyName,
+                Id = _firstTestCurrencyId,
+                Name = _firstTestCurrencyName,
                 FavoritedByUsers = new List<UserCurrency> { testUserCurrency }
             };
 
@@ -138,8 +138,8 @@ namespace Waluty.Tests
             ClaimsIdentity claims = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, _testUserName) });
             Currency expectedCurrency = new Currency()
             {
-                Id = _testCurrencyId,
-                Name = _testCurrencyName
+                Id = _firstTestCurrencyId,
+                Name = _firstTestCurrencyName
             };
             ClaimsPrincipal user = new ClaimsPrincipal(claims);
             bool result = false;
@@ -178,13 +178,30 @@ namespace Waluty.Tests
         }
 
         [Fact]
+        public async void FavortiesServiceTests_AddFavCurrency_Currency_Should_Not_Be_Added()
+        {
+            //Arrange
+            FavoritesService favoritesService = CreateFavoritesService();
+            ClaimsIdentity claims = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, _testUserName) });
+            ClaimsPrincipal user = new ClaimsPrincipal(claims);
+            int currencyId = _firstTestCurrencyId;
+            bool result = false;
+
+            //Act
+            result = await favoritesService.AddFavCurrency(currencyId, user);
+
+            //Assert
+            Assert.False(result);
+        }
+
+        [Fact]
         public async void FavortiesServiceTests_AddFavCurrency_Currency_Is_Deleted()
         {
             //Arrange
             FavoritesService favoritesService = CreateFavoritesService();
             ClaimsIdentity claims = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, _testUserName) });
             ClaimsPrincipal user = new ClaimsPrincipal(claims);
-            int currencyId = _testCurrencyId;
+            int currencyId = _firstTestCurrencyId;
             bool result = false;
 
             //Act

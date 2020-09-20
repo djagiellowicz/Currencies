@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Models.DTO;
 using X.PagedList;

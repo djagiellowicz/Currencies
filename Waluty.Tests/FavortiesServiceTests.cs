@@ -17,15 +17,22 @@ namespace Waluty.Tests
 {
     public class FavortiesServiceTests
     {
+        private readonly string _testUserName = "Mark";
+        private readonly string _testUserId = "1";
+        private readonly string _testCurrencyName = "USD";
+        private readonly int _testCurrencyId = 1;
+        private readonly string _secondTestCurrencyName = "AUD";
+        private readonly int _secondTestCurrencyId = 2;
+
+
         private IUserCurrencyRepository CreateUserCurrencyRepository()
         {
             Mock<IUserCurrencyRepository> userCurrencyRepositoryMock = new Mock<IUserCurrencyRepository>();
-            
-
+            List<Currency> currenciesToReturn;
             User testUser = new User()
             {
-                UserName = "Mark",
-                Id = "1",
+                UserName = _testUserName,
+                Id = _testUserId,
                 UserFavoriteCurrencies = new List<UserCurrency>()
             };
             UserCurrency testUserCurrency = new UserCurrency()
@@ -37,17 +44,16 @@ namespace Waluty.Tests
             };
             Currency testCurrency = new Currency()
             {
-                Id = 1,
-                Name = "USD",
+                Id = _testCurrencyId,
+                Name = _testCurrencyName,
                 FavoritedByUsers = new List<UserCurrency> { testUserCurrency }
             };
-            testUserCurrency.Currency = testCurrency;
 
-            List<Currency> currenciesToReturn = new List<Currency>() { testCurrency };
+            testUserCurrency.Currency = testCurrency;
+            currenciesToReturn = new List<Currency>() { testCurrency };
 
             userCurrencyRepositoryMock.Setup(x => x.GetUserFavoriteCurrencies(testUser.Id)).ReturnsAsync(currenciesToReturn);
             userCurrencyRepositoryMock.Setup(x => x.GetUserCurrency(testUser.Id, testCurrency.Id)).ReturnsAsync(testUserCurrency);
-
 
             return userCurrencyRepositoryMock.Object;
         }
@@ -65,14 +71,11 @@ namespace Waluty.Tests
                 new Mock<IdentityErrorDescriber>().Object,
                 new Mock<IServiceProvider>().Object,
                 new Mock<ILogger<UserManager<User>>>().Object);
-
             List<User> users = new List<User>();
-
-
             User testUser = new User()
             {
-                UserName = "Mark",
-                Id = "1",
+                UserName = _testUserName,
+                Id = _testUserId,
                 UserFavoriteCurrencies = new List<UserCurrency>()
             };
             UserCurrency testUserCurrency = new UserCurrency()
@@ -84,11 +87,11 @@ namespace Waluty.Tests
             };
             Currency testCurrency = new Currency()
             {
-                Id = 1,
-                Name = "USD",
+                Id = _testCurrencyId,
+                Name = _testCurrencyName,
                 FavoritedByUsers = new List<UserCurrency> { testUserCurrency }
             };
-            
+
             testUserCurrency.Currency = testCurrency;
             testUser.UserFavoriteCurrencies.Add(testUserCurrency);
 
@@ -106,8 +109,8 @@ namespace Waluty.Tests
             Mock<ICurrencyRepository> currencyRepositoryMock = new Mock<ICurrencyRepository>();
             Currency testCurrency = new Currency()
             {
-                Id = 2,
-                Name = "AUD",
+                Id = _secondTestCurrencyId,
+                Name = _secondTestCurrencyName,
                 FavoritedByUsers = new List<UserCurrency> { }
             };
             List<Currency> currencies = new List<Currency> { testCurrency };
@@ -127,27 +130,26 @@ namespace Waluty.Tests
             return favoritesService;
         }
 
-
         [Fact]
         public async void FavortiesServiceTests_GetLoggedUserFavCurrencies_Should_Return_1_USD()
         {
             //Arrange
             FavoritesService favoritesService = CreateFavoritesService();
-            ClaimsIdentity claims = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, "Mark") });
+            ClaimsIdentity claims = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, _testUserName) });
             Currency expectedCurrency = new Currency()
             {
-                Id = 1,
-                Name = "USD"
+                Id = _testCurrencyId,
+                Name = _testCurrencyName
             };
             ClaimsPrincipal user = new ClaimsPrincipal(claims);
             bool result = false;
 
             //Act
             var loggedUserFavService = await favoritesService.GetLoggedUserFavCurrencies(user);
-            
-            if(loggedUserFavService.Count == 1)
+
+            if (loggedUserFavService.Count == 1)
             {
-                if(loggedUserFavService[0].Id == expectedCurrency.Id 
+                if (loggedUserFavService[0].Id == expectedCurrency.Id
                     && loggedUserFavService[0].Name == expectedCurrency.Name)
                 {
                     result = true;
@@ -163,9 +165,9 @@ namespace Waluty.Tests
         {
             //Arrange
             FavoritesService favoritesService = CreateFavoritesService();
-            ClaimsIdentity claims = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, "Mark") });
+            ClaimsIdentity claims = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, _testUserName) });
             ClaimsPrincipal user = new ClaimsPrincipal(claims);
-            int currencyId = 2;
+            int currencyId = _secondTestCurrencyId;
             bool result = false;
 
             //Act
@@ -180,9 +182,9 @@ namespace Waluty.Tests
         {
             //Arrange
             FavoritesService favoritesService = CreateFavoritesService();
-            ClaimsIdentity claims = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, "Mark") });
+            ClaimsIdentity claims = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, _testUserName) });
             ClaimsPrincipal user = new ClaimsPrincipal(claims);
-            int currencyId = 1;
+            int currencyId = _testCurrencyId;
             bool result = false;
 
             //Act

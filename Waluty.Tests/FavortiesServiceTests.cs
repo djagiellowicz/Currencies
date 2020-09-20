@@ -87,6 +87,7 @@ namespace Waluty.Tests
                 Name = "USD",
                 FavoritedByUsers = new List<UserCurrency> { testUserCurrency }
             };
+            
             testUserCurrency.Currency = testCurrency;
             testUser.UserFavoriteCurrencies.Add(testUserCurrency);
 
@@ -99,11 +100,27 @@ namespace Waluty.Tests
             return userManagerMock.Object;
         }
 
+        private ICurrencyRepository CreateCurrencyRepositoryMock()
+        {
+            Mock<ICurrencyRepository> currencyRepositoryMock = new Mock<ICurrencyRepository>();
+            Currency testCurrency = new Currency()
+            {
+                Id = 2,
+                Name = "AUD",
+                FavoritedByUsers = new List<UserCurrency> { }
+            };
+            List<Currency> currencies = new List<Currency> { testCurrency };
+
+            currencyRepositoryMock.Setup(x => x.GetCurrency(testCurrency.Id)).ReturnsAsync(testCurrency);
+
+            return currencyRepositoryMock.Object;
+        }
+
         private FavoritesService CreateFavoritesService()
         {
             UserManager<User> userManagerMock = CreateUserManagerMock();
             IUserCurrencyRepository userCurrencyRepository = CreateUserCurrencyRepository();
-            ICurrencyRepository currencyRepository = new Mock<ICurrencyRepository>().Object;
+            ICurrencyRepository currencyRepository = CreateCurrencyRepositoryMock();
             FavoritesService favoritesService = new FavoritesService(userManagerMock, userCurrencyRepository, currencyRepository);
 
             return favoritesService;
@@ -135,6 +152,23 @@ namespace Waluty.Tests
                     result = true;
                 }
             }
+
+            //Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async void FavortiesServiceTests_AddFavCurrency_Currency_Is_Added()
+        {
+            //Arrange
+            FavoritesService favoritesService = CreateFavoritesService();
+            ClaimsIdentity claims = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, "Mark") });
+            ClaimsPrincipal user = new ClaimsPrincipal(claims);
+            int currencyId = 2;
+            bool result = false;
+
+            //Act
+            result = await favoritesService.AddFavCurrency(currencyId, user);
 
             //Assert
             Assert.True(result);

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MockQueryable.Moq;
@@ -9,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using WalutyBusinessLogic.AutoMapper.Profiles;
-using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Models.DTO;
 using WalutyBusinessLogic.Services;

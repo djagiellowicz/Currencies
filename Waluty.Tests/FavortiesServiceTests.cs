@@ -46,6 +46,7 @@ namespace Waluty.Tests
             List<Currency> currenciesToReturn = new List<Currency>() { testCurrency };
 
             userCurrencyRepositoryMock.Setup(x => x.GetUserFavoriteCurrencies(testUser.Id)).ReturnsAsync(currenciesToReturn);
+            userCurrencyRepositoryMock.Setup(x => x.GetUserCurrency(testUser.Id, testCurrency.Id)).ReturnsAsync(testUserCurrency);
 
 
             return userCurrencyRepositoryMock.Object;
@@ -169,6 +170,23 @@ namespace Waluty.Tests
 
             //Act
             result = await favoritesService.AddFavCurrency(currencyId, user);
+
+            //Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async void FavortiesServiceTests_AddFavCurrency_Currency_Is_Deleted()
+        {
+            //Arrange
+            FavoritesService favoritesService = CreateFavoritesService();
+            ClaimsIdentity claims = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, "Mark") });
+            ClaimsPrincipal user = new ClaimsPrincipal(claims);
+            int currencyId = 1;
+            bool result = false;
+
+            //Act
+            result = await favoritesService.DeleteFavCurrency(currencyId, user);
 
             //Assert
             Assert.True(result);

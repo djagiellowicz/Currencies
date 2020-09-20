@@ -185,7 +185,7 @@ namespace Waluty.Tests
             ClaimsIdentity claims = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, _testUserName) });
             ClaimsPrincipal user = new ClaimsPrincipal(claims);
             int currencyId = _firstTestCurrencyId;
-            bool result = false;
+            bool result = true;
 
             //Act
             result = await favoritesService.AddFavCurrency(currencyId, user);
@@ -209,6 +209,23 @@ namespace Waluty.Tests
 
             //Assert
             Assert.True(result);
+        }
+
+        [Fact]
+        public async void FavortiesServiceTests_AddFavCurrency_Currency_Should_Not_Be_Deleted()
+        {
+            //Arrange
+            FavoritesService favoritesService = CreateFavoritesService();
+            ClaimsIdentity claims = new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Name, _testUserName) });
+            ClaimsPrincipal user = new ClaimsPrincipal(claims);
+            int currencyId = _secondTestCurrencyId;
+            bool result = true;
+
+            //Act
+            result = await favoritesService.DeleteFavCurrency(currencyId, user);
+
+            //Assert
+            Assert.False(result);
         }
     }
 }

@@ -13,16 +13,14 @@ namespace WalutyBusinessLogic.Services
     public class UserServices : IUserServices
     {
         private readonly UserManager<User> _userManager;
-        private readonly WalutyDBContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IPasswordValidator<User> _passwordValidator;
         private readonly RoleManager<IdentityRole> _roleManager;
 
 
-        public UserServices(UserManager<User> userManager, WalutyDBContext walutyDBContext, IMapper mapper, IPasswordValidator<User> passwordValidator, RoleManager<IdentityRole> roleManager)
+        public UserServices(UserManager<User> userManager, IMapper mapper, IPasswordValidator<User> passwordValidator, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
-            _dbContext = walutyDBContext;
             _mapper = mapper;
             _passwordValidator = passwordValidator;
             _roleManager = roleManager;

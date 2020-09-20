@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MockQueryable.Moq;
@@ -9,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using WalutyBusinessLogic.AutoMapper.Profiles;
-using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Models.DTO;
 using WalutyBusinessLogic.Services;
@@ -30,10 +28,8 @@ namespace Waluty.Tests
             Mock<RoleManager<IdentityRole>> roleManagerMock = CreateRoleManagerMock();
             Mock<IPasswordValidator<User>> iPasswordValidatorMock = new Mock<IPasswordValidator<User>>();
             IMapper iMapper = CreateMapper();
-            WalutyDBContext context = CreateInMemoryDBContext();
 
             UserServices userServices = new UserServices(userManagerMock.Object,
-                context,
                 iMapper,
                 iPasswordValidatorMock.Object,
                 roleManagerMock.Object);
@@ -92,17 +88,6 @@ namespace Waluty.Tests
             roleManagerMock.Setup(x => x.Roles).Returns(GetRoles().AsQueryable().BuildMock().Object);
 
             return roleManagerMock;
-        }
-
-        private WalutyDBContext CreateInMemoryDBContext()
-        {
-            var dbOptions = new DbContextOptionsBuilder<WalutyDBContext>()
-                            .UseInMemoryDatabase(databaseName: "ToDoDb")
-                            .Options;
-
-            WalutyDBContext context = new WalutyDBContext(dbOptions);
-
-            return context;
         }
 
         [Fact]

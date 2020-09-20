@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
 using WalutyBusinessLogic.Services;
 
@@ -14,7 +13,7 @@ namespace WalutyMVCWebApp.Controllers
         private readonly ICurrencyNameChecker _currencyNameChecker;
         private readonly ICurrenciesSelectList _currenciesSelectList;
 
-        public CurrencyConversionController(ILoader loader, IDateRange dateRange, IDateChecker dateChecker
+        public CurrencyConversionController(IDateRange dateRange, IDateChecker dateChecker
                                             ,ICurrencyConversionService currencyConversionService, ICurrencyNameChecker currencyNameChecker, ICurrenciesSelectList currenciesSelectList)
         {
             _currencyConversionService = currencyConversionService;

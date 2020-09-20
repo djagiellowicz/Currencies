@@ -16,5 +16,6 @@ namespace WalutyBusinessLogic.DatabaseLoading
         Task<IPagedList<CurrencyInfo>> GetAllCurrencyInfo(int pageSize, int pageNumber, string filter);
         Task<Currency> GetCurrency(string currencyCode);
         Task<List<CurrencyRecord>> GetCurrencyRecordsBtwnDates(string currencyCode, DateTime begDate, DateTime endDate);
+        Task<Currency> GetCurrency(int currencyId);
     }
 }

@@ -12,6 +12,7 @@ using WalutyBusinessLogic.LoadingFromFile.DatabaseLoading;
 using WalutyBusinessLogic.AutoMapper.Profiles;
 using WalutyBusinessLogic.Services;
 using WalutyBusinessLogic.DatabaseLoading.Updater;
+using WalutyBusinessLogic.Extensions;
 
 namespace WalutyMVCWebApp
 { 
@@ -56,11 +57,15 @@ namespace WalutyMVCWebApp
             services.AddTransient<IFavoritesService, FavoritesService>();
             services.AddSingleton<ICurrencyFilesUpdater, CurrencyFilesUpdater>();
 
-
-            services.AddDbContextPool<WalutyDBContext>(opt =>
-                opt.UseInMemoryDatabase("Development"));
-
-            //services.AddDbContext<WalutyDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Connection")));
+            if ((bool)Configuration.GetFlag("IsDevelopment"))
+            {
+                services.AddDbContextPool<WalutyDBContext>(opt =>
+                    opt.UseInMemoryDatabase("Development"));
+            }
+            else
+            {
+                services.AddDbContext<WalutyDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Connection")));
+            }
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

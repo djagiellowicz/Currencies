@@ -13,6 +13,8 @@ using WalutyBusinessLogic.AutoMapper.Profiles;
 using WalutyBusinessLogic.Services;
 using WalutyBusinessLogic.DatabaseLoading.Updater;
 using WalutyBusinessLogic.Extensions;
+using Serilog;
+using Serilog.Events;
 
 namespace WalutyMVCWebApp
 { 
@@ -29,14 +31,21 @@ namespace WalutyMVCWebApp
         public void ConfigureServices(IServiceCollection services)
         {
 
-
-
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            var rollingFilePath = Configuration.GetSection("Logger")["LogsFilePath"];
+
+            Log.Logger = new LoggerConfiguration()
+           .MinimumLevel.Debug()
+           .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
+           .Enrich.FromLogContext()
+           .WriteTo.RollingFile(rollingFilePath)
+           .CreateLogger();
 
             services.AddAutoMapper(typeof(UserProfileMap));
 
@@ -57,7 +66,7 @@ namespace WalutyMVCWebApp
             services.AddTransient<IFavoritesService, FavoritesService>();
             services.AddSingleton<ICurrencyFilesUpdater, CurrencyFilesUpdater>();
 
-            if ((bool)Configuration.GetFlag("IsDevelopment"))
+            if (Configuration.GetFlag("IsDevelopment"))
             {
                 services.AddDbContextPool<WalutyDBContext>(opt =>
                     opt.UseInMemoryDatabase("Development"));

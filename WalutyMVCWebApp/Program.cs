@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
 using System;
@@ -9,22 +10,16 @@ using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.DatabaseLoading.Updater;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
+using WalutyBusinessLogic.Extensions;
 
 namespace WalutyMVCWebApp
 {
     public class Program
     {
 
-        public  static int Main(string[] args)
+        public static int Main(string[] args)
         {
-           var hostBuilder = CreateWebHostBuilder(args).Build();          
-
-            Log.Logger = new LoggerConfiguration()
-           .MinimumLevel.Debug()
-           .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
-           .Enrich.FromLogContext()
-           .WriteTo.RollingFile(@"C:\Logs\log-{Date}.txt")
-           .CreateLogger();
+            var hostBuilder = CreateWebHostBuilder(args).Build();
 
             using (var scope = hostBuilder.Services.CreateScope())
             {

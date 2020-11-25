@@ -33,15 +33,30 @@ namespace WalutyMVCWebApp
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var configuration = services.GetRequiredService<IConfiguration>();
 
-                    // Part responsible for auto database update at start of the software. By default turned off
-                    var currencyFilesDownloader = services.GetRequiredService<ICurrencyFilesDownloader>();
-                    var currencyFilesUnzipper = services.GetRequiredService<ICurrencyFilesUnzipper>();
-                    var currencyFilesUpdater = services.GetRequiredService<ICurrencyFilesUpdater>();
-
                     DBInitialisation.InitialiseDB(context, loader);
                     DefaultRolesInitialisation.Init(roleManager);
                     DefaultAdminCreator.CreateAdmin(userManager);
                     DefaultUsersCreator.CreateUsers(userManager);
+                }
+                catch (Exception e)
+                {
+                    Log.Fatal("Failed to initalise DB");
+                    Log.Fatal(e.Message);
+                }
+            }
+
+            using (var scope = hostBuilder.Services.CreateScope())
+            {
+                try
+                {
+                    var services = scope.ServiceProvider;
+                    var configuration = services.GetRequiredService<IConfiguration>();
+                    var context = services.GetRequiredService<WalutyDBContext>();
+
+                    // Part responsible for auto database update at start of the software. By default turned off
+                    var currencyFilesDownloader = services.GetRequiredService<ICurrencyFilesDownloader>();
+                    var currencyFilesUnzipper = services.GetRequiredService<ICurrencyFilesUnzipper>();
+                    var currencyFilesUpdater = services.GetRequiredService<ICurrencyFilesUpdater>();
 
                     // Part responsible for auto database update at start of the software. By default turned off
                     if (configuration.GetFlag("IsAutomaticUpdateOn"))
@@ -51,7 +66,7 @@ namespace WalutyMVCWebApp
                 }
                 catch (Exception e)
                 {
-                    Log.Fatal("Failed to initalise DB");
+                    Log.Fatal("Failed to automaticaly update database");
                     Log.Fatal(e.Message);
                 }
             }

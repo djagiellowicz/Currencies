@@ -12,9 +12,9 @@ using WalutyBusinessLogic.LoadingFromFile.DatabaseLoading;
 using WalutyBusinessLogic.AutoMapper.Profiles;
 using WalutyBusinessLogic.Services;
 using WalutyBusinessLogic.DatabaseLoading.Updater;
-using WalutyBusinessLogic.Extensions;
 using Serilog;
 using Serilog.Events;
+using WalutyMVCWebApp.Extensions.Configuration;
 
 namespace WalutyMVCWebApp
 { 

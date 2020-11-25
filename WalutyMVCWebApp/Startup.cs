@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.AutoMapper.Profiles;
 using WalutyMVCWebApp.Configuration;
@@ -36,19 +34,8 @@ namespace WalutyMVCWebApp
             services.ConfigureLogger(Configuration);
             services.AddAutoMapper(typeof(UserProfileMap));
             services.ConfigureServices();
-
-            if (Configuration.GetFlag("IsDevelopment"))
-            {
-                services.AddDbContextPool<WalutyDBContext>(opt =>
-                    opt.UseInMemoryDatabase("Development"));
-            }
-            else
-            {
-                services.AddDbContext<WalutyDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Connection")));
-            }
-
+            services.ConfigureDatabase(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -9,7 +9,7 @@ namespace WalutyMVCWebApp.Configuration
     {
         public static void ConfigureLogger(this IServiceCollection services, IConfiguration configuration)
         {
-            string logsFilePath = configuration.GetSection("Logger")["logsFilePath"];
+           string logsFilePath = configuration.GetSection("Logger")["logsFilePath"];
 
            Log.Logger = new LoggerConfiguration()
           .MinimumLevel.Debug()

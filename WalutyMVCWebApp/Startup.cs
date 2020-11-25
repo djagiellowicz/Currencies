@@ -8,10 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.LoadingFromFile;
-using WalutyBusinessLogic.LoadingFromFile.DatabaseLoading;
 using WalutyBusinessLogic.AutoMapper.Profiles;
-using WalutyBusinessLogic.Services;
-using WalutyBusinessLogic.DatabaseLoading.Updater;
 using WalutyMVCWebApp.Configuration;
 
 namespace WalutyMVCWebApp
@@ -38,22 +35,7 @@ namespace WalutyMVCWebApp
 
             services.ConfigureLogger(Configuration);
             services.AddAutoMapper(typeof(UserProfileMap));
-            services.AddSingleton<ILoader, Loader>();  
-            services.AddTransient<ICurrencyFilesDownloader, CurrencyFilesDownloader>();
-            services.AddTransient<ICurrencyFilesUnzipper, CurrencyFilesUnzipper>();
-            services.AddTransient<ICurrencyRepository, CurrencyRepository>();
-            services.AddTransient<IUserCurrencyRepository, UserCurrencyRepository>();
-            services.AddTransient<IExtremesServices, ExtremesServices>();
-            services.AddTransient<IDateRange, DateRange>();
-            services.AddTransient<IDateChecker, DateChecker>();
-            services.AddTransient<ICurrencyConversionService, CurrencyConversionService>();
-            services.AddTransient<ICurrencyNameChecker, CurrencyNameChecker>();
-            services.AddTransient<ICurrenciesComparator, CurrenciesComparator>();
-            services.AddTransient<ICurrenciesSelectList, CurrenciesSelectList>();
-            services.AddTransient<IUserServices, UserServices>();
-            services.AddTransient<IChartService, ChartService>();
-            services.AddTransient<IFavoritesService, FavoritesService>();
-            services.AddSingleton<ICurrencyFilesUpdater, CurrencyFilesUpdater>();
+            services.ConfigureServices();
 
             if (Configuration.GetFlag("IsDevelopment"))
             {

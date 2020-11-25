@@ -2,29 +2,24 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Serilog;
-using Serilog.Events;
 using System;
 using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.DatabaseLoading.Updater;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
+using WalutyMVCWebApp.Configuration;
 
 namespace WalutyMVCWebApp
 {
     public class Program
     {
 
-        public  static int Main(string[] args)
+        public static int Main(string[] args)
         {
-           var hostBuilder = CreateWebHostBuilder(args).Build();          
+            var hostBuilder = CreateWebHostBuilder(args).Build();
 
-            Log.Logger = new LoggerConfiguration()
-           .MinimumLevel.Debug()
-           .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
-           .Enrich.FromLogContext()
-           .WriteTo.RollingFile(@"C:\Logs\log-{Date}.txt")
-           .CreateLogger();
 
             using (var scope = hostBuilder.Services.CreateScope())
             {
@@ -36,24 +31,42 @@ namespace WalutyMVCWebApp
                     var loader = services.GetRequiredService<ILoader>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     var userManager = services.GetRequiredService<UserManager<User>>();
-
-                    // Uncomment if you want to automatically download and update currency files
-                    //var currencyFilesDownloader = services.GetRequiredService<ICurrencyFilesDownloader>();
-                    //var currencyFilesUnzipper = services.GetRequiredService<ICurrencyFilesUnzipper>();
-                    //var currencyFilesUpdater = services.GetRequiredService<ICurrencyFilesUpdater>();
-
+                    var configuration = services.GetRequiredService<IConfiguration>();
 
                     DBInitialisation.InitialiseDB(context, loader);
                     DefaultRolesInitialisation.Init(roleManager);
                     DefaultAdminCreator.CreateAdmin(userManager);
                     DefaultUsersCreator.CreateUsers(userManager);
-                    // Uncomment if you want to automatically download and update currency files
-                    //currencyFilesUpdater.Process(context);
-
                 }
                 catch (Exception e)
                 {
                     Log.Fatal("Failed to initalise DB");
+                    Log.Fatal(e.Message);
+                }
+            }
+
+            using (var scope = hostBuilder.Services.CreateScope())
+            {
+                try
+                {
+                    var services = scope.ServiceProvider;
+                    var configuration = services.GetRequiredService<IConfiguration>();
+                    var context = services.GetRequiredService<WalutyDBContext>();
+
+                    // Part responsible for auto database update at start of the software. By default turned off
+                    var currencyFilesDownloader = services.GetRequiredService<ICurrencyFilesDownloader>();
+                    var currencyFilesUnzipper = services.GetRequiredService<ICurrencyFilesUnzipper>();
+                    var currencyFilesUpdater = services.GetRequiredService<ICurrencyFilesUpdater>();
+
+                    // Part responsible for auto database update at start of the software. By default turned off
+                    if (configuration.GetFlag("IsAutomaticUpdateOn"))
+                    {
+                        currencyFilesUpdater.Process(context);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Fatal("Failed to automaticaly update database");
                     Log.Fatal(e.Message);
                 }
             }

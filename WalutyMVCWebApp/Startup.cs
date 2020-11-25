@@ -12,6 +12,7 @@ using WalutyBusinessLogic.LoadingFromFile.DatabaseLoading;
 using WalutyBusinessLogic.AutoMapper.Profiles;
 using WalutyBusinessLogic.Services;
 using WalutyBusinessLogic.DatabaseLoading.Updater;
+using WalutyMVCWebApp.Configuration;
 
 namespace WalutyMVCWebApp
 { 
@@ -27,6 +28,7 @@ namespace WalutyMVCWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -34,31 +36,10 @@ namespace WalutyMVCWebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.ConfigureLogger(Configuration);
             services.AddAutoMapper(typeof(UserProfileMap));
-
-            services.AddSingleton<ILoader, Loader>();  
-            services.AddTransient<ICurrencyFilesDownloader, CurrencyFilesDownloader>();
-            services.AddTransient<ICurrencyFilesUnzipper, CurrencyFilesUnzipper>();
-            services.AddTransient<ICurrencyRepository, CurrencyRepository>();
-            services.AddTransient<IUserCurrencyRepository, UserCurrencyRepository>();
-            services.AddTransient<IExtremesServices, ExtremesServices>();
-            services.AddTransient<IDateRange, DateRange>();
-            services.AddTransient<IDateChecker, DateChecker>();
-            services.AddTransient<ICurrencyConversionService, CurrencyConversionService>();
-            services.AddTransient<ICurrencyNameChecker, CurrencyNameChecker>();
-            services.AddTransient<ICurrenciesComparator, CurrenciesComparator>();
-            services.AddTransient<ICurrenciesSelectList, CurrenciesSelectList>();
-            services.AddTransient<IUserServices, UserServices>();
-            services.AddTransient<IChartService, ChartService>();
-            services.AddTransient<IFavoritesService, FavoritesService>();
-            services.AddSingleton<ICurrencyFilesUpdater, CurrencyFilesUpdater>();
-
-
-            services.AddDbContextPool<WalutyDBContext>(opt =>
-                opt.UseInMemoryDatabase("Development"));
-
-            //services.AddDbContext<WalutyDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Connection")));
-
+            services.ConfigureServices();
+            services.ConfigureDatabase(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

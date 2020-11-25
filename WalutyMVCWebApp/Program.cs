@@ -9,7 +9,7 @@ using WalutyBusinessLogic.DatabaseLoading;
 using WalutyBusinessLogic.DatabaseLoading.Updater;
 using WalutyBusinessLogic.LoadingFromFile;
 using WalutyBusinessLogic.Models;
-using WalutyBusinessLogic.Extensions;
+using WalutyMVCWebApp.Configuration;
 
 namespace WalutyMVCWebApp
 {

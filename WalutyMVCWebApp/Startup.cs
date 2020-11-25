@@ -12,9 +12,7 @@ using WalutyBusinessLogic.LoadingFromFile.DatabaseLoading;
 using WalutyBusinessLogic.AutoMapper.Profiles;
 using WalutyBusinessLogic.Services;
 using WalutyBusinessLogic.DatabaseLoading.Updater;
-using Serilog;
-using Serilog.Events;
-using WalutyMVCWebApp.Extensions.Configuration;
+using WalutyMVCWebApp.Configuration;
 
 namespace WalutyMVCWebApp
 { 
@@ -38,17 +36,8 @@ namespace WalutyMVCWebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            var rollingFilePath = Configuration.GetSection("Logger")["LogsFilePath"];
-
-            Log.Logger = new LoggerConfiguration()
-           .MinimumLevel.Debug()
-           .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
-           .Enrich.FromLogContext()
-           .WriteTo.RollingFile(rollingFilePath)
-           .CreateLogger();
-
+            services.ConfigureLogger(Configuration);
             services.AddAutoMapper(typeof(UserProfileMap));
-
             services.AddSingleton<ILoader, Loader>();  
             services.AddTransient<ICurrencyFilesDownloader, CurrencyFilesDownloader>();
             services.AddTransient<ICurrencyFilesUnzipper, CurrencyFilesUnzipper>();

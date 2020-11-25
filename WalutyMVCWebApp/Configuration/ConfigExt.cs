@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 
-namespace WalutyMVCWebApp.Extensions.Configuration
+namespace WalutyMVCWebApp.Configuration
 {
     public static class ConfigExt
     {
